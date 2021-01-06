@@ -7,11 +7,15 @@
 4. [Add your public SSH key to your new github account using this link.](https://github.com/settings/keys)
 5. Run the command `ssh-agent`. If you get back some info about a pid with a number, run the command `ssh-add` and input your password. This will allow you to clone from github without having to input your ssh password every time.
 6. **Update your git email and username:**
-    `git config --global user.email = '<yourname>@kwanzoo.com'`
-	`git config --global user.name = 'Your Name Here'`
+```
+git config --global user.email = '<yourname>@kwanzoo.com'
+git config --global user.name = 'Your Name Here'
+```
 7. Clone this repo onto your home machine (in whichever folder you'd like):
-	`cd path/to/directory/of/choice`
-	`git clone git@github.com:rvi857-pm/KZInternGitTutorial.git`
+```
+cd path/to/directory/of/choice
+git clone git@github.com:rvi857-pm/KZInternGitTutorial.git
+```
 
-###List of Developers:
+### List of Developers:
 
