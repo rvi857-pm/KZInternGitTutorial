@@ -1,5 +1,5 @@
 # Welcome to the Git Tutorial for KZ Interns!
-this is a change
+
 ### Getting Started
 1. **If you have Windows:** [download Git for Windows here](https://gitforwindows.org/), then open Git BASH.
 2. **If you have Mac or Linux:** Open Terminal.
