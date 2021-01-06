@@ -7,4 +7,4 @@
 4. [Add your public SSH key to your new github account using this link.](https://github.com/settings/keys)
 5. **Update your git email and username:**
 `git config --global user.email = '<yourname>@kwanzoo.com'`
-`git config --global user.name = 'Your Name Here'
+`git config --global user.name = 'Your Name Here'`
