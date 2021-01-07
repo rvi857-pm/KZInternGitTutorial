@@ -1,0 +1,13 @@
+git init - initialize repo
+git clone - make a copy of repo on your computer
+git add - tells git to write down your file's changes
+git commit - lock in that file's changes
+git branch - list, create, delete branches
+git checkout - switch to a specific branch to work on
+git merge - combine changes in different branches
+	- BEWARE of merge conflicts!
+git pull - sync the remote latest version of the project with the branch you are in
+git push - uploads your latest commits from local to remote 
+git diff - showing differences between commits
+git log - show commit history
+git reset - 
