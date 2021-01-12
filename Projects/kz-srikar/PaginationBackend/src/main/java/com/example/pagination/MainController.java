@@ -64,7 +64,7 @@ public class MainController {
 		  account.setIp_geo_country("%%");
 
 	  if(reqParam.containsKey("type"))
-		  account.setType("%"+reqParam.get("type"));
+		  account.setType("%"+reqParam.get("type")+"%");
 	  else
 		  account.setType("%%");
 
