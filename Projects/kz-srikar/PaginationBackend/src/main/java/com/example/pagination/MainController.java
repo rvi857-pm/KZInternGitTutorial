@@ -38,10 +38,10 @@ public class MainController {
 	  int page_size = reqParam.containsKey("page_size") ? Integer.parseInt(reqParam.get("page_size")) : 10;
 	  Account account = new Account();
 	  
-	  if(reqParam.containsKey("account_name1")) 
-		  account.setAccount_name1("%"+reqParam.get("account_name1")+"%");
+	  if(reqParam.containsKey("account_name")) 
+		  account.setAccount_name("%"+reqParam.get("account_name")+"%");
 	  else
-		  account.setAccount_name1("%%");
+		  account.setAccount_name("%%");
 
 	  if(reqParam.containsKey("ip_domain"))
 		  account.setIp_domain("%"+reqParam.get("ip_domain")+"%");
@@ -72,16 +72,6 @@ public class MainController {
 		  account.setSfdc_account_id("%"+reqParam.get("sfdc_account_id")+"%");
 	  else
 		  account.setSfdc_account_id("%%");
-	  
-	  if(reqParam.containsKey("account_name2"))
-		  account.setAccount_name2("%"+reqParam.get("account_name2")+"%");
-	  else
-		  account.setAccount_name2("%%");
-	  
-	  if(reqParam.containsKey("account_id"))
-		  account.setAccount_id("%"+reqParam.get("account_id")+"%");
-	  else
-		  account.setAccount_id("%%");
 
 	  return accountRepository.findBysearch(account, (page-1)*page_size, page_size);
   }

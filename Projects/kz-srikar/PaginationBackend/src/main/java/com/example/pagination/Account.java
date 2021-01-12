@@ -10,21 +10,19 @@ public class Account {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id;
-	private String account_name1;
+	private String account_name;
 	private String ip_domain;
 	private String ip_geo_city;
 	private String ip_geo_state;
 	private String ip_geo_country;
 	private String type;
 	private String sfdc_account_id;
-	private String account_name2;
-	private String account_id;
 	
-	public String getAccount_name1() {
-		return account_name1;
+	public String getAccount_name() {
+		return account_name;
 	}
-	public void setAccount_name1(String account_name1) {
-		this.account_name1 = account_name1;
+	public void setAccount_name(String account_name) {
+		this.account_name = account_name;
 	}
 	public String getIp_domain() {
 		return ip_domain;
@@ -61,17 +59,5 @@ public class Account {
 	}
 	public void setSfdc_account_id(String sfdc_account_id) {
 		this.sfdc_account_id = sfdc_account_id;
-	}
-	public String getAccount_name2() {
-		return account_name2;
-	}
-	public void setAccount_name2(String account_name2) {
-		this.account_name2 = account_name2;
-	}
-	public String getAccount_id() {
-		return account_id;
-	}
-	public void setAccount_id(String account_id) {
-		this.account_id = account_id;
 	}
 }
