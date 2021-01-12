@@ -9,9 +9,33 @@
           :per-page="perPage"
           aria-controls="my-table"
         ></b-pagination>
+        <label>Page Size</label>
         <input v-model="perPage" type="number" :min="1" inline controls/>
+        <label>Account Name</label>
+        <input v-model="accountName" placeholder="Account Name"/>
+        <label>Ip Domain</label>
+        <input v-model="ipDomain" placeholder="Ip Domain"/>
+        <label>Ip Geo City</label>
+        <input v-model="ipGeoCity" placeholder="Ip Geo City"/>
+        <label>Ip Geo State</label>
+        <input v-model="ipGeoState" placeholder="Ip Geo State"/>
+        <label>Ip Geo Country</label>
+        <input v-model="ipGeoCountry" placeholder="Ip Geo Country"/>
+        <label>Type</label>
+        <input v-model="type" placeholder="Type"/>
+        <label>Sfdc Account Id</label>
+        <input v-model="sfdcAccountId" placeholder="Sfdc Account Id"/>
       </b-container>
-      <Page :pageSize="getPageSize()" :currentPage="currentPage" />
+      <Page :pageSize="getPageSize()" 
+      :currentPage="currentPage" 
+      :accountName="accountName"
+      :ipDomain="ipDomain"
+      :ipGeoCity="ipGeoCity"
+      :ipGeoState="ipGeoState"
+      :ipGeoCountry="ipGeoCountry"
+      :type="type"
+      :sfdcAccountId="sfdcAccountId"
+       />
     </div>
     <div v-else>
       <b-button @click="togglePagination">Add Pagination</b-button>
@@ -35,6 +59,13 @@ export default {
       perPage: 10,
       currentPage: 1,
       results: [],
+      accountName: "",
+      ipDomain: "",
+      ipGeoCity: "",
+      ipGeoState: "",
+      ipGeoCountry: "",
+      type: "",
+      sfdcAccountId: ""
     };
   },
   methods: {
