@@ -1,0 +1,1 @@
+Contains client and server side code of kwanzoo accounts app.
