@@ -2,7 +2,7 @@
   <div id="app">
     <div>
       <b-navbar toggleable="lg" type="dark" variant="info">
-        <b-navbar-brand href="#">PAGINATION AND SEARCH</b-navbar-brand>
+        <b-navbar-brand href="#">@kz-srikar PAGINATION AND SEARCH</b-navbar-brand>
         <div v-if="isPaginated">
             <b-button size="sm" @click="togglePagination"
               >Remove Pagination</b-button
