@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ul>
+    <!--<ul>
       <table>
         <tr
           class="list-group-item"
@@ -16,8 +16,8 @@
           <td>{{ friend.sfdc_Account_ID }}</td>
         </tr>
       </table>
-    </ul>
-    <!--  <b-table striped hover :friends="friends"></b-table>-->
+    </ul>-->
+    <b-table striped :items="friends"></b-table>
   </div>
 </template>
 <script>
@@ -32,9 +32,10 @@ export default {
   },
   methods: {
     getRequest() {
-      //const requestParam = `name=${this.account.account_name}`;
-      //console.log(this.account);
-      fetch(`http://localhost:8080/accounts`, {
+      let requestParam = `?` + `name=${this.account.account_name}`;
+      if (this.account.account_name === "") requestParam = "";
+      console.log(this.account);
+      fetch(`http://localhost:8080/accounts${requestParam}`, {
         method: "get",
       })
         .then((response) => {
@@ -51,6 +52,7 @@ export default {
         this.getRequest();
       },
       deep: true,
+      immediate: true,
     },
   },
   mounted: function () {
