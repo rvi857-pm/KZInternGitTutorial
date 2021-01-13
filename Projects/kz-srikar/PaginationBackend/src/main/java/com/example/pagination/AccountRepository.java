@@ -7,13 +7,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface AccountRepository  extends CrudRepository<Account, Integer> {
-	
-	@Query(value="select * from account limit ?1, ?2", nativeQuery=true)
-	public List<Account> findPage(int offset, int limit);
-	
-	@Query(value="select * from account where account_name1 = ?1 limit ?2, ?3", nativeQuery=true)
-	public List<Account> findPageAndAccountId(String account_name, int offset, int limit);
-	
 	@Query(value="select * from account where "
 			+ "account_name like :#{#account.account_name} and "
 			+ "ip_domain like :#{#account.ip_domain} and "
