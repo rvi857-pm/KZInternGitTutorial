@@ -20,6 +20,12 @@ public class MainController {
 		}
 		int page = Integer.parseInt(reqParam.get("page"));
 		int page_size = reqParam.containsKey("page_size") ? Integer.parseInt(reqParam.get("page_size")) : 10;
+
+		if (reqParam.containsKey("name")) {
+			String name = "%" + reqParam.get("name") + "%";
+			return accountRepository.findBySingleSearch(name, (page - 1) * page_size, page_size);
+		}
+
 		Account account = new Account();
 
 		if (reqParam.containsKey("account_name"))
