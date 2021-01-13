@@ -1,6 +1,19 @@
 <template>
   <div id="app">
-    <input v-model="account.account_name" type="text" />
+    <b-form-input
+      id="input"
+      align="center"
+      placeholder="search"
+      v-model="didSearch"
+    ></b-form-input>
+    <br />
+    <label> page size </label>
+    <b-form-input
+      id="input"
+      placeholder="page size"
+      v-model="account.page_size"
+    ></b-form-input>
+
     <Account v-bind:account="account" />
   </div>
 </template>
@@ -15,29 +28,33 @@ export default {
   data() {
     return {
       msg: "hey",
+      didSearch: "",
       account: {
-        account_name: null,
-        ip_domain: null,
-        ip_geo_city: null,
-        ip_geo_state: null,
-        ip_geo_country: null,
-        sfdc: null,
-        type: null,
+        account_name: "",
+        ip_geo_city: "",
+        ip_geo_state: "",
+        ip_geo_country: "",
         page_no: "1",
         page_size: "10",
       },
     };
   },
+  watch: {
+    didSearch: {
+      handler() {
+        this.account.account_name = this.didSearch;
+        this.account.ip_geo_city = this.didSearch;
+        this.account.ip_geo_state = this.didSearch;
+        this.account.ip_geo_country = this.didSearch;
+      },
+    },
+  },
 };
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+#input {
+  width: 20%;
+  height: 10%;
 }
 </style>

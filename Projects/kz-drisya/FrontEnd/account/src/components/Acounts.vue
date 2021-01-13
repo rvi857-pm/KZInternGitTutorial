@@ -1,32 +1,18 @@
 <template>
-  <div>
-    <!--<ul>
-      <table>
-        <tr
-          class="list-group-item"
-          v-for="friend in friends"
-          v-bind:key="friend.id"
-        >
-          <td headers="dl">{{ friend.id }}</td>
-          <td>{{ friend.account_name }}</td>
-          <td>{{ friend.ip_Domain }}</td>
-          <td>{{ friend.ip_Geo_City }}</td>
-          <td>{{ friend.ip_Geo_State }}</td>
-          <td>{{ friend.ip_Geo_Country }}</td>
-          <td>{{ friend.sfdc_Account_ID }}</td>
-        </tr>
-      </table>
-    </ul>-->
+  <div id="table">
     <div class="overflow-auto">
       <b-pagination
         v-model="account.page_no"
         :per-page="account.page_size"
         :total-rows="1400"
+        align="center"
       ></b-pagination>
       <b-table
+        hover
+        small
         :items="friends"
         :per-page="account.page_size"
-        :current-page="account.page_no"
+        responsive
       ></b-table>
     </div>
   </div>
@@ -43,7 +29,7 @@ export default {
   },
   methods: {
     getRequest() {
-      let requestParam = `?pageno=${this.account.page_no}&page_size=${this.page_size}`;
+      let requestParam = `?page=${this.account.page_no}&page_size=${this.account.page_size}`;
       if (this.account.account_name !== "")
         requestParam += `&name=${this.account.account_name}`;
       if (this.account.ip_geo_city !== "")
@@ -53,8 +39,9 @@ export default {
       if (this.account.ip_geo_country !== "")
         requestParam += `&country=${this.account.ip_geo_country}`;
 
-      if (this.account.account_name === "") requestParam = "";
       console.log(this.account);
+      console.log(requestParam);
+
       fetch(`http://localhost:8080/accounts${requestParam}`, {
         method: "get",
       })
@@ -76,7 +63,7 @@ export default {
     },
   },
   mounted: function () {
-    fetch(`http://localhost:8080/accounts`, {
+    fetch(`http://localhost:8080/accounts?page=1&page_size=10`, {
       method: "get",
     })
       .then((response) => {
@@ -94,7 +81,6 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   margin-top: 60px;
 }
