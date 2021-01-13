@@ -12,16 +12,30 @@
   import axios from 'axios';
 
   export default {
+    
+    props: {
+      fields: Array,
+      items: Array,
+      state: Object
+    },
+
     data () {
       return {
         
       }
     },
+    
     methods: {
+      getUrl(){
 
+      }
     },
+
     mounted() {
-      axios.get('http://localhost:8080/accounts')
+      let queryUrl = this.getUrl();
+      let url = "http://localhost:8080/accounts";
+      url += queryUrl ? "?" + queryUrl : ""; 
+      axios.get(url)
         .then(res => {
           this.items = res.data;
         })
