@@ -17,7 +17,18 @@
         </tr>
       </table>
     </ul>-->
-    <b-table striped :items="friends"></b-table>
+    <div class="overflow-auto">
+      <b-pagination
+        v-model="account.page_no"
+        :per-page="account.page_size"
+        :total-rows="1400"
+      ></b-pagination>
+      <b-table
+        :items="friends"
+        :per-page="account.page_size"
+        :current-page="account.page_no"
+      ></b-table>
+    </div>
   </div>
 </template>
 <script>
@@ -32,7 +43,16 @@ export default {
   },
   methods: {
     getRequest() {
-      let requestParam = `?` + `name=${this.account.account_name}`;
+      let requestParam = `?pageno=${this.account.page_no}&page_size=${this.page_size}`;
+      if (this.account.account_name !== "")
+        requestParam += `&name=${this.account.account_name}`;
+      if (this.account.ip_geo_city !== "")
+        requestParam += `&city=${this.account.ip_geo_city}`;
+      if (this.account.ip_geo_state !== "")
+        requestParam += `&state=${this.account.ip_geo_state}`;
+      if (this.account.ip_geo_country !== "")
+        requestParam += `&country=${this.account.ip_geo_country}`;
+
       if (this.account.account_name === "") requestParam = "";
       console.log(this.account);
       fetch(`http://localhost:8080/accounts${requestParam}`, {

@@ -23,6 +23,8 @@ export default {
         ip_geo_country: null,
         sfdc: null,
         type: null,
+        page_no: "1",
+        page_size: "10",
       },
     };
   },
