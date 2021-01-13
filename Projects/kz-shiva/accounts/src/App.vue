@@ -1,19 +1,57 @@
 <template>
   <div id="app">
-    <Header/>
-    <Home/>
+    <Header
+      :update="updatePage"
+    />
+    <div>
+      <Home v-if="page == 0"/>
+      <Accounts v-else-if="page == 1"
+        :items="items"
+        :fields="fields"
+        :state="state"
+      />
+      <Search v-else
+        :state="state"
+      />
+    </div>
   </div>
 </template>
 
 <script>
-import Header from './components/Header.vue'
-import Home from './components/Home.vue'
+import Accounts from './components/Accounts'
+import Header from './components/Header'
+import Home from './components/Home'
+import Search from './components/Search'
 
 export default {
   name: 'App',
   components: {
     Home,
     Header,
+    Accounts,
+    Search
+  },
+  data(){
+    return{
+      page: 0,
+      fields: ['id', 'accountName', 'ipDomain', 'ipGeoCity', 'ipGeoState', 'ipGeoCountry', 'type', 'sfdcAccountId'],
+      items:[],
+      state:{
+        id: '',
+        accountName: '',
+        ipDomain: '',
+        ipGeoCity: '',
+        ipGeoState: '',
+        ipGeoCountry: '',
+        type: '',
+        sfdcAccountId: ''
+      }
+    }
+  },
+  methods:{
+    updatePage(val){
+      this.page = val;
+    }
   }
 }
 </script>
@@ -26,5 +64,7 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 </style>
