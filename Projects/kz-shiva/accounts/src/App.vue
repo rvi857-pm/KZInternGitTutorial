@@ -9,9 +9,11 @@
         :items="items"
         :fields="fields"
         :state="state"
+        :updateItems="updateItems"
       />
       <Search v-else
         :state="state"
+        :updatePage="updatePage"
       />
     </div>
   </div>
@@ -37,7 +39,6 @@ export default {
       fields: ['id', 'accountName', 'ipDomain', 'ipGeoCity', 'ipGeoState', 'ipGeoCountry', 'type', 'sfdcAccountId'],
       items:[],
       state:{
-        id: '',
         accountName: '',
         ipDomain: '',
         ipGeoCity: '',
@@ -49,9 +50,14 @@ export default {
     }
   },
   methods:{
+
     updatePage(val){
       this.page = val;
+    },
+    updateItems(data){
+      this.items = data;
     }
+
   }
 }
 </script>
