@@ -45,7 +45,9 @@ export default {
         ipGeoState: '',
         ipGeoCountry: '',
         type: '',
-        sfdcAccountId: ''
+        sfdcAccountId: '',
+        page: '',
+        pageSize: ''
       }
     }
   },

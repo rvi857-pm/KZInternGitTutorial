@@ -117,6 +117,8 @@
 			>
         <b-form-input
           id="input-8"
+					v-model="state.page"
+					type='number'
           placeholder="Enter page number"
         ></b-form-input>
       </b-form-group>
@@ -131,14 +133,16 @@
 			>
         <b-form-input
           id="input-9"
+					v-model="state.pageSize"
+					type='number'
           placeholder="Enter page size"
         ></b-form-input>
       </b-form-group>
 
-    </b-form>
+			<b-button id="submit" float type="submit" variant="primary">Submit</b-button>
+			<b-button id="reset" type="reset" variant="danger">Reset</b-button>
 
-		<b-button id="submit" float type="submit" variant="primary">Submit</b-button>
-    <b-button id="reset" type="reset" variant="danger">Reset</b-button>
+    </b-form>
 
   </div>
 </template>
@@ -171,6 +175,8 @@
 				this.state.ipGeoCountry = ''
 				this.state.type = ''
 				this.state.sfdcAccountId = ''
+				this.state.page = ''
+				this.state.pageSize = ''
         // Trick to reset/clear native browser form validation state
         this.show = false
         this.$nextTick(() => {
