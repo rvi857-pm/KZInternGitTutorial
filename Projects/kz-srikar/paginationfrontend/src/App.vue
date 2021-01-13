@@ -21,7 +21,7 @@
         <b-pagination
           v-model="currentPage"
           :total-rows="totalResults"
-          :per-page="perPage"
+          :per-page="pageSize"
           aria-controls="my-table"
         ></b-pagination>
       </b-col>
@@ -29,11 +29,11 @@
         <b-row>
           <b-col class="pb-1">
             <label class="lab pr-5">Page Size</label>
-            <input v-model="perPage" type="number" :min="1" inline controls />
+            <input v-model="pageSize" type="number" :min="1" inline controls />
           </b-col>
           <b-col  class="pb-2">
-            <input class="in" v-model="accountName" placeholder="Search All" />
-            <b-button size="sm">Search All</b-button>
+            <input class="in" v-model="name" placeholder="Search All" />
+            <b-button @click="onClickAllSubmit" size="sm">Search All</b-button>
           </b-col>
         </b-row>
         <b-row>
@@ -66,21 +66,14 @@
             <input class="in" v-model="sfdcAccountId" placeholder="Sfdc Account Id" />
           </b-col>
           <b-col class="pb-2 pt-4">
-            <b-button size="sm">Search</b-button>
+            <b-button @click="onClickSubmit" size="sm">Search</b-button>
           </b-col>
         </b-row>
         <br />
       </b-container>
       <Page
         :pageSize="getPageSize()"
-        :currentPage="currentPage"
-        :accountName="accountName"
-        :ipDomain="ipDomain"
-        :ipGeoCity="ipGeoCity"
-        :ipGeoState="ipGeoState"
-        :ipGeoCountry="ipGeoCountry"
-        :type="type"
-        :sfdcAccountId="sfdcAccountId"
+        :results="results"
       />
     </div>
     <div v-else>
@@ -96,6 +89,7 @@
 
 <script>
 import Page from "./components/Page.vue";
+import accountApi from './util/accountsApi';
 
 export default {
   name: "App",
@@ -105,10 +99,12 @@ export default {
   data() {
     return {
       isPaginated: false,
+      isSearchAll: true,
       totalResults: 0,
-      perPage: 10,
-      currentPage: 1,
       results: [],
+      currentPage: 1,
+      pageSize: 10,
+      name: "",
       accountName: "",
       ipDomain: "",
       ipGeoCity: "",
@@ -123,51 +119,81 @@ export default {
       this.isPaginated = !this.isPaginated;
     },
     getPageSize() {
-      if (this.perPage == "") return 0;
-      return parseInt(this.perPage);
+      if (this.pageSize == "") return 0;
+      return parseInt(this.pageSize);
     },
-    onChangeInput() {
-      this.currentPage = 1;
+    getAllSearch() {
+      let obj = {
+        currentPage: this.currentPage,
+        pageSize: this.pageSize,
+        name: this.name
+      };
+      accountApi.getAllSearchAccounts(obj)
+        .then(response => {
+          this.results = response;
+        })
+    },
+    onClickAllSubmit() {
+      this.isSearchAll = true;
+      this.getAllSearch();
+      this.currentPage = 0;
+    },
+    getSpecificSearch() {
+        let obj = {
+        currentPage: this.currentPage,
+        pageSize: this.pageSize,
+        accountName: this.accountName,
+        ipDomain: this.ipDomain,
+        ipGeoCity: this.ipGeoCity,
+        ipGeoState: this.ipGeoState,
+        ipGeoCountry: this.ipGeoCountry,
+        type: this.type,
+        sfdcAccountId: this.sfdcAccountId,
+      };
+      accountApi.getSpecificSearchAccounts(obj)
+        .then(response => {
+          this.results = response;
+        })
+    },
+    onClickSubmit() {
+      this.isSearchAll = false;
+      this.getSpecificSearch();
+      this.currentPage = 0;
     }
   },
   watch: {
-        perPage: function() {
-            this.onChangeInput();
+        currentPage: function(newVal, oldVal) {
+          if(newVal == 0){
+            this.currentPage = 1;
+            return;
+          }
+          if(oldVal == 0)
+            return;
+
+          if(this.isSearchAll){
+              this.getAllSearch();
+          }
+          else{
+            this.getSpecificSearch();
+          }
+          
         },
-        accountName: function() {
-            this.onChangeInput();
-        },
-        ipDomain: function() {
-            this.onChangeInput();
-        },
-        ipGeoCity: function() {
-            this.onChangeInput();
-        },
-        ipGeoState: function() {
-            this.onChangeInput();
-        },
-        ipGeoCountry: function() {
-            this.onChangeInput();
-        },
-        type: function() {
-            this.onChangeInput();
-        },
-        sfdcAccountId: function() {
-            this.onChangeInput();
-        },
+        pageSize: function() {
+          if(this.isSearchAll){
+              this.getAllSearch();
+          }
+          else{
+            this.getSpecificSearch();
+          }
+        }
+
     },
   mounted: function () {
-    fetch("http://localhost:8080/accounts/", {
-      method: "get",
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((jsonResponse) => {
-        this.totalResults = jsonResponse.length;
-        this.results = jsonResponse;
-        console.log(this.totalResults);
-      });
+    accountApi.getAllAccounts()
+        .then(response => {
+          this.totalResults = response.length;
+          this.results = response;
+        })
   },
 };
 </script>
