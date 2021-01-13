@@ -1,22 +1,60 @@
 <template>
   <div>
     <ul>
-      <li class="list-group-item" v-for="friend in friends" v-bind:key="friend">
-        {{ friend.id }}
-      </li>
+      <table>
+        <tr
+          class="list-group-item"
+          v-for="friend in friends"
+          v-bind:key="friend.id"
+        >
+          <td headers="dl">{{ friend.id }}</td>
+          <td>{{ friend.account_name }}</td>
+          <td>{{ friend.ip_Domain }}</td>
+          <td>{{ friend.ip_Geo_City }}</td>
+          <td>{{ friend.ip_Geo_State }}</td>
+          <td>{{ friend.ip_Geo_Country }}</td>
+          <td>{{ friend.sfdc_Account_ID }}</td>
+        </tr>
+      </table>
     </ul>
+    <!--  <b-table striped hover :friends="friends"></b-table>-->
   </div>
 </template>
 <script>
 export default {
+  props: {
+    account: Object,
+  },
   data() {
     return {
       friends: [],
     };
   },
+  methods: {
+    getRequest() {
+      //const requestParam = `name=${this.account.account_name}`;
+      //console.log(this.account);
+      fetch(`http://localhost:8080/accounts`, {
+        method: "get",
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((jsonResponse) => {
+          this.friends = jsonResponse;
+        });
+    },
+  },
+  watch: {
+    account: {
+      handler() {
+        this.getRequest();
+      },
+      deep: true,
+    },
+  },
   mounted: function () {
-    console.log("mounted");
-    fetch(`http://localhost:8080/accounts?page=1`, {
+    fetch(`http://localhost:8080/accounts`, {
       method: "get",
     })
       .then((response) => {
@@ -25,7 +63,6 @@ export default {
       .then((jsonResponse) => {
         this.friends = jsonResponse;
       });
-    // console.log(this.friends);
   },
 };
 </script>

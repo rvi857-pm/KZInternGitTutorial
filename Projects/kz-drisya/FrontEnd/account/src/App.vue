@@ -1,10 +1,9 @@
 <template>
   <div id="app">
-    {{ msg }}
-    <Account />
+    <input v-model="account.account_name" type="text" />
+    <Account v-bind:account="account" />
   </div>
 </template>
-
 <script>
 import Account from "./components/Acounts";
 export default {
@@ -12,9 +11,19 @@ export default {
   components: {
     Account,
   },
+  methods: {},
   data() {
     return {
       msg: "hey",
+      account: {
+        account_name: null,
+        ip_domain: null,
+        ip_geo_city: null,
+        ip_geo_state: null,
+        ip_geo_country: null,
+        sfdc: null,
+        type: null,
+      },
     };
   },
 };
