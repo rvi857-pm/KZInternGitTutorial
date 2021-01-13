@@ -27,39 +27,46 @@
       </b-col>
       <b-container fluid>
         <b-row>
-          <b-col sm="3" class="pb-2">
-            <label class="lab">Page Size</label><br/>
-            <input class="in" v-model="perPage" type="number" :min="1" inline controls />
+          <b-col class="pb-1">
+            <label class="lab pr-5">Page Size</label>
+            <input v-model="perPage" type="number" :min="1" inline controls />
           </b-col>
-          <b-col sm="3" class="pb-2">
-            <label class="lab">Account Name</label><br/>
-            <input class="in" v-model="accountName" placeholder="Account Name" />
-          </b-col>
-          <b-col sm="3" class="pb-2">
-            <label class="lab">Ip Domain</label><br/>
-            <input class="in" v-model="ipDomain" placeholder="Ip Domain" />
-          </b-col>
-          <b-col sm="3" class="pb-2">
-            <label class="lab">Ip Geo City</label><br/>
-            <input class="in" v-model="ipGeoCity" placeholder="Ip Geo City" />
+          <b-col  class="pb-2">
+            <input class="in" v-model="accountName" placeholder="Search All" />
+            <b-button size="sm">Search All</b-button>
           </b-col>
         </b-row>
         <b-row>
-          <b-col sm="3" class="pb-2">
+          <b-col  class="pb-2">
+            <label class="lab">Account Name</label><br/>
+            <input class="in" v-model="accountName" placeholder="Account Name" />
+          </b-col>
+          <b-col class="pb-2">
+            <label class="lab">Ip Domain</label><br/>
+            <input class="in" v-model="ipDomain" placeholder="Ip Domain" />
+          </b-col>
+          <b-col class="pb-2">
+            <label class="lab">Ip Geo City</label><br/>
+            <input class="in" v-model="ipGeoCity" placeholder="Ip Geo City" />
+          </b-col>
+          <b-col  class="pb-2">
             <label class="lab">Ip Geo State</label><br/>
             <input class="in" v-model="ipGeoState" placeholder="Ip Geo State" />
           </b-col>
-          <b-col sm="3" class="pb-2">
+          <b-col  class="pb-2">
             <label class="lab">Ip Geo Country</label><br/>
             <input class="in" v-model="ipGeoCountry" placeholder="Ip Geo Country" />
           </b-col>
-          <b-col sm="3" class="pb-2">
+          <b-col  class="pb-2">
             <label class="lab">Type</label><br/>
             <input class="in" v-model="type" placeholder="Type" />
           </b-col>
-          <b-col sm="3" class="pb-2">
+          <b-col class="pb-2">
             <label class="lab">Sfdc Account Id</label><br/>
             <input class="in" v-model="sfdcAccountId" placeholder="Sfdc Account Id" />
+          </b-col>
+          <b-col class="pb-2 pt-4">
+            <b-button size="sm">Search</b-button>
           </b-col>
         </b-row>
         <br />
@@ -181,5 +188,9 @@ export default {
   text-align: center;
   margin-top: 10px;
   color: rgb(190, 58, 102);
+}
+input {
+  padding: 5px;
+  margin-right: 10px;
 }
 </style>
