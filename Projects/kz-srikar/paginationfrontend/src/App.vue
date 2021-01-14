@@ -130,7 +130,8 @@ export default {
       };
       accountApi.getAllSearchAccounts(obj)
         .then(response => {
-          this.results = response;
+          this.totalResults = response.totalElements;
+          this.results = response.content;
         })
     },
     onClickAllSubmit() {
@@ -152,7 +153,8 @@ export default {
       };
       accountApi.getSpecificSearchAccounts(obj)
         .then(response => {
-          this.results = response;
+          this.totalResults = response.totalElements;
+          this.results = response.content;
         })
     },
     onClickSubmit() {
