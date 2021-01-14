@@ -3,8 +3,6 @@ package com.kwanzoo.project.model;
 import java.util.UUID;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 
@@ -37,7 +35,17 @@ public class Account {
 		this.type = type;
 		this.accountId = accountId;
 	}
-
+	
+	public void setALL(String any) {
+		this.name = any;
+		this.domain = any;
+		this.city = any;
+		this.state = any;
+		this.country = any;
+		this.type = any;
+		this.accountId = any;
+	}
+	
 	public UUID getId() {
 		return id;
 	}

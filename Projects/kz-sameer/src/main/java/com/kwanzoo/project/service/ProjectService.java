@@ -1,9 +1,9 @@
 package com.kwanzoo.project.service;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.kwanzoo.project.dao.Dao;
 import com.kwanzoo.project.model.Account;
-import com.kwanzoo.project.model.AccountPage;
 
 @Service
 public class ProjectService {
@@ -21,78 +20,52 @@ public class ProjectService {
 	    Integer pageNo = 0;
 	    Integer pageSize = 10;
 	     
-	    public List<Account> getAll(AccountPage accountpage)
+	    public Page<Account> getAll(Integer page, Integer pageSize_)
 	    {
 	    	
-	    	if(accountpage.getPage() != null) {
-	    		pageNo = accountpage.getPage();
+	    	if(page != null) {
+	    		pageNo = page;
 	    	}
 	    	else {
 	    		pageNo = 0;
 	    	}
-	    	if(accountpage.getPageSize() != null) {
-	    		pageSize = accountpage.getPageSize();
+	    	if(pageSize_ != null) {
+	    		pageSize = pageSize_;
 	    	}
 	    	
 	        Pageable paging = PageRequest.of(pageNo, pageSize);
 	 
-	        Page<Account> pagedResult = repository.findAll(paging);
-	         
-	        if(pagedResult.hasContent()) {
-	            return pagedResult.getContent();
-	        } else {
-	            return new ArrayList<Account>();
-	        }
+	        return repository.findAll(paging);
 	    }
 	    
 	    
-	    public List<Account> findBy(AccountPage accountpage){
-	    	
-	    	Account account = (Account) accountpage;
-	    	
-	    	if(accountpage.getPage() != null) {
-	    		pageNo = accountpage.getPage();
+	    public Page<Account> findBy(Account account, Integer page, Integer pageSize_, String any){
+
+	    	if(page != null) {
+	    		pageNo = page;
 	    	}
 	    	else {
 	    		pageNo = 0;
 	    	}
-	    	if(accountpage.getPageSize() != null) {
-	    		pageSize = accountpage.getPageSize();
+	    	if(pageSize_ != null) {
+	    		pageSize = pageSize_;
 	    	}
 	    	
 	        Pageable paging = PageRequest.of(pageNo, pageSize);
 	        
-	        List<Account> pagedResult = null;
+	    	if(any != null) {
+	    		account.setALL(any);
+
+	    		ExampleMatcher matcher =
+	    				ExampleMatcher.matchingAny()
+	    				.withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+	    		
+	    		return repository.findAll(Example.of(account, matcher), paging);
+	    	}
+	    	
+	    	ExampleMatcher matcher = ExampleMatcher.matchingAll().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
 	        
-	        if(account.getName() != null) {
-	        	pagedResult = repository.findByName(account.getName(), paging);
-	        }
-	        else if(account.getDomain() != null) {
-	        	pagedResult = repository.findByDomain(account.getDomain(), paging);
-	        }
-	        else if(account.getCity() != null) {
-	        	pagedResult = repository.findByCity(account.getCity(), paging);
-	        }
-	        else if(account.getState() != null) {
-	        	pagedResult = repository.findByState(account.getState(), paging);
-	        }
-	        else if(account.getCountry() != null) {
-	        	pagedResult = repository.findByCountry(account.getCountry(), paging);
-	        }
-	        else if(account.getType() != null) {
-	        	pagedResult = repository.findByType(account.getType(), paging);
-	        }
-	        else if(account.getAccountId() != null) {
-	        	pagedResult = repository.findByAccountId(account.getAccountId(), paging);
-	        }else {
-	        	return new ArrayList<Account>();
-	        }
-	         
-	        if(!pagedResult.isEmpty()) {
-	            return pagedResult;
-	        } else {
-	            return new ArrayList<Account>();
-	        }
+	        return repository.findAll(Example.of(account, matcher), paging);
 	    	
 	    }
 }
