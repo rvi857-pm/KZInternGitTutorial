@@ -1,78 +1,82 @@
 <template>
-  <div id="app">
-    <Header
-      :update="updatePage"
-    />
-    <div>
-      <Home v-if="page == 0"/>
-      <Accounts v-else-if="page == 1"
-        :items="items"
-        :fields="fields"
-        :state="state"
-        :updateItems="updateItems"
-      />
-      <Search v-else
-        :state="state"
-        :updatePage="updatePage"
-      />
+    <div id="app">
+        <Header :update="updatePage" />
+        <div>
+            <Home v-if="page == 0" />
+            <Accounts
+                v-else-if="page == 1"
+                :items="items"
+                :fields="fields"
+                :state="state"
+                :updateItems="updateItems"
+            />
+            <Search v-else :state="state" :updatePage="updatePage" />
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
-import Accounts from './components/Accounts'
-import Header from './components/Header'
-import Home from './components/Home'
-import Search from './components/Search'
+import Accounts from "./components/Accounts";
+import Header from "./components/Header";
+import Home from "./components/Home";
+import Search from "./components/Search";
 
 export default {
-  name: 'App',
-  components: {
-    Home,
-    Header,
-    Accounts,
-    Search
-  },
-  data(){
-    return{
-      page: 0,
-      fields: ['id', 'accountName', 'ipDomain', 'ipGeoCity', 'ipGeoState', 'ipGeoCountry', 'type', 'sfdcAccountId'],
-      items:[],
-      state:{
-        accountName: '',
-        ipDomain: '',
-        ipGeoCity: '',
-        ipGeoState: '',
-        ipGeoCountry: '',
-        type: '',
-        sfdcAccountId: '',
-        page: '',
-        pageSize: ''
-      }
-    }
-  },
-  methods:{
-
-    updatePage(val){
-      this.page = val;
+    name: "App",
+    components: {
+        Home,
+        Header,
+        Accounts,
+        Search,
     },
+    data() {
+        return {
+            page: 0,
+            fields: [
+                "id",
+                "accountName",
+                "ipDomain",
+                "ipGeoCity",
+                "ipGeoState",
+                "ipGeoCountry",
+                "type",
+                "sfdcAccountId",
+            ],
+            items: [],
+            state: {
+                accountName: "",
+                ipDomain: "",
+                ipGeoCity: "",
+                ipGeoState: "",
+                ipGeoCountry: "",
+                type: "",
+                sfdcAccountId: "",
+                page: "",
+                pageSize: "",
+            },
+        };
+    },
+    methods: {
+        updatePage(val) {
+            this.page = val;
+        },
 
-    updateItems(val){
-      this.items = val;
-    }
-  }
-}
+        updateItems(val) {
+            this.items = val;
+        },
+    },
+};
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 10px;
-  margin-left: 5px;
-  margin-right: 5px;
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 </style>
