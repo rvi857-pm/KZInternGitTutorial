@@ -28,8 +28,18 @@ public class MainController {
 		int page_size = reqParam.containsKey("page_size") ? Integer.parseInt(reqParam.get("page_size")) : 10;
 
 		if (reqParam.containsKey("name")) {
-			String name = "%" + reqParam.get("name") + "%";
-			return accountRepository.findBySingleSearch(name, (page - 1) * page_size, page_size);
+			String name = reqParam.get("name");
+			Account account = new Account();
+			account.setAccount_name(name);
+			account.setIp_domain(name);
+			account.setIp_geo_city(name);
+			account.setIp_geo_state(name);
+			account.setIp_geo_country(name);
+			account.setType(name);
+			account.setSfdc_account_id(name);
+			Pageable pageableInstance = PageRequest.of(page - 1, page_size);
+			Example<Account> universalSearchExample = Example.of(account, generateUniversalSearchMatcher());
+			return accountRepository.findAll(universalSearchExample, pageableInstance);
 		}
 
 		Account account = new Account();
@@ -41,10 +51,10 @@ public class MainController {
 		account.setIp_geo_country(reqParam.get("ip_geo_country"));
 		account.setType(reqParam.get("type"));
 		account.setSfdc_account_id(reqParam.get("sfdc_account_id"));
-		
-		Pageable pageableInstance = PageRequest.of(page-1, page_size);
+
+		Pageable pageableInstance = PageRequest.of(page - 1, page_size);
 		Example<Account> compoundSearchExample = Example.of(account, generateCompoundSearchMatcher());
-		return accountRepository.findAll(compoundSearchExample,pageableInstance);
+		return accountRepository.findAll(compoundSearchExample, pageableInstance);
 	}
 	
 	private ExampleMatcher generateCompoundSearchMatcher() {
@@ -57,6 +67,18 @@ public class MainController {
 				.withMatcher("type", ExampleMatcher.GenericPropertyMatchers.contains())
 				.withMatcher("sfdc_account_id", ExampleMatcher.GenericPropertyMatchers.contains());
 		return compoundSearchMatcher;
+	}
+
+	private ExampleMatcher generateUniversalSearchMatcher() {
+		ExampleMatcher universalSearchMatcher = ExampleMatcher.matchingAny()
+				.withMatcher("account_name", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("ip_domain", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("ip_geo_city", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("ip_geo_state", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("ip_geo_country", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("type", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("sfdc_account_id", ExampleMatcher.GenericPropertyMatchers.contains());
+		return universalSearchMatcher;
 	}
 
 }
