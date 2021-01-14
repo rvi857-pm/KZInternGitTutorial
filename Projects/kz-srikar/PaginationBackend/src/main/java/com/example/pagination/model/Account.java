@@ -1,20 +1,26 @@
 package com.example.pagination.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 
 @Entity
 public class Account {
 	@Id
 	private String id;
+	@Column(name = "name")
 	private String account_name;
+	@Column(name = "ip_domain")
 	private String ip_domain;
+	@Column(name = "city")
 	private String ip_geo_city;
+	@Column(name = "state")
 	private String ip_geo_state;
+	@Column(name = "country")
 	private String ip_geo_country;
+	@Column(name = "type")
 	private String type;
+	@Column(name = "salesforce_id")
 	private String sfdc_account_id;
 
 	public String getAccount_name() {
