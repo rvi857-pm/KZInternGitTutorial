@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.model.Account;
 import com.example.demo.repository.AccountRepository;
@@ -27,47 +26,19 @@ public class AccountController {
 		return "home.jsp";
 	}
 	
-	/*@GetMapping("/accounts")
-	public  ModelAndView getAccounts( @RequestParam Map<String, String> query ) {
-		
-		List<Account> accounts;
-		int page_no, page_size = 10;
-		
-		Pageable paging;
-		if(!query.containsKey("page"))
-			paging = null;
-		else {
-			page_no = Integer.parseInt(query.get("page"));
-			if (query.containsKey("page_size"))
-				page_size = Integer.parseInt(query.get("page_size"));
-			paging = PageRequest.of(page_no - 1,page_size);
-		}
-			
-		
-		String city  = query.get("city");
-		String country = query.get("country");
-		String state = query.get("state");
-		String name = query.get("name");
-		Page<Account> pagedResult = repo.x(name, city,state,country,paging);
-		accounts = pagedResult.toList();
-		
-		ModelAndView mv = new ModelAndView("show.jsp");
-		mv.getModelMap().addAttribute("accounts", accounts);
-		return mv;
-	}*/
-	
 	@GetMapping("/accounts")
 	public  List<Account> getAccounts( @RequestParam Map<String, String> query ) {
 		
 		int page_no, page_size = 10;
 		
-		Pageable paging;
+		Pageable paging = null;
 		if(!query.containsKey("page") || query.get("page") == "")
 			paging = null;
 		else {
 			page_no = Integer.parseInt(query.get("page"));
-			if (query.containsKey("page_size") && query.get("page_size") != "")
+			if (query.containsKey("page_size") && query.get("page_size") != ""){
 				page_size = Integer.parseInt(query.get("page_size"));
+			}
 			paging = PageRequest.of(page_no - 1,page_size);
 		}
 			
@@ -77,12 +48,10 @@ public class AccountController {
 		String state = query.get("state");
 		String name = query.get("name");
 		Page<Account> pagedResult;
-		if ( name == null) {
+		if( name == null)
 			pagedResult = repo.findAll(paging);
-		}else {
-			pagedResult = repo.x(name, city,state,country,paging);
-		}
-		//System.out.println(city + country + state + name + page_size + page_no);
+		else
+			pagedResult = repo.findAllByNameContainingOrCityOrStateOrCountry(name,city,state,country,paging);
 		
 		return pagedResult.toList();
 		

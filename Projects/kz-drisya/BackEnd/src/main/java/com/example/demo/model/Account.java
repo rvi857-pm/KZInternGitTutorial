@@ -11,104 +11,161 @@ public class Account {
 
 	@Id
 	@Column ( name = "Id")
-	private int Id;
+	private int id;
 	
 	@Column( name = "Account_name")
-	private String Account_name;
+	private String name;
 	
 	@Column( name = "IP_Domain")
-	private String IP_Domain;
+	private String domain;
 	
 	@Column( name = "IP_Geo_City")
-	private String IP_Geo_City;
+	private String city;
 	
 	@Column( name = "IP_Geo_Country")
-	private String IP_Geo_Country;
+	private String country;
 	
 	@Column( name = "Type")
-	private String Type;
+	private String type;
 	
 	@Column( name = "SFDC_Account_ID")
-	private String SFDC_Account_ID;
+	private String sfdc;
 	
 	@Column( name = "IP_Geo_State")
-	private String IP_Geo_State;
+	private String state;
+
+	
+	
+	
+
+
+
 
 	public int getId() {
-		return Id;
+		return id;
 	}
+
+
+
+
 
 	public void setId(int id) {
-		Id = id;
+		this.id = id;
 	}
 
-	public String getAccount_name() {
-		return Account_name;
+
+
+
+
+	public String getName() {
+		return name;
 	}
 
-	public void setAccount_name(String account_name) {
-		Account_name = account_name;
+
+
+
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getIP_Domain() {
-		return IP_Domain;
+
+
+
+
+	public String getDomain() {
+		return domain;
 	}
 
-	public void setIP_Domain(String iP_Domain) {
-		IP_Domain = iP_Domain;
+
+
+
+
+	public void setDomain(String domain) {
+		this.domain = domain;
 	}
 
-	public String getIP_Geo_City() {
-		return IP_Geo_City;
+
+
+
+
+	public String getCity() {
+		return city;
 	}
 
-	public void setIP_Geo_City(String iP_Geo_City) {
-		IP_Geo_City = iP_Geo_City;
+
+
+
+
+	public void setCity(String city) {
+		this.city = city;
 	}
 
-	public String getIP_Geo_Country() {
-		return IP_Geo_Country;
+
+
+
+
+	public String getCountry() {
+		return country;
 	}
 
-	public void setIP_Geo_Country(String iP_Geo_Country) {
-		IP_Geo_Country = iP_Geo_Country;
+
+
+
+
+	public void setCountry(String country) {
+		this.country = country;
 	}
+
+
+
+
 
 	public String getType() {
-		return Type;
+		return type;
 	}
+
+
+
+
 
 	public void setType(String type) {
-		Type = type;
+		this.type = type;
 	}
 
-	public String getSFDC_Account_ID() {
-		return SFDC_Account_ID;
+
+
+
+
+	public String getSfdc() {
+		return sfdc;
 	}
 
-	public void setSFDC_Account_ID(String sFDC_Account_ID) {
-		SFDC_Account_ID = sFDC_Account_ID;
+
+
+
+
+	public void setSfdc(String sfdc) {
+		this.sfdc = sfdc;
 	}
 
-	public String getIP_Geo_State() {
-		return IP_Geo_State;
+
+
+
+
+	public String getState() {
+		return state;
 	}
 
-	public void setIP_Geo_State(String iP_Geo_State) {
-		IP_Geo_State = iP_Geo_State;
+
+
+
+
+	public void setState(String state) {
+		this.state = state;
 	}
-	
-	@Override
-	public String toString(){
-		return " Account_name : " + Account_name +
-				"IP_Domain :" + IP_Domain +
-				"IP_Geo_City :" + IP_Geo_City +
-				"IP_Geo_State :" + IP_Geo_State +
-				"IP_Geo_Country :" + IP_Geo_Country +
-				"Type :" + Type +
-				"SFDC_Account_ID :" + SFDC_Account_ID + "\n";
-	}
-	
+
+		
 	
 	
 }
