@@ -30,13 +30,7 @@ public class MainController {
 		if (reqParam.containsKey("name")) {
 			String name = reqParam.get("name");
 			Account account = new Account();
-			account.setAccount_name(name);
-			account.setIp_domain(name);
-			account.setIp_geo_city(name);
-			account.setIp_geo_state(name);
-			account.setIp_geo_country(name);
-			account.setType(name);
-			account.setSfdc_account_id(name);
+			account.setAll(name);
 			Pageable pageableInstance = PageRequest.of(page - 1, page_size);
 			Example<Account> universalSearchExample = Example.of(account, generateUniversalSearchMatcher());
 			return accountRepository.findAll(universalSearchExample, pageableInstance);
