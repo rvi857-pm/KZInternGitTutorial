@@ -56,10 +56,10 @@ export default {
     updatePage(val){
       this.page = val;
     },
-    updateItems(data){
-      this.items = data;
-    }
 
+    updateItems(val){
+      this.items = val;
+    }
   }
 }
 </script>
