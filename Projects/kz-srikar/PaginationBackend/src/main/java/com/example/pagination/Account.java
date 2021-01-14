@@ -8,8 +8,7 @@ import javax.persistence.GenerationType;
 @Entity
 public class Account {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer id;
+	private String id;
 	private String account_name;
 	private String ip_domain;
 	private String ip_geo_city;
