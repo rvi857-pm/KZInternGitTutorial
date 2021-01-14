@@ -20,7 +20,7 @@ public class MainController {
 	private AccountRepository accountRepository;
 
 	@GetMapping(path = "/accounts")
-	public Iterable<Account> search(@RequestParam Map<String, String> reqParam) {
+	public Object search(@RequestParam Map<String, String> reqParam) {
 		if (!reqParam.containsKey("page")) {
 			return accountRepository.findAll();
 		}
