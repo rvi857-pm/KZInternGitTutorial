@@ -1,7 +1,10 @@
 package com.example.pagination.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,42 +34,29 @@ public class MainController {
 
 		Account account = new Account();
 
-		if (reqParam.containsKey("account_name"))
-			account.setAccount_name("%" + reqParam.get("account_name") + "%");
-		else
-			account.setAccount_name("%%");
-
-		if (reqParam.containsKey("ip_domain"))
-			account.setIp_domain("%" + reqParam.get("ip_domain") + "%");
-		else
-			account.setIp_domain("%%");
-
-		if (reqParam.containsKey("ip_geo_city"))
-			account.setIp_geo_city("%" + reqParam.get("ip_geo_city") + "%");
-		else
-			account.setIp_geo_city("%%");
-
-		if (reqParam.containsKey("ip_geo_state"))
-			account.setIp_geo_state("%" + reqParam.get("ip_geo_state") + "%");
-		else
-			account.setIp_geo_state("%%");
-
-		if (reqParam.containsKey("ip_geo_country"))
-			account.setIp_geo_country("%" + reqParam.get("ip_geo_country") + "%");
-		else
-			account.setIp_geo_country("%%");
-
-		if (reqParam.containsKey("type"))
-			account.setType("%" + reqParam.get("type") + "%");
-		else
-			account.setType("%%");
-
-		if (reqParam.containsKey("sfdc_account_id"))
-			account.setSfdc_account_id("%" + reqParam.get("sfdc_account_id") + "%");
-		else
-			account.setSfdc_account_id("%%");
-
-		return accountRepository.findBysearch(account, (page - 1) * page_size, page_size);
+		account.setAccount_name(reqParam.get("account_name"));
+		account.setIp_domain(reqParam.get("ip_domain"));
+		account.setIp_geo_city(reqParam.get("ip_geo_city"));
+		account.setIp_geo_state(reqParam.get("ip_geo_state"));
+		account.setIp_geo_country(reqParam.get("ip_geo_country"));
+		account.setType(reqParam.get("type"));
+		account.setSfdc_account_id(reqParam.get("sfdc_account_id"));
+		
+		Pageable pageableInstance = PageRequest.of(page-1, page_size);
+		Example<Account> compoundSearchExample = Example.of(account, generateCompoundSearchMatcher());
+		return accountRepository.findAll(compoundSearchExample,pageableInstance);
+	}
+	
+	private ExampleMatcher generateCompoundSearchMatcher() {
+		ExampleMatcher compoundSearchMatcher = ExampleMatcher.matchingAll()
+				.withMatcher("account_name", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("ip_domain", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("ip_geo_city", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("ip_geo_state", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("ip_geo_country", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("type", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("sfdc_account_id", ExampleMatcher.GenericPropertyMatchers.contains());
+		return compoundSearchMatcher;
 	}
 
 }
