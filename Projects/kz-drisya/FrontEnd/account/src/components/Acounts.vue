@@ -46,9 +46,15 @@ export default {
         method: "get",
       })
         .then((response) => {
-          return response.json();
+          let v = response.json();
+          return v;
         })
         .then((jsonResponse) => {
+          for (let x in jsonResponse) {
+            delete jsonResponse[x]["id"];
+            console.log(jsonResponse[x]);
+          }
+
           this.friends = jsonResponse;
         });
     },
@@ -70,6 +76,11 @@ export default {
         return response.json();
       })
       .then((jsonResponse) => {
+        for (let x in jsonResponse) {
+          delete jsonResponse[x]["id"];
+          console.log(jsonResponse[x]);
+        }
+
         this.friends = jsonResponse;
       });
   },
