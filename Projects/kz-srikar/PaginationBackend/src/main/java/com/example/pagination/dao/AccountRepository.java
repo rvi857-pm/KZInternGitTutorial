@@ -1,8 +1,10 @@
-package com.example.pagination;
+package com.example.pagination.dao;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+
+import com.example.pagination.model.Account;
 
 import java.util.List;
 

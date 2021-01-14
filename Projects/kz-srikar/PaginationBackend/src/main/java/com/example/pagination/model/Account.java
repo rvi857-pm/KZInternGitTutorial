@@ -1,4 +1,4 @@
-package com.example.pagination;
+package com.example.pagination.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
