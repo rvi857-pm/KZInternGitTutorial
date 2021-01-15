@@ -53,7 +53,9 @@ export default {
                 parsedStr = parsedStr + this.searchList[k] + "=" + filter + "&"
             }
             str = str.trim()
-            parsedStr = "any=" + str + "&" + parsedStr
+            if(str !== ''){
+                parsedStr = "any=" + str + "&" + parsedStr
+            }
             this.search(parsedStr)
         }
     }
