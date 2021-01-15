@@ -1,9 +1,9 @@
 <template>
-    <div id="header">
-        <h1>
-            Welcome to Kwanzoo Accounts!!
-        </h1>
-    </div>
+	<div id="header">
+		<h1>
+			Welcome to Kwanzoo Accounts!!
+		</h1>
+	</div>
 </template>
 
 <script>
@@ -12,6 +12,6 @@ export default {};
 
 <style>
 #header {
-    margin-top: 120px;
+	margin-top: 120px;
 }
 </style>
