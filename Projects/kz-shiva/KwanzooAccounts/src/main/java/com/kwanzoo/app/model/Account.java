@@ -1,5 +1,6 @@
 package com.kwanzoo.app.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -8,12 +9,19 @@ public class Account {
 
 	@Id
 	private String id;
+	@Column(name = "name")
 	private String accountName;
+	@Column(name = "ip_domain")
 	private String ipDomain;
+	@Column(name = "city")
 	private String ipGeoCity;
+	@Column(name = "state")
 	private String ipGeoState;
+	@Column(name = "country")
 	private String ipGeoCountry;
+	@Column(name = "type")
 	private String type;
+	@Column(name = "salesforce_id")
 	private String sfdcAccountId;
 
 	public String getId() {
