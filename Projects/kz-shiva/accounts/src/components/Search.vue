@@ -141,21 +141,17 @@
 								placeholder="Enter page size"
 							></b-form-input>
 						</b-form-group>
+						<b-button
+							id="submit"
+							float
+							type="submit"
+							variant="primary"
+							>Submit</b-button
+						>
+						<b-button id="reset" type="reset" variant="danger"
+							>Reset</b-button
+						>
 					</b-form>
-				</b-col>
-			</b-row>
-			<b-row >
-				<b-col>
-					<b-button
-						id="submit"
-						float
-						type="submit"
-						variant="primary"
-						>Submit</b-button
-					>
-					<b-button id="reset" type="reset" variant="danger"
-						>Reset</b-button
-					>
 				</b-col>
 			</b-row>
 		</b-container>
@@ -207,5 +203,11 @@ export default {
 }
 #submit{
 	margin: 4px;
+	position: relative;
+	right: 25%;
+}
+#reset{
+	position: relative;
+	right: 25%;
 }
 </style>
