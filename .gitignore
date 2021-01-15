@@ -4,3 +4,4 @@ __pycache__/
 
 # Virtualenv
 env/*
+Projects/kz-sameer/frontend/src/components/search.vue

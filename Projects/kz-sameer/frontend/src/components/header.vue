@@ -14,17 +14,9 @@
                             <b-form-input v-model="input">Search</b-form-input>
                                 <template #append>
                                     <b-dropdown :text="searchBy.toUpperCase()" variant="success">
-                                         <b-dropdown-item @click="searchBy = 'any'">Any</b-dropdown-item>
-                                        <b-dropdown-item @click="searchBy = 'id'">Id</b-dropdown-item>
-                                        <b-dropdown-item @click="searchBy = 'name'">Name</b-dropdown-item>
-                                        <b-dropdown-item @click="searchBy = 'doamin'">Domain</b-dropdown-item>
-                                        <b-dropdown-item @click="searchBy = 'city'">City</b-dropdown-item>
-                                        <b-dropdown-item @click="searchBy = 'state'">State</b-dropdown-item>
-                                        <b-dropdown-item @click="searchBy = 'country'">Country</b-dropdown-item>
-                                        <b-dropdown-item @click="searchBy = 'type'">Type</b-dropdown-item>
-                                        <b-dropdown-item @click="searchBy = 'accountId'">Account Id</b-dropdown-item>
+                                         <b-dropdown-item v-for="(searchItem, index) in searchList"  @click="searchBy = searchItem" :key="index" :value="searchItem">{{ searchItem.toUpperCase() }}</b-dropdown-item>
                                     </b-dropdown>
-                                    <b-button variant="success" @click="search(searchBy + '=' + input)"> Search</b-button>
+                                    <b-button variant="success" @click="searchParser(input)"> Search</b-button>
                                 </template>
                         </b-input-group>
                     </b-nav-form>
@@ -38,11 +30,32 @@ export default {
     data(){
         return{
             searchBy: 'any',
-            input: ''
+            input: '',
+            searchList: ["any", "id", "domain", "city", "state", "country", "type", "accountId"]
         }
     },
     props: [
         'search'
-    ]
+    ],
+    methods: {
+        searchParser(str){
+            let parsedStr = ""
+            for (let k=0; k < 8; k++){
+                let indexOfFilter = str.indexOf(this.searchList[k] + ":")
+                if(indexOfFilter > -1){
+                indexOfFilter = indexOfFilter + this.searchList[k].length + 2
+                }
+                else{
+                continue
+                }
+                let filter =str.slice(indexOfFilter, str.indexOf('"', indexOfFilter)) 
+                str = str.replace(filter, "").replace(this.searchList[k] + ':""', "")
+                parsedStr = parsedStr + this.searchList[k] + "=" + filter + "&"
+            }
+            str = str.trim()
+            parsedStr = "any=" + str + "&" + parsedStr
+            this.search(parsedStr)
+        }
+    }
 }
 </script>
