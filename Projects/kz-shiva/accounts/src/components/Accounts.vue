@@ -67,11 +67,11 @@ export default {
         getUrl() {
             let url = "";
             url += url
-                ? this.state.accountName
-                    ? "&name=" + this.state.accountName
+                ? this.state.name
+                    ? "&name=" + this.state.name
                     : ""
-                : this.state.accountName
-                ? "name=" + this.state.accountName
+                : this.state.name
+                ? "name=" + this.state.name
                 : "";
             url += url
                 ? this.state.ipDomain
@@ -81,25 +81,25 @@ export default {
                 ? "domain=" + this.state.ipDomain
                 : "";
             url += url
-                ? this.state.ipGeoCity
-                    ? "&city=" + this.state.ipGeoCity
+                ? this.state.city
+                    ? "&city=" + this.state.city
                     : ""
-                : this.state.ipGeoCity
-                ? "city=" + this.state.ipGeoCity
+                : this.state.city
+                ? "city=" + this.state.city
                 : "";
             url += url
-                ? this.state.ipGeoState
-                    ? "&state=" + this.state.ipGeoState
+                ? this.state.state
+                    ? "&state=" + this.state.state
                     : ""
-                : this.state.ipGeoState
-                ? "state=" + this.state.ipGeoState
+                : this.state.state
+                ? "state=" + this.state.state
                 : "";
             url += url
-                ? this.state.ipGeoCountry
-                    ? "&country=" + this.state.ipGeoCountry
+                ? this.state.country
+                    ? "&country=" + this.state.country
                     : ""
-                : this.state.ipGeoCountry
-                ? "country=" + this.state.ipGeoCountry
+                : this.state.country
+                ? "country=" + this.state.country
                 : "";
             url += url
                 ? this.state.type
@@ -109,11 +109,11 @@ export default {
                 ? "type=" + this.state.type
                 : "";
             url += url
-                ? this.state.sfdcAccountId
-                    ? "&id=" + this.state.sfdcAccountId
+                ? this.state.salesforceId
+                    ? "&id=" + this.state.salesforceId
                     : ""
-                : this.state.sfdcAccountId
-                ? "id=" + this.state.sfdcAccountId
+                : this.state.salesforceId
+                ? "id=" + this.state.salesforceId
                 : "";
             if (this.page == 0) {
                 url += url
@@ -153,7 +153,6 @@ export default {
                         this.updatePerPage(Number(this.state.pageSize));
                     else this.updatePerPage(10);
                     this.updateLen(res.data.totalElements);
-                    console.log(this.len);
                     this.updatePage(Number(this.state.page) + 1);
                     this.flag = true;
                 } else {

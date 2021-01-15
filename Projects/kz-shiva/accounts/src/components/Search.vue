@@ -42,7 +42,7 @@
             >
                 <b-form-input
                     id="input-3"
-                    v-model="state.ipGeoCity"
+                    v-model="state.city"
                     placeholder="Enter city"
                 ></b-form-input>
             </b-form-group>
@@ -57,7 +57,7 @@
             >
                 <b-form-input
                     id="input-4"
-                    v-model="state.ipGeoState"
+                    v-model="state.state"
                     placeholder="Enter state"
                 ></b-form-input>
             </b-form-group>
@@ -72,7 +72,7 @@
             >
                 <b-form-input
                     id="input-5"
-                    v-model="state.ipGeoCountry"
+                    v-model="state.country"
                     placeholder="Enter country"
                 ></b-form-input>
             </b-form-group>
@@ -102,7 +102,7 @@
             >
                 <b-form-input
                     id="input-7"
-                    v-model="state.sfdcAccountId"
+                    v-model="state.salesforceId"
                     placeholder="Enter accountId"
                 ></b-form-input>
             </b-form-group>
@@ -167,13 +167,13 @@ export default {
         onReset(event) {
             event.preventDefault();
             // Reset our form values
-            this.state.accountName = "";
+            this.state.name = "";
             this.state.ipDomain = "";
-            this.state.ipGeoCity = "";
-            this.state.ipGeoState = "";
-            this.state.ipGeoCountry = "";
+            this.state.city = "";
+            this.state.state = "";
+            this.state.country = "";
             this.state.type = "";
-            this.state.sfdcAccountId = "";
+            this.state.salesforceId = "";
             this.state.page = "";
             this.state.pageSize = "";
             // Trick to reset/clear native browser form validation state
