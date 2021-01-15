@@ -28,13 +28,13 @@ public class AccountRepositoryImpl {
 		// Creates an probe object based on the filter1.
 		Account account = new Account();
 
-		account.setAccountName(filter.get("name"));
+		account.setName(filter.get("name"));
 		account.setIpDomain(filter.get("domain"));
-		account.setIpGeoCity(filter.get("city"));
-		account.setIpGeoState(filter.get("state"));
-		account.setIpGeoCountry(filter.get("country"));
+		account.setCity(filter.get("city"));
+		account.setState(filter.get("state"));
+		account.setCountry(filter.get("country"));
 		account.setType(filter.get("type"));
-		account.setSfdcAccountId(filter.get("id"));
+		account.setSalesforceId(filter.get("id"));
 
 		return account;
 
@@ -43,13 +43,13 @@ public class AccountRepositoryImpl {
 	public ExampleMatcher rules() {
 
 		ExampleMatcher expMatcher = ExampleMatcher.matchingAll()
-				.withMatcher("accountName", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
 				.withMatcher("ipDomain", ExampleMatcher.GenericPropertyMatchers.contains())
-				.withMatcher("ipGeoCity", ExampleMatcher.GenericPropertyMatchers.contains())
-				.withMatcher("ipGeoState", ExampleMatcher.GenericPropertyMatchers.contains())
-				.withMatcher("ipGeoCountry", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("city", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("state", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("country", ExampleMatcher.GenericPropertyMatchers.contains())
 				.withMatcher("type", ExampleMatcher.GenericPropertyMatchers.contains())
-				.withMatcher("sfdcAccountId", ExampleMatcher.GenericPropertyMatchers.contains());
+				.withMatcher("salesforceId", ExampleMatcher.GenericPropertyMatchers.contains());
 
 		return expMatcher;
 

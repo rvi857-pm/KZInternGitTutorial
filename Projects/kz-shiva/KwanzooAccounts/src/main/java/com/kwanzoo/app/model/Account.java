@@ -1,6 +1,5 @@
 package com.kwanzoo.app.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -9,20 +8,13 @@ public class Account {
 
 	@Id
 	private String id;
-	@Column(name = "name")
-	private String accountName;
-	@Column(name = "ip_domain")
+	private String name;
 	private String ipDomain;
-	@Column(name = "city")
-	private String ipGeoCity;
-	@Column(name = "state")
-	private String ipGeoState;
-	@Column(name = "country")
-	private String ipGeoCountry;
-	@Column(name = "type")
+	private String city;
+	private String state;
+	private String country;
 	private String type;
-	@Column(name = "salesforce_id")
-	private String sfdcAccountId;
+	private String salesforceId;
 
 	public String getId() {
 		return id;
@@ -32,12 +24,12 @@ public class Account {
 		this.id = id;
 	}
 
-	public String getAccountName() {
-		return accountName;
+	public String getName() {
+		return name;
 	}
 
-	public void setAccountName(String accountName) {
-		this.accountName = accountName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getIpDomain() {
@@ -48,28 +40,28 @@ public class Account {
 		this.ipDomain = ipDomain;
 	}
 
-	public String getIpGeoCity() {
-		return ipGeoCity;
+	public String getCity() {
+		return city;
 	}
 
-	public void setIpGeoCity(String ipGeoCity) {
-		this.ipGeoCity = ipGeoCity;
+	public void setCity(String city) {
+		this.city = city;
 	}
 
-	public String getIpGeoState() {
-		return ipGeoState;
+	public String getState() {
+		return state;
 	}
 
-	public void setIpGeoState(String ipGeoState) {
-		this.ipGeoState = ipGeoState;
+	public void setState(String state) {
+		this.state = state;
 	}
 
-	public String getIpGeoCountry() {
-		return ipGeoCountry;
+	public String getCountry() {
+		return country;
 	}
 
-	public void setIpGeoCountry(String ipGeoCountry) {
-		this.ipGeoCountry = ipGeoCountry;
+	public void setCountry(String country) {
+		this.country = country;
 	}
 
 	public String getType() {
@@ -80,12 +72,12 @@ public class Account {
 		this.type = type;
 	}
 
-	public String getSfdcAccountId() {
-		return sfdcAccountId;
+	public String getSalesforceId() {
+		return salesforceId;
 	}
 
-	public void setSfdcAccountId(String sfdcAccountId) {
-		this.sfdcAccountId = sfdcAccountId;
+	public void setSalesforceId(String salesforceId) {
+		this.salesforceId = salesforceId;
 	}
 
 }
