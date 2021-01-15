@@ -1,59 +1,44 @@
 <template>
   <div id="app">
-    <Header :search="search" />
 
-    <Comp :items = items id='t' />
-    
-    <Nav :page = "page"
-        :pageSize="pageSize"
-        :nextPage="nextPage"
-        :prevPage="prevPage"
-        :last="last"
-        :first="first"
-        :fPage="fPage"
-        :lPage="lPage" />
+    <router-view  :items="items"
+                  :str="str"
+                  :last="last"
+                  :request='request'
+                  :first='first'
+                  :lastPage='lastPage'
+                  :page='page'
+                  :pageSize="pageSize"
+                  :nextPage="nextPage"
+                  :prevPage="prevPage"
+                  :fPage="fPage"
+                  :lPage="lPage"
+                  :search="search"
+                  />
+
   </div>
 
 </template>
 
 <script>
-import Comp from './components/comp.vue';
-import Nav from './components/nav.vue'
-import Header from './components/header.vue'
+
 import axios from 'axios'
 
 export default
 {
-  components: { 
-    Comp,
-    Nav,
-    Header
-   },
-  name: 'app',
   data() {
-  return {
-    str: '',
-    last: false,
-    first: false,
-    lastPage: 0,
-    page: 1,
-    items: [
-      {
-        a : 10,
-        b : 20
-      }
-    ]
-  }
+    return{
+      items: [],
+      str: '',
+      last: false,
+      first: false,
+      lastPage: 0,
+      page: 1
+
+    }
   },
   mounted: function() {
-    axios.get("http://localhost:8080/accounts")
-      .then((jsonData) => {
-        this.items = jsonData.data.content
-        this.last = jsonData.data.last
-        this.first = jsonData.data.first
-        this.lastPage = jsonData.data.totalPages
-        this.page = jsonData.data.number + 1
-      })
+      this.request("")
   },
   methods:{
     pageSize(size){
@@ -109,7 +94,4 @@ export default
 </script>
 
 <style scoped>
-#t{
-  margin: 1% 1%;
-}
 </style>
