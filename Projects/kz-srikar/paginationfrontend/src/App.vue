@@ -159,9 +159,9 @@ export default {
             if (this.pageSize == "") return 0;
             return parseInt(this.pageSize);
         },
-        getAllSearch() {
+        getAllSearch(p) {
             let obj = {
-                currentPage: this.currentPage,
+                currentPage: p,
                 pageSize: this.pageSize,
                 name: this.name,
             };
@@ -172,12 +172,12 @@ export default {
         },
         onClickAllSubmit() {
             this.isSearchAll = true;
-            this.getAllSearch();
+            this.getAllSearch(1);
             this.currentPage = 0;
         },
-        getSpecificSearch() {
+        getSpecificSearch(p) {
             let obj = {
-                currentPage: this.currentPage,
+                currentPage: p,
                 pageSize: this.pageSize,
                 accountName: this.accountName,
                 ipDomain: this.ipDomain,
@@ -194,7 +194,7 @@ export default {
         },
         onClickSubmit() {
             this.isSearchAll = false;
-            this.getSpecificSearch();
+            this.getSpecificSearch(1);
             this.currentPage = 0;
         },
     },
@@ -207,16 +207,16 @@ export default {
             if (oldVal == 0) return;
 
             if (this.isSearchAll) {
-                this.getAllSearch();
+                this.getAllSearch(this.currentPage);
             } else {
-                this.getSpecificSearch();
+                this.getSpecificSearch(this.currentPage);
             }
         },
         pageSize: function() {
             if (this.isSearchAll) {
-                this.getAllSearch();
+                this.getAllSearch(this.currentPage);
             } else {
-                this.getSpecificSearch();
+                this.getSpecificSearch(this.currentPage);
             }
         },
     },
