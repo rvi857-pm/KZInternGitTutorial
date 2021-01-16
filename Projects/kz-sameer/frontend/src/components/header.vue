@@ -38,25 +38,31 @@ export default {
         'search'
     ],
     methods: {
+
         searchParser(str){
-            let parsedStr = ""
-            for (let k=0; k < 8; k++){
-                let indexOfFilter = str.indexOf(this.searchList[k] + ":")
-                if(indexOfFilter > -1){
-                indexOfFilter = indexOfFilter + this.searchList[k].length + 2
+            if(this.searchBy === 'any'){
+                let parsedStr = ""
+                for (let k=0; k < 8; k++){
+                    let indexOfFilter = str.indexOf(this.searchList[k] + ":")
+                    if(indexOfFilter > -1){
+                        indexOfFilter = indexOfFilter + this.searchList[k].length + 2
+                    }
+                    else{
+                        continue
+                    }
+                    let filter =str.slice(indexOfFilter, str.indexOf('"', indexOfFilter)) 
+                    str = str.replace(filter, "").replace(this.searchList[k] + ':""', "")
+                    parsedStr = parsedStr + this.searchList[k] + "=" + filter + "&"
                 }
-                else{
-                continue
+                str = str.trim()
+                if(str !== ''){
+                    parsedStr = "any=" + str + "&" + parsedStr
                 }
-                let filter =str.slice(indexOfFilter, str.indexOf('"', indexOfFilter)) 
-                str = str.replace(filter, "").replace(this.searchList[k] + ':""', "")
-                parsedStr = parsedStr + this.searchList[k] + "=" + filter + "&"
+                this.search(parsedStr)
             }
-            str = str.trim()
-            if(str !== ''){
-                parsedStr = "any=" + str + "&" + parsedStr
+            else{
+                this.search(this.searchBy + "=" + str)
             }
-            this.search(parsedStr)
         }
     }
 }

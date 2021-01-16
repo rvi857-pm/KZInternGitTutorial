@@ -1,10 +1,13 @@
 package com.kwanzoo.project.service;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -54,13 +57,24 @@ public class ProjectService {
 	        Pageable paging = PageRequest.of(pageNo, pageSize);
 	        
 	    	if(any != null) {
-	    		account.setALL(any);
+	    		Account newAccount = new Account();
+	    		newAccount.setALL(any);
 
-	    		ExampleMatcher matcher =
-	    				ExampleMatcher.matchingAny()
-	    				.withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+	    		ExampleMatcher matcherAny = ExampleMatcher.matchingAny().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+	    		ExampleMatcher matcherAll = ExampleMatcher.matchingAll().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
 	    		
-	    		return repository.findAll(Example.of(account, matcher), paging);
+	    		
+	    		List<Account> accountAll = repository.findAll(Example.of(account, matcherAll));
+	    		List<Account> accountAny = repository.findAll(Example.of(newAccount, matcherAny));
+	    		
+	    		accountAll.retainAll(accountAny);
+	    		
+	    		int start = (int) paging.getOffset();
+	    		int end = (start + paging.getPageSize()) > accountAll.size() ? accountAll.size() : (start + paging.getPageSize());
+	    		
+	    		Page<Account> pagedResult  = new PageImpl<Account>(accountAll.subList(start, end), paging, accountAll.size());
+	    		
+	    		return pagedResult;
 	    	}
 	    	
 	    	ExampleMatcher matcher = ExampleMatcher.matchingAll().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
