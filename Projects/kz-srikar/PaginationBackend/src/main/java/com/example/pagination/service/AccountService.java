@@ -28,25 +28,24 @@ public class AccountService {
 		return accountRepository.findAll();
 	}
 
-	@Cacheable(value = "universalSearchAccounts", key = "{#page,#page_size,#name}")
-	public Page<Account> getUniversalSearchResults(int page, int page_size, String name) {
+	@Cacheable(value = "universalSearchAccounts", key = "{#page,#pageSize,#q}")
+	public Page<Account> getUniversalSearchResults(int page, int pageSize, String q) {
 		Account account = new Account();
-		account.setAll(name);
-		Pageable pageableInstance = PageRequest.of(page - 1, page_size);
+		account.setAll(q);
+		Pageable pageableInstance = PageRequest.of(page - 1, pageSize);
 		Example<Account> universalSearchExample = Example.of(account, generateUniversalSearchMatcher());
 		return accountRepository.findAll(universalSearchExample, pageableInstance);
 	}
 
-	public Page<Account> getCompoundSearchResults(int page, int page_size, Account account) {
-		Pageable pageableInstance = PageRequest.of(page - 1, page_size);
+	public Page<Account> getCompoundSearchResults(int page, int pageSize, Account account) {
+		Pageable pageableInstance = PageRequest.of(page - 1, pageSize);
 		Example<Account> compoundSearchExample = Example.of(account, generateCompoundSearchMatcher());
 		return accountRepository.findAll(compoundSearchExample, pageableInstance);
 	}
 
-	public Page<Account> getMultiSearchResults(int page, int page_size, Account accountCompound, String name) {
-		System.out.println("in multi search " + page + " " + page_size);
+	public Page<Account> getMultiSearchResults(int page, int pageSize, Account accountCompound, String q) {
 		Account accountUniversal = new Account();
-		accountUniversal.setAll(name);
+		accountUniversal.setAll(q);
 		Example<Account> universalSearchExample = Example.of(accountUniversal, generateUniversalSearchMatcher());
 		List<Account> universalAccountList = accountRepository.findAll(universalSearchExample);
 
@@ -56,7 +55,7 @@ public class AccountService {
 		Set<Account> multiSearchSet = universalAccountList.stream().distinct().filter(compoundAccountList::contains)
 				.collect(Collectors.toSet());
 		List<Account> multiSearchList = new ArrayList<Account>(multiSearchSet);
-		Pageable pageableInstance = PageRequest.of(page - 1, page_size);
+		Pageable pageableInstance = PageRequest.of(page - 1, pageSize);
 		return pageUtility(pageableInstance, multiSearchList);
 	}
 
@@ -75,25 +74,25 @@ public class AccountService {
 
 	private ExampleMatcher generateCompoundSearchMatcher() {
 		ExampleMatcher compoundSearchMatcher = ExampleMatcher.matchingAll()
-				.withMatcher("account_name", ExampleMatcher.GenericPropertyMatchers.contains())
-				.withMatcher("ip_domain", ExampleMatcher.GenericPropertyMatchers.contains())
-				.withMatcher("ip_geo_city", ExampleMatcher.GenericPropertyMatchers.contains())
-				.withMatcher("ip_geo_state", ExampleMatcher.GenericPropertyMatchers.contains())
-				.withMatcher("ip_geo_country", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("ipDomain", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("city", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("state", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("country", ExampleMatcher.GenericPropertyMatchers.contains())
 				.withMatcher("type", ExampleMatcher.GenericPropertyMatchers.contains())
-				.withMatcher("sfdc_account_id", ExampleMatcher.GenericPropertyMatchers.contains());
+				.withMatcher("salesforceId", ExampleMatcher.GenericPropertyMatchers.contains());
 		return compoundSearchMatcher;
 	}
 
 	private ExampleMatcher generateUniversalSearchMatcher() {
 		ExampleMatcher universalSearchMatcher = ExampleMatcher.matchingAny()
-				.withMatcher("account_name", ExampleMatcher.GenericPropertyMatchers.contains())
-				.withMatcher("ip_domain", ExampleMatcher.GenericPropertyMatchers.contains())
-				.withMatcher("ip_geo_city", ExampleMatcher.GenericPropertyMatchers.contains())
-				.withMatcher("ip_geo_state", ExampleMatcher.GenericPropertyMatchers.contains())
-				.withMatcher("ip_geo_country", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("ipDomain", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("city", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("state", ExampleMatcher.GenericPropertyMatchers.contains())
+				.withMatcher("country", ExampleMatcher.GenericPropertyMatchers.contains())
 				.withMatcher("type", ExampleMatcher.GenericPropertyMatchers.contains())
-				.withMatcher("sfdc_account_id", ExampleMatcher.GenericPropertyMatchers.contains());
+				.withMatcher("salesforceId", ExampleMatcher.GenericPropertyMatchers.contains());
 		return universalSearchMatcher;
 	}
 

@@ -17,24 +17,24 @@ public class MainController {
 
 	@GetMapping(path = "/accounts")
 	public Object search(@ModelAttribute Account account, @RequestParam(required = false) Integer page,
-			@RequestParam(required = false) Integer page_size, @RequestParam(required = false) String name) {
+			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) String q) {
 
 		if (page == null) {
 			return accountService.getAllResults();
 		}
 
-		if (page_size == null) {
-			page_size = 10;
+		if (pageSize == null) {
+			pageSize = 10;
 		}
 
-		if (name != null) {
+		if (q != null) {
 			if (account.isNull()) {
-				return accountService.getUniversalSearchResults(page, page_size, name);
+				return accountService.getUniversalSearchResults(page, pageSize, q);
 			}
-			return accountService.getMultiSearchResults(page, page_size, account, name);
+			return accountService.getMultiSearchResults(page, pageSize, account, q);
 		}
 
-		return accountService.getCompoundSearchResults(page, page_size, account);
+		return accountService.getCompoundSearchResults(page, pageSize, account);
 	}
 
 }

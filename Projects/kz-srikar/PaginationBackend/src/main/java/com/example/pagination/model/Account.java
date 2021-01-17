@@ -1,6 +1,5 @@
 package com.example.pagination.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -8,59 +7,52 @@ import javax.persistence.Id;
 public class Account {
 	@Id
 	private String id;
-	@Column(name = "name")
-	private String account_name;
-	@Column(name = "ip_domain")
-	private String ip_domain;
-	@Column(name = "city")
-	private String ip_geo_city;
-	@Column(name = "state")
-	private String ip_geo_state;
-	@Column(name = "country")
-	private String ip_geo_country;
-	@Column(name = "type")
+	private String name;
+	private String ipDomain;
+	private String city;
+	private String state;
+	private String country;
 	private String type;
-	@Column(name = "salesforce_id")
-	private String sfdc_account_id;
+	private String salesforceId;
 
-	public String getAccount_name() {
-		return account_name;
+	public String getname() {
+		return name;
 	}
 
-	public void setAccount_name(String account_name) {
-		this.account_name = account_name;
+	public void setname(String name) {
+		this.name = name;
 	}
 
-	public String getIp_domain() {
-		return ip_domain;
+	public String getipDomain() {
+		return ipDomain;
 	}
 
-	public void setIp_domain(String ip_domain) {
-		this.ip_domain = ip_domain;
+	public void setipDomain(String ipDomain) {
+		this.ipDomain = ipDomain;
 	}
 
-	public String getIp_geo_city() {
-		return ip_geo_city;
+	public String getcity() {
+		return city;
 	}
 
-	public void setIp_geo_city(String ip_geo_city) {
-		this.ip_geo_city = ip_geo_city;
+	public void setcity(String city) {
+		this.city = city;
 	}
 
-	public String getIp_geo_state() {
-		return ip_geo_state;
+	public String getstate() {
+		return state;
 	}
 
-	public void setIp_geo_state(String ip_geo_state) {
-		this.ip_geo_state = ip_geo_state;
+	public void setstate(String state) {
+		this.state = state;
 	}
 
-	public String getIp_geo_country() {
-		return ip_geo_country;
+	public String getcountry() {
+		return country;
 	}
 
-	public void setIp_geo_country(String ip_geo_country) {
-		this.ip_geo_country = ip_geo_country;
+	public void setcountry(String country) {
+		this.country = country;
 	}
 
 	public String getType() {
@@ -71,27 +63,27 @@ public class Account {
 		this.type = type;
 	}
 
-	public String getSfdc_account_id() {
-		return sfdc_account_id;
+	public String getsalesforceId() {
+		return salesforceId;
 	}
 
-	public void setSfdc_account_id(String sfdc_account_id) {
-		this.sfdc_account_id = sfdc_account_id;
+	public void setsalesforceId(String salesforceId) {
+		this.salesforceId = salesforceId;
 	}
 
 	public void setAll(String value) {
-		this.account_name = value;
-		this.ip_domain = value;
-		this.ip_geo_city = value;
-		this.ip_geo_state = value;
-		this.ip_geo_country = value;
+		this.name = value;
+		this.ipDomain = value;
+		this.city = value;
+		this.state = value;
+		this.country = value;
 		this.type = value;
-		this.sfdc_account_id = value;
+		this.salesforceId = value;
 	}
 
 	public boolean isNull() {
-		if (this.account_name == null && this.ip_domain == null && this.ip_geo_city == null && this.ip_geo_state == null
-				&& this.ip_geo_country == null && this.type == null && this.sfdc_account_id == null) {
+		if (this.name == null && this.ipDomain == null && this.city == null && this.state == null
+				&& this.country == null && this.type == null && this.salesforceId == null) {
 			return true;
 		}
 		return false;
