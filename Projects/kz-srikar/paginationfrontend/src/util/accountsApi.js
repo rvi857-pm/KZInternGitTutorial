@@ -11,23 +11,26 @@ const accountsApi = {
         }).catch(error => console.log(error));
     },
 
-    getSpecificSearchAccounts(obj) {
+    getSearchAccounts(obj) {
         let reqParams = `page=${obj.currentPage}&page_size=${obj.pageSize}`;
-        if (obj.accountName != "")
-            reqParams = reqParams + `&account_name=${obj.accountName}`;
-        if (obj.ipDomain != "")
-            reqParams = reqParams + `&ip_domain=${obj.ipDomain}`;
-        if (obj.ipGeoCity != "")
-            reqParams = reqParams + `&ip_geo_city=${obj.ipGeoCity}`;
-        if (obj.ipGeoState != "")
-            reqParams = reqParams + `&ip_geo_state=${obj.ipGeoState}`;
-        if (obj.ipGeoCountry != "")
-            reqParams = reqParams + `&ip_geo_country=${obj.ipGeoCountry}`;
+        if(obj.q != "")
+            reqParams = reqParams + `&name=${obj.q}`;
+        if (obj.name != "")
+            reqParams = reqParams + `&account_name=${obj.name}`;
+        if (obj.ip_domain != "")
+            reqParams = reqParams + `&ip_domain=${obj.ip_domain}`;
+        if (obj.city != "")
+            reqParams = reqParams + `&ip_geo_city=${obj.city}`;
+        if (obj.state != "")
+            reqParams = reqParams + `&ip_geo_state=${obj.state}`;
+        if (obj.country != "")
+            reqParams = reqParams + `&ip_geo_country=${obj.country}`;
         if (obj.type != "")
             reqParams = reqParams + `&type=${obj.type}`;
-        if (obj.sfdcAccountId != "")
-            reqParams = reqParams + `&sfdc_account_id=${obj.sfdcAccountId}`;
+        if (obj.salesforce_id != "")
+            reqParams = reqParams + `&sfdc_account_id=${obj.salesforce_id}`;
 
+        console.log(reqParams);
         return fetch(`${api.serverAddress}accounts?${reqParams}`, {
             method: 'get',
         }).then(response => {
@@ -36,17 +39,6 @@ const accountsApi = {
             return jsonResponse;
         }).catch(error => console.log(error));
     },
-
-    getAllSearchAccounts(obj) {
-        let reqParams = `page=${obj.currentPage}&page_size=${obj.pageSize}&name=${obj.name}`;
-        return fetch(`${api.serverAddress}accounts?${reqParams}`, {
-            method: 'get',
-        }).then(response => {
-            return response.json();
-        }).then(jsonResponse => {
-            return jsonResponse;
-        }).catch(error => console.log(error));
-    }
 };
 
 export default accountsApi;

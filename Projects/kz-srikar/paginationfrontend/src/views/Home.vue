@@ -1,99 +1,36 @@
 <template>
     <div id="home">
-        <div>
-            <b-navbar toggleable="lg" type="dark" variant="info">
-                <b-navbar-brand href="#"
-                    >@kz-srikar</b-navbar-brand
-                >
-            </b-navbar>
+        <div class="searchBox">
+            <b-form-input
+                class="p-10"
+                v-model="searchText"
+                placeholder="Enter search pattern"
+            ></b-form-input>
+            <b-button @click="onClickAllSubmit" size="sm">Search</b-button>
         </div>
-
-        <b-col class="btn" sm="2">
-            <b-pagination
-                v-model="currentPage"
-                :total-rows="totalResults"
-                :per-page="pageSize"
-                aria-controls="my-table"
-            ></b-pagination>
+        <p class="p-2">
+            Query Example ->
+            <mark>
+                name:"xyz" ip_domain:"xyz" city:"xyz" state:"xyz" country:"xyz"
+                type:"xyz" salesforce_id:"xyz" xyz
+            </mark>
+        </p>
+        <b-col sm="1">
+            <label>Page No :</label>
+            <b-form-input
+                v-model="pageSize"
+                min="1"
+                type="number"
+            ></b-form-input>
         </b-col>
-        <b-container fluid>
-            <b-row>
-                <b-col class="pb-1">
-                    <label class="lab pr-5">Page Size</label>
-                    <input
-                        v-model="pageSize"
-                        type="number"
-                        :min="1"
-                        inline
-                        controls
-                    />
-                </b-col>
-                <b-col class="pb-2">
-                    <input class="in" v-model="name" placeholder="Search All" />
-                    <b-button @click="onClickAllSubmit" size="sm"
-                        >Search All</b-button
-                    >
-                </b-col>
-            </b-row>
-            <b-row>
-                <b-col class="pb-2">
-                    <label class="lab">Account Name</label><br />
-                    <input
-                        class="in"
-                        v-model="accountName"
-                        placeholder="Account Name"
-                    />
-                </b-col>
-                <b-col class="pb-2">
-                    <label class="lab">Ip Domain</label><br />
-                    <input
-                        class="in"
-                        v-model="ipDomain"
-                        placeholder="Ip Domain"
-                    />
-                </b-col>
-                <b-col class="pb-2">
-                    <label class="lab">Ip Geo City</label><br />
-                    <input
-                        class="in"
-                        v-model="ipGeoCity"
-                        placeholder="Ip Geo City"
-                    />
-                </b-col>
-                <b-col class="pb-2">
-                    <label class="lab">Ip Geo State</label><br />
-                    <input
-                        class="in"
-                        v-model="ipGeoState"
-                        placeholder="Ip Geo State"
-                    />
-                </b-col>
-                <b-col class="pb-2">
-                    <label class="lab">Ip Geo Country</label><br />
-                    <input
-                        class="in"
-                        v-model="ipGeoCountry"
-                        placeholder="Ip Geo Country"
-                    />
-                </b-col>
-                <b-col class="pb-2">
-                    <label class="lab">Type</label><br />
-                    <input class="in" v-model="type" placeholder="Type" />
-                </b-col>
-                <b-col class="pb-2">
-                    <label class="lab">Sfdc Account Id</label><br />
-                    <input
-                        class="in"
-                        v-model="sfdcAccountId"
-                        placeholder="Sfdc Account Id"
-                    />
-                </b-col>
-                <b-col class="pb-2 pt-4">
-                    <b-button @click="onClickSubmit" size="sm">Search</b-button>
-                </b-col>
-            </b-row>
-            <br />
-        </b-container>
+        <b-pagination
+            v-model="currentPage"
+            :total-rows="totalResults"
+            :per-page="pageSize"
+            aria-controls="my-table"
+            align="center"
+        ></b-pagination>
+
         <Page :pageSize="getPageSize()" :results="results" />
     </div>
 </template>
@@ -109,65 +46,83 @@ export default {
     },
     data() {
         return {
-            isSearchAll: true,
+            searchText: "",
             totalResults: 0,
             results: [],
             currentPage: 1,
             pageSize: 10,
-            name: "",
-            accountName: "",
-            ipDomain: "",
-            ipGeoCity: "",
-            ipGeoState: "",
-            ipGeoCountry: "",
-            type: "",
-            sfdcAccountId: "",
+            searchParam: {
+                q: "",
+                name: "",
+                ip_domain: "",
+                city: "",
+                state: "",
+                country: "",
+                type: "",
+                salesforce_id: "",
+            },
         };
     },
     methods: {
-        togglePagination() {
-            this.isPaginated = !this.isPaginated;
+        parseSearchText() {
+            this.searchParam = {
+                q: "",
+                name: "",
+                ip_domain: "",
+                city: "",
+                state: "",
+                country: "",
+                type: "",
+                salesforce_id: "",
+            };
+            const parseText = this.searchText;
+            let presentKey = "";
+            let presentValue = "";
+            let inValue = false;
+            let inKey = true;
+            for (let i = 0; i < parseText.length; i++) {
+                if (parseText[i] == ":") {
+                    inKey = false;
+                    continue;
+                }
+                if (parseText[i] == '"') {
+                    inValue = !inValue;
+                    continue;
+                }
+                if (inKey) presentKey += parseText[i];
+                if (parseText[i] == " ") {
+                    if (!inValue) {
+                        if (this.searchParam[presentKey] == "")
+                            this.searchParam[presentKey] = presentValue;
+                        presentKey = "";
+                        presentValue = "";
+                        inKey = true;
+                    }
+                }
+                if (inValue) presentValue += parseText[i];
+            }
+            if (presentValue == "") this.searchParam.q = presentKey;
+            else this.searchParam[presentKey] = presentValue;
         },
         getPageSize() {
             if (this.pageSize == "") return 0;
             return parseInt(this.pageSize);
         },
-        getAllSearch(p) {
+        getSearchResults(p) {
             let obj = {
                 currentPage: p,
                 pageSize: this.pageSize,
-                name: this.name,
+                ...this.searchParam,
             };
-            accountApi.getAllSearchAccounts(obj).then((response) => {
+            accountApi.getSearchAccounts(obj).then((response) => {
                 this.totalResults = response.totalElements;
                 this.results = response.content;
+                console.log(this.results);
             });
         },
         onClickAllSubmit() {
-            this.isSearchAll = true;
-            this.getAllSearch(1);
-            this.currentPage = 0;
-        },
-        getSpecificSearch(p) {
-            let obj = {
-                currentPage: p,
-                pageSize: this.pageSize,
-                accountName: this.accountName,
-                ipDomain: this.ipDomain,
-                ipGeoCity: this.ipGeoCity,
-                ipGeoState: this.ipGeoState,
-                ipGeoCountry: this.ipGeoCountry,
-                type: this.type,
-                sfdcAccountId: this.sfdcAccountId,
-            };
-            accountApi.getSpecificSearchAccounts(obj).then((response) => {
-                this.totalResults = response.totalElements;
-                this.results = response.content;
-            });
-        },
-        onClickSubmit() {
-            this.isSearchAll = false;
-            this.getSpecificSearch(1);
+            this.parseSearchText();
+            this.getSearchResults(1);
             this.currentPage = 0;
         },
     },
@@ -178,19 +133,11 @@ export default {
                 return;
             }
             if (oldVal == 0) return;
-
-            if (this.isSearchAll) {
-                this.getAllSearch(this.currentPage);
-            } else {
-                this.getSpecificSearch(this.currentPage);
-            }
+            console.log("in change of current page");
+            this.getSearchResults(this.currentPage);
         },
         pageSize: function() {
-            if (this.isSearchAll) {
-                this.getAllSearch(this.currentPage);
-            } else {
-                this.getSpecificSearch(this.currentPage);
-            }
+            this.getSearchResults(this.currentPage);
         },
     },
     mounted: function() {
@@ -203,24 +150,14 @@ export default {
 </script>
 
 <style>
-#app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-}
 .btn {
     padding: 20px;
     margin: 20px;
 }
-.lab {
-    text-align: center;
-    margin-top: 10px;
-    color: rgb(190, 58, 102);
-}
-input {
-    padding: 5px;
-    margin-right: 10px;
+.searchBox {
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+    align-items: center;
 }
 </style>

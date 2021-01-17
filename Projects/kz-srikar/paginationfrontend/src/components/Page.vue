@@ -1,5 +1,5 @@
 <template>
-    <div class="overflow-auto">
+    <div class="table">
         <b-table
             id="my-table"
             :items="results"
@@ -13,10 +13,16 @@
 export default {
     props: {
         pageSize: Number,
-        results: Array,
+        results: Array
     },
     data() {
         return {};
     },
 };
 </script>
+
+<style scoped>
+.table {
+    margin: 10px;
+}
+</style>

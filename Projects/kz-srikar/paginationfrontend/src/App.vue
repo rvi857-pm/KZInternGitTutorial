@@ -1,5 +1,12 @@
 <template>
     <div id="app">
+         <div>
+            <b-navbar toggleable="lg" type="dark" variant="info">
+                <b-navbar-brand href="#"
+                    >@kz-srikar</b-navbar-brand
+                >
+            </b-navbar>
+        </div>
         <Home />
     </div>
 </template>
