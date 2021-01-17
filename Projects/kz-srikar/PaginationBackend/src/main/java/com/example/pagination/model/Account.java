@@ -88,4 +88,12 @@ public class Account {
 		this.type = value;
 		this.sfdc_account_id = value;
 	}
+
+	public boolean isNull() {
+		if (this.account_name == null && this.ip_domain == null && this.ip_geo_city == null && this.ip_geo_state == null
+				&& this.ip_geo_country == null && this.type == null && this.sfdc_account_id == null) {
+			return true;
+		}
+		return false;
+	}
 }

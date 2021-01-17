@@ -28,7 +28,10 @@ public class MainController {
 		}
 
 		if (name != null) {
-			return accountService.getUniversalSearchResults(page, page_size, name);
+			if (account.isNull()) {
+				return accountService.getUniversalSearchResults(page, page_size, name);
+			}
+			return accountService.getMultiSearchResults(page, page_size, account, name);
 		}
 
 		return accountService.getCompoundSearchResults(page, page_size, account);
