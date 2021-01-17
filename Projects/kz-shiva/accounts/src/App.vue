@@ -10,7 +10,12 @@
 				:state="state"
 				:updateItems="updateItems"
 			/>
-			<Search v-else :state="state" :updatePage="updatePage" />
+			<Search
+				v-else
+				:state="state"
+				:updatePage="updatePage"
+				:parse="parse"
+			/>
 		</div>
 	</div>
 </template>
@@ -57,12 +62,51 @@ export default {
 		};
 	},
 	methods: {
-		updatePage(val) {
-			this.page = val;
+		updatePage(value) {
+			this.page = value;
 		},
 
-		updateItems(val) {
-			this.items = val;
+		updateItems(value) {
+			this.items = value;
+		},
+
+		parse(value) {
+			value += " ";
+			let stack = [];
+			let temp = "";
+			let flag = false;
+			let seperator = false;
+			for (let c of value) {
+				if (c == " ") {
+					if (flag) temp += c;
+					else {
+						if (temp) {
+							if (seperator) {
+								let key = stack.pop();
+								this.state = { ...this.state, [key]: temp };
+								seperator = false;
+							} else stack.push(temp);
+							temp = "";
+						}
+					}
+				} else if (c == '"') {
+					flag = !flag;
+					if (!flag) {
+						if (seperator) {
+							let key = stack.pop();
+							this.state = { ...this.state, [key]: temp };
+							seperator = false;
+						} else stack.push(temp);
+						temp = "";
+					}
+				} else if (c == ":") {
+					seperator = true;
+					if (temp) {
+						stack.push(temp);
+						temp = "";
+					}
+				} else temp += c;
+			}	
 		},
 	},
 };
