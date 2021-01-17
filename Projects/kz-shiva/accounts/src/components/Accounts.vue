@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<Search :state="state" :parse="parse" :update="updateComponent"/>
 		<b-pagination
 			id="page"
 			v-if="flag"
@@ -15,13 +16,19 @@
 
 <script>
 import axios from "axios";
+import Search from "./Search";
 
 export default {
+	components: {
+		Search,
+	},
+
 	props: {
 		fields: Array,
 		items: Array,
 		state: Object,
 		updateItems: Function,
+		parse: Function,
 	},
 
 	data() {
@@ -144,33 +151,34 @@ export default {
 				: "";
 			return url;
 		},
+		updateComponent() {
+			let queryUrl = this.getUrl();
+			let url = "http://localhost:8080/accounts";
+			url += queryUrl ? "?" + queryUrl : "";
+
+			axios
+				.get(url)
+				.then((res) => {
+					if (this.state.page) {
+						this.updateItems(res.data.content);
+						if (this.state.pageSize)
+							this.updatePerPage(Number(this.state.pageSize));
+						else this.updatePerPage(10);
+						this.updateLen(res.data.totalElements);
+						this.updatePage(Number(this.state.page) + 1);
+						this.flag = true;
+					} else {
+						this.updateItems(res.data);
+						this.flag = false;
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		},
 	},
 
-	mounted() {
-		let queryUrl = this.getUrl();
-		let url = "http://localhost:8080/accounts";
-		url += queryUrl ? "?" + queryUrl : "";
-
-		axios
-			.get(url)
-			.then((res) => {
-				if (this.state.page) {
-					this.updateItems(res.data.content);
-					if (this.state.pageSize)
-						this.updatePerPage(Number(this.state.pageSize));
-					else this.updatePerPage(10);
-					this.updateLen(res.data.totalElements);
-					this.updatePage(Number(this.state.page) + 1);
-					this.flag = true;
-				} else {
-					this.updateItems(res.data);
-					this.flag = false;
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	},
+	mounted() {},
 };
 </script>
 

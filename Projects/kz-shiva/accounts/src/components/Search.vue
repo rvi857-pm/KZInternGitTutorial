@@ -29,8 +29,8 @@
 export default {
 	props: {
 		state: Object,
-		updatePage: Function,
-		parse: Function
+		parse: Function,
+		update: Function
 	},
 
 	data() {
@@ -41,8 +41,15 @@ export default {
 	},
 	methods: {
 		onSubmit() {
-			this.parse(this.value);
-			this.updatePage(1)
+			let myPromise = new Promise((resolve, reject) => {
+				let ret = this.parse(this.value)
+				if(ret) resolve();
+				else reject();
+			})
+			myPromise.then(()=>{
+				this.update();
+			})
+			.catch()
 		},
 	},
 };

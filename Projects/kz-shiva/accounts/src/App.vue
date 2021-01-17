@@ -1,42 +1,28 @@
 <template>
 	<div id="app">
-		<Header :update="updatePage" />
-		<div>
-			<Home v-if="page == 0" />
-			<Accounts
-				v-else-if="page == 1"
-				:items="items"
-				:fields="fields"
-				:state="state"
-				:updateItems="updateItems"
-			/>
-			<Search
-				v-else
-				:state="state"
-				:updatePage="updatePage"
-				:parse="parse"
-			/>
-		</div>
+		<Header/>
+		<Accounts
+			:items="items"
+			:fields="fields"
+			:state="state"
+			:updateItems="updateItems"
+			:parse="parse"
+		/>
 	</div>
 </template>
 
 <script>
 import Accounts from "./components/Accounts";
 import Header from "./components/Header";
-import Home from "./components/Home";
-import Search from "./components/Search";
 
 export default {
 	name: "App",
 	components: {
-		Home,
 		Header,
-		Accounts,
-		Search,
+		Accounts
 	},
 	data() {
 		return {
-			page: 0,
 			fields: [
 				"id",
 				"name",
@@ -63,10 +49,6 @@ export default {
 		};
 	},
 	methods: {
-		updatePage(value) {
-			this.page = value;
-		},
-
 		updateItems(value) {
 			this.items = value;
 		},
@@ -110,10 +92,12 @@ export default {
 			}
 			let search = "";
 			while (stack.length) {
-				search = search.length ? stack.pop() + " " + search : stack.pop();
+				search = search.length
+					? stack.pop() + " " + search
+					: stack.pop();
 			}
-			this.state = { ...this.state, "search": search };
-			console.log(this.state)
+			this.state = { ...this.state, search: search };
+			return true;
 		},
 	},
 };
