@@ -1,18 +1,33 @@
 <template>
   <div id="app">
-    <b-form-input
-      id="input"
-      align="center"
-      placeholder="search"
-      v-model="didSearch"
-    ></b-form-input>
+    <b-form-row>
+      <label id="label">Account name</label><br />
+      <input id="input" v-model="account.name" />
+      <label id="label"> Ip domain</label><br />
+      <input id="input" v-model="account.domain" />
+      <label id="label">City</label><br />
+      <input id="input" v-model="account.city" />
+    </b-form-row>
     <br />
+    <b-form-row>
+      <label id="label">State </label><br />
+      <input id="input" v-model="account.state" />
+      <label id="label"> Country</label><br />
+      <input id="input" v-model="account.country" />
+      <label id="label">SFDC ID</label><br />
+      <input id="input" v-model="account.sfdc" />
+      <label id="label">Type</label><br />
+      <input id="input" v-model="account.type" />
+    </b-form-row>
+
+    <br />
+    <b-form-row>
+      <label id="label">Page Size </label><br />
+      <input id="input" v-model="account.page_size" />
+      <label id="label"> Search All</label><br />
+      <input id="input" v-model="account.q" />
+    </b-form-row>
     <label> page size </label>
-    <b-form-input
-      id="input"
-      placeholder="page size"
-      v-model="account.page_size"
-    ></b-form-input>
 
     <Account v-bind:account="account" />
   </div>
@@ -30,23 +45,25 @@ export default {
       msg: "hey",
       didSearch: "",
       account: {
-        account_name: "",
-        ip_geo_city: "",
-        ip_geo_state: "",
-        ip_geo_country: "",
+        name: "",
+        domain: "",
+        city: "",
+        state: "",
+        country: "",
+        type: "",
+        sfdc: "",
         page_no: "1",
         page_size: "10",
+        q: "",
       },
     };
   },
   watch: {
-    didSearch: {
+    account: {
       handler() {
-        this.account.account_name = this.didSearch;
-        this.account.ip_geo_city = this.didSearch;
-        this.account.ip_geo_state = this.didSearch;
-        this.account.ip_geo_country = this.didSearch;
+        this.page_no = "1";
       },
+      deep: true,
     },
   },
 };
@@ -54,7 +71,12 @@ export default {
 
 <style>
 #input {
-  width: 20%;
-  height: 10%;
+  width: 19%;
+  height: 30%;
+}
+#label {
+  padding-left: 1%;
+  font-size: 150%;
+  color: green;
 }
 </style>

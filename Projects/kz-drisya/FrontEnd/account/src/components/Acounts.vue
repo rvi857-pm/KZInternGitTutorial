@@ -1,12 +1,7 @@
 <template>
   <div id="table">
     <div class="overflow-auto">
-      <b-pagination
-        v-model="account.page_no"
-        :per-page="account.page_size"
-        :total-rows="1400"
-        align="center"
-      ></b-pagination>
+      <h1>Account</h1>
       <b-table
         hover
         small
@@ -14,6 +9,13 @@
         :per-page="account.page_size"
         responsive
       ></b-table>
+
+      <b-pagination
+        v-model="account.page_no"
+        :per-page="account.page_size"
+        :total-rows="1400"
+        align="center"
+      ></b-pagination>
     </div>
   </div>
 </template>
@@ -28,33 +30,35 @@ export default {
     };
   },
   methods: {
-    getRequest() {
-      let requestParam = `?page=${this.account.page_no}&page_size=${this.account.page_size}`;
-      if (this.account.account_name !== "")
-        requestParam += `&name=${this.account.account_name}`;
-      if (this.account.ip_geo_city !== "")
-        requestParam += `&city=${this.account.ip_geo_city}`;
-      if (this.account.ip_geo_state !== "")
-        requestParam += `&state=${this.account.ip_geo_state}`;
-      if (this.account.ip_geo_country !== "")
-        requestParam += `&country=${this.account.ip_geo_country}`;
-
+    getUrl() {
+      let requestParam = `http://localhost:8080/accounts`;
+      requestParam += `?page=${this.account.page_no}&page_size=${this.account.page_size}`;
+      if (this.account.name !== "")
+        requestParam += `&name=${this.account.name}`;
+      if (this.account.domain !== "")
+        requestParam += `&domain=${this.account.domain}`;
+      if (this.account.city !== "")
+        requestParam += `&city=${this.account.city}`;
+      if (this.account.state !== "")
+        requestParam += `&state=${this.account.state}`;
+      if (this.account.country !== "")
+        requestParam += `&country=${this.account.country}`;
+      if (this.account.sfdc !== "")
+        requestParam += `&sfdc=${this.account.sfdc}`;
+      if (this.account.type !== "")
+        requestParam += `&type=${this.account.type}`;
+      if (this.account.q !== "") requestParam += `&q=${this.account.q}`;
       console.log(this.account);
       console.log(requestParam);
-
-      fetch(`http://localhost:8080/accounts${requestParam}`, {
-        method: "get",
-      })
+      return requestParam;
+    },
+    callApi() {
+      let url = this.getUrl();
+      fetch(url, { method: "get" })
         .then((response) => {
-          let v = response.json();
-          return v;
+          return response.json();
         })
         .then((jsonResponse) => {
-          for (let x in jsonResponse) {
-            delete jsonResponse[x]["id"];
-            console.log(jsonResponse[x]);
-          }
-
           this.friends = jsonResponse;
         });
     },
@@ -62,27 +66,14 @@ export default {
   watch: {
     account: {
       handler() {
-        this.getRequest();
+        this.callApi();
       },
       deep: true,
       immediate: true,
     },
   },
   mounted: function () {
-    fetch(`http://localhost:8080/accounts?page=1&page_size=10`, {
-      method: "get",
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((jsonResponse) => {
-        for (let x in jsonResponse) {
-          delete jsonResponse[x]["id"];
-          console.log(jsonResponse[x]);
-        }
-
-        this.friends = jsonResponse;
-      });
+    this.callApi();
   },
 };
 </script>
