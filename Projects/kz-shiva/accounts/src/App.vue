@@ -49,6 +49,7 @@ export default {
 			],
 			items: [],
 			state: {
+				search: "",
 				name: "",
 				ipDomain: "",
 				city: "",
@@ -106,7 +107,13 @@ export default {
 						temp = "";
 					}
 				} else temp += c;
-			}	
+			}
+			let search = "";
+			while (stack.length) {
+				search = search.length ? stack.pop() + " " + search : stack.pop();
+			}
+			this.state = { ...this.state, "search": search };
+			console.log(this.state)
 		},
 	},
 };

@@ -67,6 +67,13 @@ export default {
 		getUrl() {
 			let url = "";
 			url += url
+				? this.state.search
+					? "&search=" + this.state.search
+					: ""
+				: this.state.search
+				? "search=" + this.state.search
+				: "";
+			url += url
 				? this.state.name
 					? "&name=" + this.state.name
 					: ""
