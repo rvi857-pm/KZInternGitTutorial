@@ -2,7 +2,6 @@ package com.example.pagination.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,9 +51,8 @@ public class AccountService {
 		Example<Account> compoundSearchExample = Example.of(accountCompound, generateCompoundSearchMatcher());
 		List<Account> compoundAccountList = accountRepository.findAll(compoundSearchExample);
 
-		Set<Account> multiSearchSet = universalAccountList.stream().distinct().filter(compoundAccountList::contains)
-				.collect(Collectors.toSet());
-		List<Account> multiSearchList = new ArrayList<Account>(multiSearchSet);
+		List<Account> multiSearchList = universalAccountList.stream().distinct().filter(compoundAccountList::contains)
+				.collect(Collectors.toList());
 		Pageable pageableInstance = PageRequest.of(page - 1, pageSize);
 		return pageUtility(pageableInstance, multiSearchList);
 	}
