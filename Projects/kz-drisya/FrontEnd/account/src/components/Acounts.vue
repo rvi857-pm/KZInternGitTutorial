@@ -1,5 +1,11 @@
 <template>
-  <div id="table">
+  <div>
+    <label> page size </label>
+    <b-form-input
+      id="input"
+      placeholder="page size"
+      v-model="account.page_size"
+    ></b-form-input>
     <div class="overflow-auto">
       <h1>Account</h1>
       <b-table
