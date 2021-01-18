@@ -10,6 +10,7 @@
 		<div v-if="showTable">
 			<b-pagination
 				id="page"
+				v-if="localPageNum"
 				v-model="localPageNum"
 				:total-rows="totalLength"
 				:per-page="perPage"
@@ -126,7 +127,11 @@ export default {
 				: "";
 
 			url += this.localPageNum
-				? this.urlUtility(url, "page=") + this.localPageNum + this.urlUtility(url, "page_size=") + this.perPage
+				? this.urlUtility(url, "page=") + (this.localPageNum - 1)
+				: "";
+
+			url += this.localPageNum
+				? this.urlUtility(url, "page_size=") + this.state.pageSize
 				: "";
 
 			return url;

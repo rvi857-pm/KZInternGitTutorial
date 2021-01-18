@@ -65,7 +65,7 @@ export default {
 				let state = this.parse(this.value);
 
 				state = this.size
-					? { ...state, page: "0", pageSize: String[this.size] }
+					? { ...state, page: "0", pageSize: this.size }
 					: { ...state, page: "", pageSize: "" };
 
 				if (this.updateState(state)) resolve();
