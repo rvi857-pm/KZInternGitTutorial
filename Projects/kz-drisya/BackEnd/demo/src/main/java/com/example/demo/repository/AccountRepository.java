@@ -23,5 +23,6 @@ public interface AccountRepository extends JpaRepository<Account, Integer>{
 					@Param("country") String country,Pageable pageRequest);*/
 	
 	//Page<Account> findAll(Pageable pageRequest);
-	Page<Account> findAllByNameContainingOrCityContainingOrStateContainingOrCountryContaining ( String name,String city, String state, String country,Pageable pageRequest);
+	//Page<Account> findAllByNameContainingOrCityContainingOrStateContainingOrCountryContaining ( String name,String city, String state, String country,Pageable pageRequest);
+	//Page<Account> findByNameContains(String x, Pageable pagerequest);
 }

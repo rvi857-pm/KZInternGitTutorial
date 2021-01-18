@@ -59,7 +59,13 @@ export default {
           return response.json();
         })
         .then((jsonResponse) => {
-          this.friends = jsonResponse;
+          // this.friends = jsonResponse;
+          //console.log(this.friends);
+          return jsonResponse;
+        })
+        .then((item) => {
+          console.log(item);
+          this.friends = item.content;
         });
     },
   },
