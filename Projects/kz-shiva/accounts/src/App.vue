@@ -28,7 +28,6 @@ export default {
 	data() {
 		return {
 			fields: [
-				"id",
 				"name",
 				"ipDomain",
 				"city",

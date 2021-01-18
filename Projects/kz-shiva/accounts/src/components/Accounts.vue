@@ -50,6 +50,11 @@ export default {
 	},
 
 	watch: {
+
+		/**
+		 * Watcher on the variable localPageNum. So, that when it gets updated 
+		 * we can call the appropriate api. 
+		 */
 		localPageNum: function() {
 			if (this.localPageNum) {
 				this.updateShowTable(false);
@@ -71,26 +76,45 @@ export default {
 	},
 
 	methods: {
+
+		/**
+		 * @param value flag variable to show the table
+		 */
 		updateShowTable(value) {
 			this.showTable = value;
 		},
 
+		/**
+		 * @param length total elements without the page filter
+		 */
 		updateTotalLength(length) {
 			this.totalLength = length;
 		},
 
+		/**
+		 * @param size elements per a single page
+		 */
 		updatePerPage(size) {
 			this.perPage = size;
 		},
 
+		/**
+		 * @param value current index of the page
+		 */
 		updateLocalPageNum(value) {
 			this.localPageNum = value;
 		},
 
+		// utility function for getUrl
 		urlUtility(param1, param2) {
 			return param1 ? "&" + param2 : param2;
 		},
 
+		/**
+		 * This method forms a url based on the present state
+		 * @param
+		 * @return url for the api call
+		 */
 		getUrl() {
 			let url = "";
 
@@ -137,6 +161,11 @@ export default {
 			return url;
 		},
 
+		/**
+		 * This method updates component by calling corresponding api.
+		 * @param
+		 * @return 
+		 */
 		updateComponent() {
 			if (this.state.page)
 				this.updateLocalPageNum(Number(this.state.page) + 1);

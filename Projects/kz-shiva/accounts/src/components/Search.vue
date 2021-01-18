@@ -59,6 +59,12 @@ export default {
 		};
 	},
 	methods: {
+		/**
+		 * This method updates the state and then calls appropriate methods
+		 * to update the UI.
+		 * @param
+		 * @return
+		 */
 		onSubmit() {
 			let myPromise = new Promise((resolve, reject) => {
 				this.updateTable(false);
