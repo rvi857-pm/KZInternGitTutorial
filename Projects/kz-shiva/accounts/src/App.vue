@@ -68,7 +68,7 @@ export default {
 		 * @return boolean to mark as successful
 		 */
 		updateState( updatedState ) {
-			this.state = Object.assign( this.state, updatedState );
+			this.state = updatedState;
 			return true;
 		},
 
