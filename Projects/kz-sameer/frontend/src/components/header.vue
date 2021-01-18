@@ -14,7 +14,7 @@
                             <b-form-input v-model="input">Search</b-form-input>
                                 <template #append>
                                     <b-dropdown :text="searchBy.toUpperCase()" variant="success">
-                                         <b-dropdown-item v-for="(searchItem, index) in searchList"  @click="searchBy = searchItem" :key="index" :value="searchItem">{{ searchItem.toUpperCase() }}</b-dropdown-item>
+                                         <b-dropdown-item v-for="(searchItem, index) in searchList"  @click='searchBy = searchItem' :key="index" :value="searchItem">{{ searchItem.toUpperCase() }}</b-dropdown-item>
                                     </b-dropdown>
                                     <b-button variant="success" @click="searchParser(input)"> Search</b-button>
                                 </template>
@@ -31,7 +31,7 @@ export default {
         return{
             searchBy: 'any',
             input: '',
-            searchList: ["any", "id", "domain", "city", "state", "country", "type", "accountId"]
+            searchList: ["any", "id", "ip Domain", "city", "state", "country", "type", "salesforce Id"]
         }
     },
     props: [
@@ -61,7 +61,7 @@ export default {
                 this.search(parsedStr)
             }
             else{
-                this.search(this.searchBy + "=" + str)
+                this.search(this.searchBy.replace(" ", "") + "=" + str)
             }
         }
     }
