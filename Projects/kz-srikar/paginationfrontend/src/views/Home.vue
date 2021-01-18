@@ -117,7 +117,6 @@ export default {
             accountApi.getSearchAccounts(obj).then((response) => {
                 this.totalResults = response.totalElements;
                 this.results = response.content;
-                console.log(this.results);
             });
         },
         onClickAllSubmit() {
@@ -133,7 +132,6 @@ export default {
                 return;
             }
             if (oldVal == 0) return;
-            console.log("in change of current page");
             this.getSearchResults(this.currentPage);
         },
         pageSize: function() {
@@ -141,10 +139,7 @@ export default {
         },
     },
     mounted: function() {
-        accountApi.getAllAccounts().then((response) => {
-            this.totalResults = response.length;
-            this.results = response;
-        });
+        this.getSearchResults(1);
     },
 };
 </script>
