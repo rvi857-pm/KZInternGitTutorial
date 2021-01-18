@@ -15,43 +15,43 @@ public class Account {
 	private String type;
 	private String salesforceId;
 
-	public String getname() {
+	public String getName() {
 		return name;
 	}
 
-	public void setname(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 
-	public String getipDomain() {
+	public String getIpDomain() {
 		return ipDomain;
 	}
 
-	public void setipDomain(String ipDomain) {
+	public void setIpDomain(String ipDomain) {
 		this.ipDomain = ipDomain;
 	}
 
-	public String getcity() {
+	public String getCity() {
 		return city;
 	}
 
-	public void setcity(String city) {
+	public void setCity(String city) {
 		this.city = city;
 	}
 
-	public String getstate() {
+	public String getState() {
 		return state;
 	}
 
-	public void setstate(String state) {
+	public void setState(String state) {
 		this.state = state;
 	}
 
-	public String getcountry() {
+	public String getCountry() {
 		return country;
 	}
 
-	public void setcountry(String country) {
+	public void setCountry(String country) {
 		this.country = country;
 	}
 
@@ -63,11 +63,11 @@ public class Account {
 		this.type = type;
 	}
 
-	public String getsalesforceId() {
+	public String getSalesforceId() {
 		return salesforceId;
 	}
 
-	public void setsalesforceId(String salesforceId) {
+	public void setSalesforceId(String salesforceId) {
 		this.salesforceId = salesforceId;
 	}
 
@@ -79,13 +79,5 @@ public class Account {
 		this.country = value;
 		this.type = value;
 		this.salesforceId = value;
-	}
-
-	public boolean isNull() {
-		if (this.name == null && this.ipDomain == null && this.city == null && this.state == null
-				&& this.country == null && this.type == null && this.salesforceId == null) {
-			return true;
-		}
-		return false;
 	}
 }

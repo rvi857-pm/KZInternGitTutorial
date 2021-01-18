@@ -28,7 +28,9 @@ public class MainController {
 		}
 
 		if (q != null) {
-			if (account.isNull()) {
+			if (account.getName() == null && account.getIpDomain() == null && account.getCity() == null
+					&& account.getState() == null && account.getCountry() == null && account.getType() == null
+					&& account.getSalesforceId() == null) {
 				return accountService.getUniversalSearchResults(page, pageSize, q);
 			}
 			return accountService.getMultiSearchResults(page, pageSize, account, q);
