@@ -1,0 +1,43 @@
+<div class="card my-5">
+   <div class="card-body"> 
+     <mat-form-field style="margin-left:80px; width:450px !important"> 
+      <input matInput (keyup)="takeTextInput($event.target.value)" placeholder="Filter"> 
+    </mat-form-field> 
+    <button style="margin-left:80px; width:150px !important" mat-button color="primary" (click)="refreshPage()" id="filterBtn">Filter</button> 
+    <button style="margin-left:80px; width:150px !important" mat-button (click)="clearPage()" id="clearBtn">Clear</button> 
+    <table class="table table-bordered table-striped"> 
+      <thead class="thead-dark"> <tr> <th scope="col">ID</th> 
+        <th scope="col">Account Name</th> <th scope="col">IP Domain</th> 
+        <th scope="col">IP Geo City</th> <th scope="col">IP Geo State</th> 
+        <th scope="col">IP Geo Country</th> <th scope="col">Types</th> 
+        <th scope="col">SDFC Account ID</th> </tr> 
+      </thead> 
+      <tbody> 
+        <tr *ngFor="let user of pageOfItems"> 
+          <td>{{ user.id }}</td> 
+          <td>{{ user.account_Name }}</td> 
+          <td>{{ user.ip_Domain }}</td> 
+          <td>{{ user.ip_Geo_City }}</td> 
+          <td>{{ user.ip_Geo_State }}</td> 
+          <td>{{ user.ip_Geo_Country }}</td> 
+          <td>{{ user.types }}</td> 
+          <td>{{ user.sfdc_Account_Id }}</td> 
+        </tr> 
+      </tbody> 
+    </table> 
+  </div> 
+  <div style="display: flex;"> 
+    <mat-form-field style="margin-left:40px; align-self:centre;width:200px !important;" appearance="fill"> 
+      <mat-label>Select Page Size</mat-label> 
+      <mat-select [(value)]="pageSizeSelector" (selectionChange)="setPageSize($event)"> 
+        <mat-option value="PageSize5">5</mat-option> 
+        <mat-option value="PageSize10">10</mat-option> 
+        <mat-option value="PageSize15">15</mat-option> 
+        <mat-option value="PageSize20">20</mat-option> 
+        <mat-option value="PageSize25">25</mat-option> 
+        <mat-option value="PageSize30">30</mat-option> 
+      </mat-select> 
+    </mat-form-field> 
+    <jw-pagination style="margin-left:40px;" [items]="users" [pageSize]="pageSize" (changePage)="onChangePage($event);"></jw-pagination> 
+  </div> 
+</div>
