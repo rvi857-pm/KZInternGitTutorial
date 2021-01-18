@@ -1,12 +1,13 @@
 <template>
 	<div id="app">
-		<Header/>
+		<Header />
 		<Accounts
 			:items="items"
 			:fields="fields"
 			:state="state"
 			:updateItems="updateItems"
 			:parse="parse"
+			:updateState="updateState"
 		/>
 	</div>
 </template>
@@ -16,11 +17,14 @@ import Accounts from "./components/Accounts";
 import Header from "./components/Header";
 
 export default {
+
 	name: "App",
+
 	components: {
 		Header,
 		Accounts
 	},
+
 	data() {
 		return {
 			fields: [
@@ -48,25 +52,48 @@ export default {
 			},
 		};
 	},
+
 	methods: {
-		updateItems(value) {
-			this.items = value;
+
+		/**
+		 * This method updates the items in the table as required.
+		 * @param items updated list of items to render on the table
+		 */
+		updateItems( items ) {
+			this.items = items;
 		},
 
-		parse(value) {
-			value += " ";
+		/**
+		 * This method updates the state object of the data members
+		 * @param updatedState
+		 * @return boolean to mark as successful
+		 */
+		updateState( updatedState ) {
+			this.state = Object.assign( this.state, updatedState );
+			return true;
+		},
+
+		/**
+		 * This method is used to parse the value in the search box. It uses stack data structure
+		 * to achieve required functionality.
+		 * @param searchValue string that needs to be parsed
+		 * @return the updated key value pairs
+		 */
+		parse( searchValue ) {
+			searchValue += " ";
 			let stack = [];
 			let temp = "";
 			let flag = false;
 			let seperator = false;
-			for (let c of value) {
+			let returnValue = {};
+			for (let c of searchValue) {
 				if (c == " ") {
 					if (flag) temp += c;
 					else {
 						if (temp) {
 							if (seperator) {
 								let key = stack.pop();
-								this.state = { ...this.state, [key]: temp };
+								returnValue = { ...returnValue, [key]: temp };
 								seperator = false;
 							} else stack.push(temp);
 							temp = "";
@@ -77,7 +104,7 @@ export default {
 					if (!flag) {
 						if (seperator) {
 							let key = stack.pop();
-							this.state = { ...this.state, [key]: temp };
+							returnValue = { ...returnValue, [key]: temp };
 							seperator = false;
 						} else stack.push(temp);
 						temp = "";
@@ -96,8 +123,8 @@ export default {
 					? stack.pop() + " " + search
 					: stack.pop();
 			}
-			this.state = { ...this.state, search: search };
-			return true;
+			returnValue = { ...returnValue, search: search };
+			return returnValue;
 		},
 	},
 };

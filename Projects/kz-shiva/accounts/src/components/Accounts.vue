@@ -1,16 +1,23 @@
 <template>
 	<div>
-		<Search :state="state" :parse="parse" :update="updateComponent"/>
-		<b-pagination
-			id="page"
-			v-if="flag"
-			v-model="page"
-			:total-rows="len"
-			:per-page="perPage"
-			aria-controls="my-table"
-			align="center"
-		></b-pagination>
-		<b-table id="my-table" :items="items" :fields="fields"></b-table>
+		<Search
+			:state="state"
+			:parse="parse"
+			:search="updateComponent"
+			:updateState="updateState"
+			:updateTable="updateShowTable"
+		/>
+		<div v-if="showTable">
+			<b-pagination
+				id="page"
+				v-model="localPageNum"
+				:total-rows="totalLength"
+				:per-page="perPage"
+				aria-controls="my-table"
+				align="center"
+			></b-pagination>
+			<b-table id="my-table" :items="items" :fields="fields"></b-table>
+		</div>
 	</div>
 </template>
 
@@ -29,129 +36,107 @@ export default {
 		state: Object,
 		updateItems: Function,
 		parse: Function,
+		updateState: Function,
 	},
 
 	data() {
 		return {
-			page: 0,
-			len: 0,
+			localPageNum: 0,
+			totalLength: 0,
 			perPage: 0,
-			flag: false,
+			showTable: false,
 		};
 	},
 
 	watch: {
-		page: function() {
-			let queryUrl = this.getUrl();
-			let url = "http://localhost:8080/accounts";
-			url += queryUrl ? "?" + queryUrl : "";
+		localPageNum: function() {
+			if (this.localPageNum) {
+				this.updateShowTable(false);
+				let queryUrl = this.getUrl();
+				let url = "http://localhost:8080/accounts";
+				url += queryUrl ? "?" + queryUrl : "";
 
-			axios
-				.get(url)
-				.then((res) => {
-					this.updateItems(res.data.content);
-				})
-				.catch((err) => {
-					this.flag = false;
-					console.log(err);
-				});
+				axios
+					.get(url)
+					.then((res) => {
+						this.updateItems(res.data.content);
+					})
+					.catch((err) => {
+						console.log(err);
+					});
+				this.updateShowTable(true);
+			}
 		},
 	},
 
 	methods: {
-		updateLen(val) {
-			this.len = val;
+		updateShowTable(value) {
+			this.showTable = value;
 		},
 
-		updatePerPage(val) {
-			this.perPage = val;
+		updateTotalLength(length) {
+			this.totalLength = length;
 		},
 
-		updatePage(val) {
-			this.page = val;
+		updatePerPage(size) {
+			this.perPage = size;
+		},
+
+		updateLocalPageNum(value) {
+			this.localPageNum = value;
+		},
+
+		urlUtility(param1, param2) {
+			return param1 ? "&" + param2 : param2;
 		},
 
 		getUrl() {
 			let url = "";
-			url += url
-				? this.state.search
-					? "&search=" + this.state.search
-					: ""
-				: this.state.search
-				? "search=" + this.state.search
+
+			url += this.state.search
+				? this.urlUtility(url, "search=") + this.state.search
 				: "";
-			url += url
-				? this.state.name
-					? "&name=" + this.state.name
-					: ""
-				: this.state.name
-				? "name=" + this.state.name
+
+			url += this.state.name
+				? this.urlUtility(url, "name=") + this.state.name
 				: "";
-			url += url
-				? this.state.ipDomain
-					? "&domain=" + this.state.ipDomain
-					: ""
-				: this.state.ipDomain
-				? "domain=" + this.state.ipDomain
+
+			url += this.state.ipDomain
+				? this.urlUtility(url, "ipDomain=") + this.state.ipDomain
 				: "";
-			url += url
-				? this.state.city
-					? "&city=" + this.state.city
-					: ""
-				: this.state.city
-				? "city=" + this.state.city
+
+			url += this.state.city
+				? this.urlUtility(url, "city=") + this.state.city
 				: "";
-			url += url
-				? this.state.state
-					? "&state=" + this.state.state
-					: ""
-				: this.state.state
-				? "state=" + this.state.state
+
+			url += this.state.state
+				? this.urlUtility(url, "state=") + this.state.state
 				: "";
-			url += url
-				? this.state.country
-					? "&country=" + this.state.country
-					: ""
-				: this.state.country
-				? "country=" + this.state.country
+
+			url += this.state.country
+				? this.urlUtility(url, "country=") + this.state.country
 				: "";
-			url += url
-				? this.state.type
-					? "&type=" + this.state.type
-					: ""
-				: this.state.type
-				? "type=" + this.state.type
+
+			url += this.state.type
+				? this.urlUtility(url, "type=") + this.state.type
 				: "";
-			url += url
-				? this.state.salesforceId
-					? "&id=" + this.state.salesforceId
-					: ""
-				: this.state.salesforceId
-				? "id=" + this.state.salesforceId
+
+			url += this.state.salesforceId
+				? this.urlUtility(url, "salesforceId=") + this.state.salesforceId
 				: "";
-			if (this.page == 0) {
-				url += url
-					? this.state.page
-						? "&page=" + this.state.page
-						: ""
-					: this.state.page
-					? "page=" + this.state.page
-					: "";
-			} else {
-				url += url
-					? "&page=" + (this.page - 1).toString()
-					: "page=" + (this.page - 1).toString();
-			}
-			url += url
-				? this.state.pageSize
-					? "&page_size=" + this.state.pageSize
-					: ""
-				: this.state.pageSize
-				? "page_size=" + this.state.pageSize
+
+			url += this.localPageNum
+				? this.urlUtility(url, "page=") + this.localPageNum + this.urlUtility(url, "page_size=") + this.perPage
 				: "";
+
 			return url;
 		},
+
 		updateComponent() {
+			if (this.state.page)
+				this.updateLocalPageNum(Number(this.state.page) + 1);
+			else this.updateLocalPageNum(0);
+
 			let queryUrl = this.getUrl();
 			let url = "http://localhost:8080/accounts";
 			url += queryUrl ? "?" + queryUrl : "";
@@ -159,26 +144,20 @@ export default {
 			axios
 				.get(url)
 				.then((res) => {
-					if (this.state.page) {
+					if (this.localPageNum) {
 						this.updateItems(res.data.content);
-						if (this.state.pageSize)
-							this.updatePerPage(Number(this.state.pageSize));
-						else this.updatePerPage(10);
-						this.updateLen(res.data.totalElements);
-						this.updatePage(Number(this.state.page) + 1);
-						this.flag = true;
+						this.updatePerPage(Number(this.state.pageSize));
+						this.updateTotalLength(res.data.totalElements);
 					} else {
 						this.updateItems(res.data);
-						this.flag = false;
 					}
+					this.updateShowTable(true);
 				})
 				.catch((err) => {
 					console.log(err);
 				});
 		},
 	},
-
-	mounted() {},
 };
 </script>
 
