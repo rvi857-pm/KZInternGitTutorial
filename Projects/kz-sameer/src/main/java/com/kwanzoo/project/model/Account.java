@@ -1,7 +1,5 @@
 package com.kwanzoo.project.model;
 
-import java.util.UUID;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -10,7 +8,7 @@ import javax.persistence.Id;
 public class Account {
 
 	@Id
-	UUID id;
+	String id;
 	String name;
 	String ipDomain;
 	String city;
@@ -25,7 +23,7 @@ public class Account {
 	
 	
 	
-	public Account(UUID id, String name, String ipDomain, String city, String state, String country, String type,
+	public Account(String id, String name, String ipDomain, String city, String state, String country, String type,
 			String salesforceId) {
 		super();
 		this.id = id;
@@ -41,6 +39,7 @@ public class Account {
 
 
 	public void setALL(String any) {
+		this.id = any;
 		this.name = any;
 		this.ipDomain = any;
 		this.city = any;
@@ -52,13 +51,13 @@ public class Account {
 
 
 
-	public UUID getId() {
+	public String getId() {
 		return id;
 	}
 
 
 
-	public void setId(UUID id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
