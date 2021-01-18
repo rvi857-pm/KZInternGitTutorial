@@ -89,59 +89,50 @@ public class AccountRepositoryImpl {
 		return expMatcher;
 
 	}
-	
+
 	private List<Account> utility(Map<String, String> filter) {
-		System.out.println("he");
 		Example<Account> example = Example.of(probe(filter), rules());
-		Example<Account> univExample = Example.of(universalProbe(filter), universalRules());
 		List<Account> list = accRepo.findAll(example);
-		List<Account> univList = accRepo.findAll(univExample);
-		
-		Set<Account> result = list.stream()
-				  .distinct()
-				  .filter(univList::contains)
-				  .collect(Collectors.toSet());
-		
-		List<Account> aList = new ArrayList<Account>(result);
-		return aList;
+		if (filter.get("search") != null) {
+			Example<Account> univExample = Example.of(universalProbe(filter), universalRules());
+			List<Account> univList = accRepo.findAll(univExample);
+
+			List<Account> result = list.stream().distinct().filter(univList::contains).collect(Collectors.toList());
+			return result;
+		} else
+			return list;
 	}
-	
-	private Page<Account> pageUtility(Pageable obj, List<Account> list){
+
+	private Page<Account> pageUtility(Pageable obj, List<Account> list) {
 		int total = list.size();
-		int start = (int)obj.getOffset();
-		System.out.println(start);
+		int start = (int) obj.getOffset();
 		int end = Math.min((start + obj.getPageSize()), total);
-		System.out.println(end);
 
 		List<Account> output = new ArrayList<>();
 
-		if (start <= end) output = list.subList(start, end);
+		if (start <= end)
+			output = list.subList(start, end);
 
 		return new PageImpl<Account>(output, obj, total);
 	}
 
 	@GetMapping(path = "/accounts")
 	@Cacheable("accounts")
-	public List<Account> getAccountByParams(@RequestParam Map<String, String> filter) {
-		return utility(filter);
-	}
+	public Object getAccountByParams(@RequestParam Map<String, String> filter) {
 
-	@GetMapping(path = "/accounts", params = "page")
-	public Page<Account> getAccountsByPage(@RequestParam int page, @RequestParam Map<String, String> filter) {
-
+		System.out.println(filter.size());
 		List<Account> list = utility(filter);
-		Pageable obj = PageRequest.of(page, 10);
-		return pageUtility(obj, list);
-
-	}
-
-	@GetMapping(path = "/accounts", params = { "page", "page_size" })
-	public Page<Account> getAccountsByPage(@RequestParam int page, @RequestParam("page_size") int size,
-			@RequestParam Map<String, String> filter) {
-
-		List<Account> list = utility(filter);
-		Pageable obj = PageRequest.of(page, size);
-		return pageUtility(obj, list);
+		if (filter.get("page_size") != null) {
+			int page = Integer.parseInt(filter.get("page"));
+			int size = Integer.parseInt(filter.get("page_size"));
+			Pageable obj = PageRequest.of(page, size);
+			return pageUtility(obj, list);
+		} else if (filter.get("page") != null) {
+			int page = Integer.parseInt(filter.get("page"));
+			Pageable obj = PageRequest.of(page, 10);
+			return pageUtility(obj, list);
+		} else
+			return utility(filter);
 
 	}
 
