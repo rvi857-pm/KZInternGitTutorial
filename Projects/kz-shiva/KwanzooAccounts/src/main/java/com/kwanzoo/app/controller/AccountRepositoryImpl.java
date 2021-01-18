@@ -27,8 +27,13 @@ public class AccountRepositoryImpl {
 	@Autowired
 	private AccountRepository accRepo;
 
+	/**
+	 * This method creates a Account object to probe the database. 
+	 * This object is for universal search.
+	 * @param filter
+	 * @return probe to search the database
+	 */
 	private Account universalProbe(Map<String, String> filter) {
-
 		Account account = new Account();
 
 		account.setName(filter.get("search"));
@@ -40,11 +45,14 @@ public class AccountRepositoryImpl {
 		account.setSalesforceId(filter.get("search"));
 
 		return account;
-
 	}
-
+	
+	/**
+	 * This method creates a Account object to probe the database.
+	 * @param filter
+	 * @return probe to search the database
+	 */
 	private Account probe(Map<String, String> filter) {
-
 		Account account = new Account();
 
 		account.setName(filter.get("name"));
@@ -56,11 +64,14 @@ public class AccountRepositoryImpl {
 		account.setSalesforceId(filter.get("id"));
 
 		return account;
-
 	}
 
+	/**
+	 * This method creates the rules to how the probing should be done.
+	 * It is used for universal search.
+	 * @return object with the rules.
+	 */
 	private ExampleMatcher universalRules() {
-
 		ExampleMatcher expMatcher = ExampleMatcher.matchingAny()
 				.withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
 				.withMatcher("ipDomain", ExampleMatcher.GenericPropertyMatchers.contains())
@@ -71,11 +82,13 @@ public class AccountRepositoryImpl {
 				.withMatcher("salesforceId", ExampleMatcher.GenericPropertyMatchers.contains());
 
 		return expMatcher;
-
 	}
 
+	/**
+	 * This method creates the rules to how the probing should be done.
+	 * @return object with the rules.
+	 */
 	private ExampleMatcher rules() {
-
 		ExampleMatcher expMatcher = ExampleMatcher.matchingAll()
 				.withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
 				.withMatcher("ipDomain", ExampleMatcher.GenericPropertyMatchers.contains())
@@ -86,9 +99,13 @@ public class AccountRepositoryImpl {
 				.withMatcher("salesforceId", ExampleMatcher.GenericPropertyMatchers.contains());
 
 		return expMatcher;
-
 	}
 
+	/**
+	 * Utility method to get values from the database.
+	 * @param filter
+	 * @return list of the required data.
+	 */
 	private List<Account> utility(Map<String, String> filter) {
 		Example<Account> example = Example.of(probe(filter), rules());
 		List<Account> list = accRepo.findAll(example);
@@ -102,6 +119,12 @@ public class AccountRepositoryImpl {
 			return list;
 	}
 
+	/**
+	 * Utility method to convert a list into a page.
+	 * @param obj
+	 * @param list
+	 * @return page format of the required data
+	 */
 	private Page<Account> pageUtility(Pageable obj, List<Account> list) {
 		int total = list.size();
 		int start = (int) obj.getOffset();
@@ -118,8 +141,6 @@ public class AccountRepositoryImpl {
 	@GetMapping(path = "/accounts")
 	@Cacheable("accounts")
 	public Object getAccountByParams(@RequestParam Map<String, String> filter) {
-
-		System.out.println(filter.size());
 		List<Account> list = utility(filter);
 		if (filter.get("page_size") != null) {
 			int page = Integer.parseInt(filter.get("page"));
