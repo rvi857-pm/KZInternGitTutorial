@@ -1,91 +1,124 @@
 <template>
   <div>
-    <label> page size </label>
+    <label> search here</label>
     <b-form-input
       id="input"
-      placeholder="page size"
-      v-model="account.page_size"
+      placeholder=" search here"
+      v-model="input.searchVal"
     ></b-form-input>
-    <div class="overflow-auto">
-      <h1>Account</h1>
-      <b-table
-        hover
-        small
-        :items="friends"
-        :per-page="account.page_size"
-        responsive
-      ></b-table>
 
+    <div class="overflow-auto">
       <b-pagination
-        v-model="account.page_no"
-        :per-page="account.page_size"
+        v-model="input.page"
+        :per-page="input.page_size"
         :total-rows="1400"
         align="center"
       ></b-pagination>
+      <b-table
+        hover
+        small
+        :items="accounts"
+        :per-page="input.page_size"
+        responsive
+      ></b-table>
     </div>
   </div>
 </template>
 <script>
 export default {
-  props: {
-    account: Object,
-  },
   data() {
     return {
-      friends: [],
+      accounts: [],
+      input: {
+        name: "",
+        domain: "",
+        city: "",
+        state: "",
+        country: "",
+        type: "",
+        sfdc: "",
+        page: "1",
+        page_size: "10",
+        q: "",
+        searchVal: "",
+      },
     };
   },
-  methods: {
-    getUrl() {
-      let requestParam = `http://localhost:8080/accounts`;
-      requestParam += `?page=${this.account.page_no}&page_size=${this.account.page_size}`;
-      if (this.account.name !== "")
-        requestParam += `&name=${this.account.name}`;
-      if (this.account.domain !== "")
-        requestParam += `&domain=${this.account.domain}`;
-      if (this.account.city !== "")
-        requestParam += `&city=${this.account.city}`;
-      if (this.account.state !== "")
-        requestParam += `&state=${this.account.state}`;
-      if (this.account.country !== "")
-        requestParam += `&country=${this.account.country}`;
-      if (this.account.sfdc !== "")
-        requestParam += `&sfdc=${this.account.sfdc}`;
-      if (this.account.type !== "")
-        requestParam += `&type=${this.account.type}`;
-      if (this.account.q !== "") requestParam += `&q=${this.account.q}`;
-      console.log(this.account);
-      console.log(requestParam);
-      return requestParam;
-    },
-    callApi() {
-      let url = this.getUrl();
-      fetch(url, { method: "get" })
-        .then((response) => {
-          return response.json();
-        })
-        .then((jsonResponse) => {
-          // this.friends = jsonResponse;
-          //console.log(this.friends);
-          return jsonResponse;
-        })
-        .then((item) => {
-          console.log(item);
-          this.friends = item.content;
-        });
-    },
-  },
   watch: {
-    account: {
+    input: {
       handler() {
-        this.callApi();
+        console.log("watching");
+        this.splitVal(this.input.searchVal);
+        let url = this.getParameter(this.input);
+        console.log(url);
+        console.log(this.input);
+        this.getAccounts(url);
       },
       deep: true,
       immediate: true,
     },
   },
-  mounted: function () {
-    this.callApi();
+  mounted() {
+    let url = this.getParameter(this.input);
+    // console.log(url);
+    this.getAccounts(url);
+    console.log(this.accounts);
+  },
+  methods: {
+    splitVal(val) {
+      this.initial();
+      if (!val.includes("?")) {
+        if (!val.includes(":")) this.input.q = val;
+        else {
+          let pair = val.split(":");
+          let key = pair[0];
+          this.input[key] = pair[1];
+        }
+      } else {
+        console.log("hey");
+        let x = val.split(",");
+        for (let i in x) {
+          if (!x[i].includes(":")) this.input.q = x[i];
+          else {
+            let pair = x[i].split(":");
+            let key = pair[0];
+            this.input[key] = pair[1];
+          }
+        }
+      }
+    },
+    initial() {
+      (this.input.name = ""), (this.input.city = ""), (this.input.q = "");
+    },
+    getParameter(account) {
+      const url = `http://localhost:8080/accounts`;
+      let requestParam =
+        url + `?page=${account.page}&page_size=${account.page_size}`;
+      if (account.name !== "") requestParam += `&name=${account.name}`;
+      if (account.city !== "") requestParam += `&city=${account.city}`;
+      if (account.state !== "") requestParam += `&state=${account.state}`;
+      if (account.country !== "") requestParam += `&country=${account.country}`;
+      if (account.type !== "") requestParam += `&type=${account.type}`;
+      if (account.sfdc !== "") requestParam += `&sfdc=${account.sfdc}`;
+      if (account.q !== "") requestParam += `&q=${account.q}`;
+      if (account.domain !== "") requestParam += `&domain=${account.domain}`;
+
+      return requestParam;
+    },
+    getAccounts(url) {
+      fetch(url, {
+        method: "get",
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((jsonResponse) => {
+          return jsonResponse;
+        })
+        .then((jsonResponse) => {
+          this.accounts = jsonResponse.content;
+        });
+    },
   },
 };
 </script>
@@ -97,5 +130,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   margin-top: 60px;
+}
+#input {
+  width: 20%;
+  height: 10%;
 }
 </style>
