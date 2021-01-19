@@ -42,13 +42,13 @@ export class UserListComponent implements OnInit {
   }
 
   takeTextInput(filterValue: string) {
-	this.searchInput = filterValue;
+	  this.searchInput = filterValue;
 	//console.log(this.searchInput);
   }
 
   parseString(){
 	  let inputStr = this.searchInput;
-	  let listOfFilters:string[] = ["name", "ip_domain", "city", "state", "country", "type", "salesforce_id"];
+	  let listOfFilters:string[] = ['name', 'ip_domain', 'city', 'state', 'country', 'type', 'salesforce_id'];
 	  let params = new HttpParams();
 	  
 	  for(let i = 0; i < listOfFilters.length; i++){
@@ -60,18 +60,18 @@ export class UserListComponent implements OnInit {
 			  continue;
 		  }
 		  let filteredString = inputStr.slice(firstIndex, inputStr.indexOf('"', firstIndex));
-		  inputStr = inputStr.replace(filteredString, '').replace(listOfFilters[i] + ':', '');
+      inputStr = inputStr.replace('"' + filteredString + '"', '').replace(listOfFilters[i] + ':', '');
 		  
 		  params = params.append(listOfFilters[i], filteredString);
-	  }
-      inputStr = inputStr.trim();
-      inputStr = inputStr.trim();
-      var cleanString = inputStr.replace(/[|&;:$%@"<>()+,]/g, "");
-
-	  	if(cleanString !== ''){
-			params = params.append('q', cleanString);
     }
-    console.log(params.getAll('city'));
+      //console.log(inputStr);
+      inputStr = inputStr.trim();
+      //console.log(inputStr);
+
+	  	if(inputStr !== ''){
+			  params = params.append('q', inputStr);
+    }
+    //console.log(params.getAll('q'));
     return params;
     
   }
