@@ -16,7 +16,7 @@
             </mark>
         </p>
         <b-col sm="1">
-            <label>Page No :</label>
+            <label>Page Size :</label>
             <b-form-input
                 v-model="pageSize"
                 min="1"
