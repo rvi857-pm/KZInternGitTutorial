@@ -23,17 +23,16 @@ public class Utility {
 	@Autowired
 	private AccountRepository accountRepo;
 
-	public Account probe(Map<String, String> filter) {
+	public Account probe(Map<String, String> filter, boolean flag) {
 		Account account = new Account();
 
-		account.setName(filter.get("search") != null ? filter.get("search") : filter.get("name"));
-		account.setIpDomain(filter.get("search") != null ? filter.get("search") : filter.get("ipDomain"));
-		account.setCity(filter.get("search") != null ? filter.get("search") : filter.get("city"));
-		account.setState(filter.get("search") != null ? filter.get("search") : filter.get("state"));
-		account.setCountry(filter.get("search") != null ? filter.get("search") : filter.get("country"));
-		account.setType(filter.get("search") != null ? filter.get("search") : filter.get("type"));
-		account.setSalesforceId(filter.get("search") != null ? filter.get("search") : filter.get("salesforceId"));
-
+		account.setName(flag ? filter.get("search") : filter.get("name"));
+		account.setIpDomain(flag ? filter.get("search") : filter.get("ipDomain"));
+		account.setCity(flag ? filter.get("search") : filter.get("city"));
+		account.setState(flag ? filter.get("search") : filter.get("state"));
+		account.setCountry(flag ? filter.get("search") : filter.get("country"));
+		account.setType(flag ? filter.get("search") : filter.get("type"));
+		account.setSalesforceId(flag ? filter.get("search") : filter.get("salesforceId"));
 		return account;
 	}
 
@@ -52,10 +51,10 @@ public class Utility {
 	}
 
 	public List<Account> getList(Map<String, String> filter) {
-		Example<Account> example = Example.of(probe(filter), rules(matcher(filter)));
+		Example<Account> example = Example.of(probe(filter, false), rules(matcher(filter)));
 		List<Account> list = accountRepo.findAll(example);
 		if (filter.get("search") != null) {
-			Example<Account> univExample = Example.of(probe(filter), rules(matcher(filter)));
+			Example<Account> univExample = Example.of(probe(filter, true), rules(matcher(filter)));
 			List<Account> univList = accountRepo.findAll(univExample);
 
 			List<Account> result = list.stream().distinct().filter(univList::contains).collect(Collectors.toList());
@@ -65,7 +64,7 @@ public class Utility {
 	}
 
 	public Page<Account> getPage(Map<String, String> filter, int page, int pageSize) {
-		Example<Account> example = Example.of(probe(filter), rules(matcher(filter)));
+		Example<Account> example = Example.of(probe(filter, false), rules(matcher(filter)));
 		Pageable obj = PageRequest.of(page, pageSize);
 		Page<Account> retVal = accountRepo.findAll(example, obj);
 		return retVal;
@@ -77,9 +76,7 @@ public class Utility {
 		int end = Math.min((start + obj.getPageSize()), total);
 
 		List<Account> output = new ArrayList<>();
-
-		if (start <= end)
-			output = list.subList(start, end);
+		if (start <= end) output = list.subList(start, end);
 
 		return new PageImpl<Account>(output, obj, total);
 	}
