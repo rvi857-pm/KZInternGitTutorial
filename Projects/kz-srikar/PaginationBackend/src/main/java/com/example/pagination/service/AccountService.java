@@ -32,23 +32,27 @@ public class AccountService {
 		Account account = new Account();
 		account.setAll(q);
 		Pageable pageableInstance = PageRequest.of(page - 1, pageSize);
-		Example<Account> universalSearchExample = Example.of(account, generateUniversalSearchMatcher());
+		Example<Account> universalSearchExample = Example.of(account,
+				generateExampleMatcher(ExampleMatcher.matchingAny()));
 		return accountRepository.findAll(universalSearchExample, pageableInstance);
 	}
 
 	public Page<Account> getCompoundSearchResults(int page, int pageSize, Account account) {
 		Pageable pageableInstance = PageRequest.of(page - 1, pageSize);
-		Example<Account> compoundSearchExample = Example.of(account, generateCompoundSearchMatcher());
+		Example<Account> compoundSearchExample = Example.of(account,
+				generateExampleMatcher(ExampleMatcher.matchingAll()));
 		return accountRepository.findAll(compoundSearchExample, pageableInstance);
 	}
 
 	public Page<Account> getMultiSearchResults(int page, int pageSize, Account accountCompound, String q) {
 		Account accountUniversal = new Account();
 		accountUniversal.setAll(q);
-		Example<Account> universalSearchExample = Example.of(accountUniversal, generateUniversalSearchMatcher());
+		Example<Account> universalSearchExample = Example.of(accountUniversal,
+				generateExampleMatcher(ExampleMatcher.matchingAny()));
 		List<Account> universalAccountList = accountRepository.findAll(universalSearchExample);
 
-		Example<Account> compoundSearchExample = Example.of(accountCompound, generateCompoundSearchMatcher());
+		Example<Account> compoundSearchExample = Example.of(accountCompound,
+				generateExampleMatcher(ExampleMatcher.matchingAll()));
 		List<Account> compoundAccountList = accountRepository.findAll(compoundSearchExample);
 
 		List<Account> multiSearchList = universalAccountList.stream().distinct().filter(compoundAccountList::contains)
@@ -70,28 +74,13 @@ public class AccountService {
 		return new PageImpl<Account>(output, obj, total);
 	}
 
-	private ExampleMatcher generateCompoundSearchMatcher() {
-		ExampleMatcher compoundSearchMatcher = ExampleMatcher.matchingAll()
-				.withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
+	private ExampleMatcher generateExampleMatcher(ExampleMatcher searchMatcher) {
+		return searchMatcher.withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
 				.withMatcher("ipDomain", ExampleMatcher.GenericPropertyMatchers.contains())
 				.withMatcher("city", ExampleMatcher.GenericPropertyMatchers.contains())
 				.withMatcher("state", ExampleMatcher.GenericPropertyMatchers.contains())
 				.withMatcher("country", ExampleMatcher.GenericPropertyMatchers.contains())
 				.withMatcher("type", ExampleMatcher.GenericPropertyMatchers.contains())
 				.withMatcher("salesforceId", ExampleMatcher.GenericPropertyMatchers.contains());
-		return compoundSearchMatcher;
 	}
-
-	private ExampleMatcher generateUniversalSearchMatcher() {
-		ExampleMatcher universalSearchMatcher = ExampleMatcher.matchingAny()
-				.withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
-				.withMatcher("ipDomain", ExampleMatcher.GenericPropertyMatchers.contains())
-				.withMatcher("city", ExampleMatcher.GenericPropertyMatchers.contains())
-				.withMatcher("state", ExampleMatcher.GenericPropertyMatchers.contains())
-				.withMatcher("country", ExampleMatcher.GenericPropertyMatchers.contains())
-				.withMatcher("type", ExampleMatcher.GenericPropertyMatchers.contains())
-				.withMatcher("salesforceId", ExampleMatcher.GenericPropertyMatchers.contains());
-		return universalSearchMatcher;
-	}
-
 }
