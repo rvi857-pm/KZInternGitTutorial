@@ -89,14 +89,15 @@ export default {
                     inValue = !inValue;
                     continue;
                 }
-                if (inKey) presentKey += parseText[i];
+                if (inKey && parseText[i] != " ") presentKey += parseText[i];
                 if (parseText[i] == " ") {
-                    if (!inValue) {
+                    if (!inValue && presentValue != "") {
                         if (this.searchParam[presentKey] == "")
                             this.searchParam[presentKey] = presentValue;
                         presentKey = "";
                         presentValue = "";
                         inKey = true;
+                        continue;
                     }
                 }
                 if (inValue) presentValue += parseText[i];
