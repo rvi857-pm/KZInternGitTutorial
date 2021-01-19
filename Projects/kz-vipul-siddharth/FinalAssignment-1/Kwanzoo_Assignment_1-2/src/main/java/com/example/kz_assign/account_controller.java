@@ -23,6 +23,8 @@ public class account_controller {
 	@Autowired
 	private account_repo repo;
 	
+	private String lastpage;
+	
 	@GetMapping("/accounts")		//The mapping for accounts view
 	//@ResponseBody
 	public List<account> show_accountlist(@RequestParam(defaultValue="",required=false)String page, 		//getting the optional parameters
@@ -31,7 +33,7 @@ public class account_controller {
 											account probaccount,
 											Model model) {
 		//System.out.println(probaccount.getIp_domain());
-		System.out.println(probaccount.getState());
+		//System.out.println(probaccount.getState());
 		ExampleMatcher QueryMatcher = ExampleMatcher.matchingAny()
 			      .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
 			      .withMatcher("city", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
@@ -56,7 +58,7 @@ public class account_controller {
 
 	    List<account> accountslist = repo.findAll(strict_example);
 	    if(!(q.equals(""))) {
-	    	System.out.println("check");
+	    	//System.out.println("check");
 			account querymodel = new account();
 			querymodel.setName(q);
 			querymodel.setCity(q);
@@ -115,7 +117,7 @@ public class account_controller {
 				return null;
 		}
 	}
-	
+
 //		@GetMapping("/temp")
 //		@ResponseBody
 //		public String show_accountlist(account a) {

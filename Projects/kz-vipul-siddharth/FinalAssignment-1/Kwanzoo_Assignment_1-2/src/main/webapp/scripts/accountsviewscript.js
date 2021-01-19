@@ -27,6 +27,7 @@ var app =angular.module("AccountsModule",[]);
 		$scope.url="http://localhost:8080/accounts?";
 		$scope.accountview=false;
 		$scope.querystring="";
+		$scope.lastpage=false;
 		refreshAccountslist();
 		function refreshAccountslist() {
 					$scope.pagenumber="1";
@@ -35,8 +36,9 @@ var app =angular.module("AccountsModule",[]);
                         data: $scope.accountsform,
                         url : $scope.url 
                     }).then(function successCallback(response) {
+						
                         $scope.accounts = response.data;
-                        
+						
                     }, function errorCallback(response) {
       
                         console.log(response.statusText);
@@ -44,13 +46,30 @@ var app =angular.module("AccountsModule",[]);
    		};
    		$scope.AccountQuery = function(){
    			urlgenerator();
-			console.log($scope.url);	
+			console.log($scope.url);
    			$http({
                         method : 'GET',
                         url : $scope.url
                     }).then(function successCallback(response) {
 						reseturl();
-                        $scope.accounts = response.data;        
+                        $scope.accounts = response.data;   
+						if(($scope.accountsform).page==="1" | ($scope.accountsform).page===""){
+							$scope.pagenumber = "1";
+							document.getElementById("PreviousButton").classList.add("disabled");
+						}
+						else{
+							$scope.pagenumber = ($scope.accountsform).page;
+							document.getElementById("PreviousButton").classList.remove("disabled");	                        
+						}
+						if($scope.accounts.length === 0){
+							//console.log("success");
+							document.getElementById("NextButton").classList.add("disabled");
+							$scope.lastpage=true;
+						}
+						else{
+							document.getElementById("NextButton").classList.remove("disabled");
+							$scope.lastpage = false;
+						}
                     }, function errorCallback(response) {
       
                         console.log(response.statusText);
@@ -90,22 +109,25 @@ var app =angular.module("AccountsModule",[]);
 				
    			}
 			if(!(($scope.accountsform).type==="")){
-   				$scope.url= $scope.url + '&type=' + ($scope.accountsform).type;
-				
+   				$scope.url= $scope.url + '&type=' + ($scope.accountsform).type;	
    			}
+			console.log($scope.url);
    		};
 		
 		$scope.increamentpage=function(){
-			console.log("success");
-			$scope.pagenumber=(parseInt($scope.pagenumber)+1).toString();
-			($scope.accountsform).page = $scope.pagenumber;
-			$scope.AccountQuery();
+			if(!(document.getElementById("NextButton").classList.contains("disabled"))){
+				$scope.pagenumber=(parseInt($scope.pagenumber)+1).toString();
+				($scope.accountsform).page = $scope.pagenumber;
+				$scope.AccountQuery();
+			}
 		};
 		
 		$scope.decreamentpage=function(){
-			$scope.pagenumber=(parseInt($scope.pagenumber)-1).toString();
-			($scope.accountsform).page = $scope.pagenumber;
-			$scope.AccountQuery();
+			if(!(document.getElementById("PreviousButton").classList.contains("disabled"))){
+				$scope.pagenumber=(parseInt($scope.pagenumber)-1).toString();
+				($scope.accountsform).page = $scope.pagenumber;
+				$scope.AccountQuery();
+			}
 		};
 		
    		function reseturl(){
@@ -141,27 +163,28 @@ var app =angular.module("AccountsModule",[]);
 		};
    		
 		$scope.ProcessString= function(){
-			console.log("fields: " + $scope.fields);
-			console.log("querystring: " + $scope.querystring);
-			for(field of $scope.fields){
-				console.log("Field: "+ field);
-				var field_start = ($scope.querystring).indexOf(field);
-				if(field_start!=-1){
-					var field_removed = ($scope.querystring).slice(field_start + field.length + 2);
-					var field_val = field_removed.slice(0,field_removed.indexOf('"'));
-					console.log("field_Value: "+ field_val);
-					($scope.accountsform)[field] = field_val;
-					$scope.querystring = ($scope.querystring).replace(field + ':"' + field_val + '"', "");
-					console.log("After Field removed: " + $scope.querystring);
-				}
-			 }
-			 console.log("Query: " + ($scope.querystring).trim());
-			 ($scope.accountsform).q = ($scope.querystring).trim();
-			 console.log($scope.accountsform);
-			
-			$scope.AccountQuery();
-			resetobject();
-		}
+			var tempstring = $scope.querystring;
+			if(tempstring.length == 0){
+				resetobject();
+				$scope.AccountQuery();
+			}
+			else{
+				resetobject();
+				for(field of $scope.fields){
+					var field_start = ($scope.querystring).indexOf(field);
+					if(field_start!=-1){
+						var field_removed = ($scope.querystring).slice(field_start + field.length + 2);
+						var field_val = field_removed.slice(0,field_removed.indexOf('"'));
+						($scope.accountsform)[field] = field_val;
+						$scope.querystring = ($scope.querystring).replace(field + ':"' + field_val + '"', "");
+					}
+				 }
+				 ($scope.accountsform).q = ($scope.querystring).trim();
+				 $scope.querystring = tempstring;
+				
+				$scope.AccountQuery();
+			}
+		}  		
 		
-   		
+
      });
