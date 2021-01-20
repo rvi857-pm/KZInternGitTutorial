@@ -36,8 +36,8 @@ public class Utility {
 		return account;
 	}
 
-	public ExampleMatcher matcher(Map<String, String> filter) {
-		return filter.get("search") != null ? ExampleMatcher.matchingAny() : ExampleMatcher.matchingAll();
+	public ExampleMatcher matcher(Map<String, String> filter, boolean flag) {
+		return flag ? ExampleMatcher.matchingAny() : ExampleMatcher.matchingAll();
 	}
 
 	public ExampleMatcher rules(ExampleMatcher obj) {
@@ -51,12 +51,12 @@ public class Utility {
 	}
 
 	public List<Account> getList(Map<String, String> filter) {
-		Example<Account> example = Example.of(probe(filter, false), rules(matcher(filter)));
+		Example<Account> example = Example.of(probe(filter, false), rules(matcher(filter, false)));
 		List<Account> list = accountRepo.findAll(example);
 		if (filter.get("search") != null) {
-			Example<Account> univExample = Example.of(probe(filter, true), rules(matcher(filter)));
+			Example<Account> univExample = Example.of(probe(filter, true), rules(matcher(filter, true)));
 			List<Account> univList = accountRepo.findAll(univExample);
-
+			
 			List<Account> result = list.stream().distinct().filter(univList::contains).collect(Collectors.toList());
 			return result;
 		} else
@@ -64,7 +64,7 @@ public class Utility {
 	}
 
 	public Page<Account> getPage(Map<String, String> filter, int page, int pageSize) {
-		Example<Account> example = Example.of(probe(filter, false), rules(matcher(filter)));
+		Example<Account> example = Example.of(probe(filter, false), rules(matcher(filter, false)));
 		Pageable obj = PageRequest.of(page, pageSize);
 		Page<Account> retVal = accountRepo.findAll(example, obj);
 		return retVal;
