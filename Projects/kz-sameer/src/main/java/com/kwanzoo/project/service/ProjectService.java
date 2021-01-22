@@ -12,6 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.kwanzoo.project.dao.ActivityDao;
+import com.kwanzoo.project.dao.BuyerDao;
 import com.kwanzoo.project.dao.Dao;
 import com.kwanzoo.project.model.Account;
 
@@ -20,10 +22,17 @@ public class ProjectService {
 	    @Autowired
 	    Dao repository;
 	    
+	    @Autowired
+	    BuyerDao buyerRepo;
+	    
+	    @Autowired
+	    ActivityDao activityRepo;
+	    
 	    int pageSize = 10;
+	     
 	    
 	    public Page<Account> findBy(Account account, int pageNo, int pageSize_, String any){
-	    	
+
 	    	if(pageSize_ != 0) {
 	    		pageSize = pageSize_;
 	    	}
@@ -32,7 +41,7 @@ public class ProjectService {
 	        
 	    	if(any != null) {
 	    		Account newAccount = new Account();
-	    		newAccount.setALL(any);
+	    		newAccount.setAll(any);
 
 	    		ExampleMatcher matcherAny = ExampleMatcher.matchingAny().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
 	    		ExampleMatcher matcherAll = ExampleMatcher.matchingAll().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
