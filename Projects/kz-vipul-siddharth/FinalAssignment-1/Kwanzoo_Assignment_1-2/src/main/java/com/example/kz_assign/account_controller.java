@@ -2,6 +2,7 @@ package com.example.kz_assign;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -15,13 +16,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.kz_assign.dao.account_repo;
+import com.example.kz_assign.dao.buyer_repo;
 import com.example.kz_assign.models.account;
+import com.example.kz_assign.models.buyer;
 
 @RestController
 public class account_controller {
 
 	@Autowired
 	private account_repo repo;
+	
+	@Autowired
+	private buyer_repo br;
 	
 	private String lastpage;
 	
@@ -32,8 +38,6 @@ public class account_controller {
 											@RequestParam(defaultValue="",required=false)String q,
 											account probaccount,
 											Model model) {
-		//System.out.println(probaccount.getIp_domain());
-		//System.out.println(probaccount.getState());
 		ExampleMatcher QueryMatcher = ExampleMatcher.matchingAny()
 			      .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
 			      .withMatcher("city", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
@@ -118,11 +122,8 @@ public class account_controller {
 		}
 	}
 
-//		@GetMapping("/temp")
-//		@ResponseBody
-//		public String show_accountlist(account a) {
-//			if(a.getName() == null)
-//				return "check";
-//			return a.getName();
-//		}
+//	@GetMapping("/temp")
+//	public List<buyer> show_buyeraccount(account a) {
+//		return br.findAll();
+//	}
 }

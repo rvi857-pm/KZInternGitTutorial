@@ -1,11 +1,18 @@
 package com.example.kz_assign.models;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
-@Table(name="acc", schema="kwanzoo_assignments")
+@Table(name="acc", schema="roughwork")
 public class account{
 	
 	@Column(name="name")
@@ -32,6 +39,10 @@ public class account{
 	@Id
 	@Column(name="id")
 	private String id;
+	
+	@JsonBackReference
+	@OneToMany(fetch = FetchType.EAGER,mappedBy="acc",cascade = CascadeType.ALL)
+    private Set<buyer> buyers;
 	
 	public String getId() {
 		return id;
@@ -69,6 +80,12 @@ public class account{
 	}
 	public void setState(String state) {
 		this.state = state;
+	}
+	public Set<buyer> getBuyers() {
+		return buyers;
+	}
+	public void setBuyers(Set<buyer> buyers) {
+		this.buyers = buyers;
 	}
 	public String getType() {
 		return type;
