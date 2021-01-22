@@ -77,7 +77,7 @@ export default
         })
       }
       else{
-        axios.post("http://localhost:8080/accounts" + input + "&" + this.str)
+        axios.get("http://localhost:8080/accounts" + input + "&" + this.str)
         .then((jsonData) => {
         this.items = jsonData.data.content
         this.last = jsonData.data.last

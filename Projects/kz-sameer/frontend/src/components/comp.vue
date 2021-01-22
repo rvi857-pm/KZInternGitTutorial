@@ -1,6 +1,6 @@
 <template>
   <div id ='t'>
-    <b-table responsive="lg" hover :items="items">
+    <b-table small responsive="lg" hover :items="items">
       <template #cell(name)="data">
         <router-link :to="`/single/${data.index}`">{{ data.value }}</router-link>
       </template>

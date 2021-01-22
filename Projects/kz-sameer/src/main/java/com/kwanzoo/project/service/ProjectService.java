@@ -20,37 +20,11 @@ public class ProjectService {
 	    @Autowired
 	    Dao repository;
 	    
-	    Integer pageNo = 0;
-	    Integer pageSize = 10;
-	     
-	    public Page<Account> getAll(Integer page, Integer pageSize_)
-	    {
-	    	
-	    	if(page != null) {
-	    		pageNo = page;
-	    	}
-	    	else {
-	    		pageNo = 0;
-	    	}
-	    	if(pageSize_ != null) {
-	    		pageSize = pageSize_;
-	    	}
-	    	
-	        Pageable paging = PageRequest.of(pageNo, pageSize);
-	 
-	        return repository.findAll(paging);
-	    }
+	    int pageSize = 10;
 	    
-	    
-	    public Page<Account> findBy(Account account, Integer page, Integer pageSize_, String any){
-
-	    	if(page != null) {
-	    		pageNo = page;
-	    	}
-	    	else {
-	    		pageNo = 0;
-	    	}
-	    	if(pageSize_ != null) {
+	    public Page<Account> findBy(Account account, int pageNo, int pageSize_, String any){
+	    	
+	    	if(pageSize_ != 0) {
 	    		pageSize = pageSize_;
 	    	}
 	    	
