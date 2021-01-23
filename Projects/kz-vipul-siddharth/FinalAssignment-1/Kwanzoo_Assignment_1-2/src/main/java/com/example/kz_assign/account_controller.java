@@ -28,7 +28,7 @@ public class account_controller {
 	public List<Map<String,Object>> show_accountlist(@RequestParam(defaultValue="",required=false)String page, 		//getting the optional parameters
 											@RequestParam(defaultValue="",required=false)String page_size,
 											@RequestParam(defaultValue="",required=false)String q,
-											@RequestParam(defaultValue="",required=false)String metric,
+											@RequestParam(defaultValue="",required=false)List<String> metric,
 											account probaccount,
 											Model model) {
 		accountslist = accservice.get_filteredaccounts(page, page_size, q, probaccount, model);
