@@ -1,54 +1,97 @@
 package com.example.pagination.model;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Buyer {
 	@Id
 	private String id;
-	private String accountId;
 	private String city;
 	private String state;
 	private String country;
 	private String jobLevel;
 	private String jobFunction;
-	
-	public String getAccountId() {
-		return accountId;
+
+	@ManyToOne
+	@JoinColumn(name = "account_id", insertable = false, updatable = false)
+	@JsonBackReference
+	private Account account;
+
+	@OneToMany(targetEntity = Activity.class, mappedBy = "buyer", orphanRemoval = false)
+	@JsonManagedReference
+	private List<Activity> activities;
+
+	public String getId() {
+		return id;
 	}
-	public void setAccountId(String accountId) {
-		this.accountId = accountId;
+
+	public void setId(String id) {
+		this.id = id;
 	}
+
 	public String getCity() {
 		return city;
 	}
+
 	public void setCity(String city) {
 		this.city = city;
 	}
+
 	public String getState() {
 		return state;
 	}
+
 	public void setState(String state) {
 		this.state = state;
 	}
+
 	public String getCountry() {
 		return country;
 	}
+
 	public void setCountry(String country) {
 		this.country = country;
 	}
+
 	public String getJobLevel() {
 		return jobLevel;
 	}
+
 	public void setJobLevel(String jobLevel) {
 		this.jobLevel = jobLevel;
 	}
+
 	public String getJobFunction() {
 		return jobFunction;
 	}
+
 	public void setJobFunction(String jobFunction) {
 		this.jobFunction = jobFunction;
+	}
+
+	public Account getAccount() {
+		return account;
+	}
+
+	public void setAccount(Account account) {
+		this.account = account;
+	}
+
+	public List<Activity> getActivities() {
+		return activities;
+	}
+
+	public void setActivities(List<Activity> activities) {
+		this.activities = activities;
 	}
 
 }

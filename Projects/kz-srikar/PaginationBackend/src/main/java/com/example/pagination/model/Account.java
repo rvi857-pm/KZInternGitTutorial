@@ -1,7 +1,12 @@
 package com.example.pagination.model;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Account {
@@ -14,6 +19,18 @@ public class Account {
 	private String country;
 	private String type;
 	private String salesforceId;
+
+	@OneToMany(targetEntity = Buyer.class, mappedBy = "account", orphanRemoval = false)
+	@JsonManagedReference
+	private List<Buyer> buyers;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public String getName() {
 		return name;
@@ -71,13 +88,15 @@ public class Account {
 		this.salesforceId = salesforceId;
 	}
 
+	public List<Buyer> getBuyers() {
+		return buyers;
+	}
+
+	public void setBuyers(List<Buyer> buyers) {
+		this.buyers = buyers;
+	}
+
 	public void setAll(String value) {
-		this.name = value;
-		this.ipDomain = value;
-		this.city = value;
-		this.state = value;
-		this.country = value;
-		this.type = value;
-		this.salesforceId = value;
+		this.name = this.ipDomain = this.city = this.state = this.country = this.type = this.salesforceId = value;
 	}
 }
