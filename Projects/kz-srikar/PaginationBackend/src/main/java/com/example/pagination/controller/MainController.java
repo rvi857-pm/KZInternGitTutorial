@@ -17,7 +17,8 @@ public class MainController {
 
 	@GetMapping(path = "/accounts")
 	public Object search(@ModelAttribute Account account, @RequestParam(required = false) Integer page,
-			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) String q) {
+			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) String q,
+			@RequestParam(required = false) String metrics) {
 
 		if (page == null) {
 			return accountService.getAllResults();
