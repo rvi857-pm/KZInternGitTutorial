@@ -1,13 +1,18 @@
 package com.example.kz_assign.models;
 
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -42,6 +47,19 @@ public class buyer {
 	@ManyToOne(cascade= CascadeType.ALL)
     @JoinColumn(name = "account_id",  insertable = false, updatable = false)
     private account acc;
+	
+	@JsonBackReference
+	@OneToMany(fetch = FetchType.LAZY,mappedBy="activity_buyer",cascade = CascadeType.ALL)
+    private Set<activity> activities;
+	
+
+	public Set<activity> getActivities() {
+		return activities;
+	}
+
+	public void setActivities(Set<activity> activities) {
+		this.activities = activities;
+	}
 
 	public String getBuyer_id() {
 		return buyer_id;

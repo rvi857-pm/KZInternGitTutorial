@@ -41,7 +41,7 @@ public class account{
 	private String id;
 	
 	@JsonBackReference
-	@OneToMany(fetch = FetchType.EAGER,mappedBy="acc",cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY,mappedBy="acc",cascade = CascadeType.ALL)
     private Set<buyer> buyers;
 	
 	public String getId() {
