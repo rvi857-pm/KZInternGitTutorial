@@ -13,7 +13,7 @@ alter table account add column id varchar(100) NOT NULL;
 delete from account where name = "";
 
 -- hash value as the primary id of table
-update account set id = bin_to_uuid( unhex( md5( concat_ws(' ', name, ip_domain, city, state, country, type, salesforce_id))));
+update account set id = uuid();
 alter table account modify column id varchar(100) FIRST;
 
 -- sets id as the primary key
