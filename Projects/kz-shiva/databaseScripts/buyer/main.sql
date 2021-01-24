@@ -12,6 +12,7 @@ create table buyer(
 );
 
 -- updates geographical values
+drop table if exists geo;
 create table geo (
     id varchar(100),
     city varchar(100),
@@ -19,6 +20,7 @@ create table geo (
     country varchar(100)
 );
 
+drop table if exists variables;
 create table variables (
     id varchar(100),
     source varchar(100),
@@ -50,9 +52,7 @@ update buyer set account_id  = getAccountId(id);
 update buyer set city = getCity(id);
 update buyer set state = getState(id);
 update buyer set country = getCountry;
-drop table geo;
 
 update buyer set source = getSource(id);
 update buyer set job_level = getJobLevel(id);
 update buyer set job_function = getJobFunction(id);
-drop table variables;

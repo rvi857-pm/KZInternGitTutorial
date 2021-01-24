@@ -1,4 +1,5 @@
 -- creates table account
+alter table buyer drop constraint FK_account;
 drop table if exists account;
 create table account ( name varchar(100), ip_domain varchar(100), city varchar(100), state varchar(100), country varchar(100), type varchar(100), salesforce_id varchar(100), one varchar(100), two varchar(100));
 
