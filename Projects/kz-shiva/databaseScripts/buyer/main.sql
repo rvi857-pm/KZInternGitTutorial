@@ -51,7 +51,7 @@ update buyer set account_id  = getAccountId(id);
 
 update buyer set city = getCity(id);
 update buyer set state = getState(id);
-update buyer set country = getCountry;
+update buyer set country = getCountry(id);
 
 update buyer set source = getSource(id);
 update buyer set job_level = getJobLevel(id);
