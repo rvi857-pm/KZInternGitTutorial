@@ -47,7 +47,7 @@ source buyer/getJobFunction.sql;
 
 -- updates table with right account_id value and sets it as a foreign key
 update buyer set account_id  = getAccountId(id);
--- alter table buyer add constraint FK_account foreign key(account_id) references account(id);
+alter table buyer add constraint FK_account foreign key(account_id) references account(id);
 
 update buyer set city = getCity(id);
 update buyer set state = getState(id);
