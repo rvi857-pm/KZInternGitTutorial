@@ -5,20 +5,21 @@ CREATE FUNCTION getSource ( buyerId varchar(100) )
 	READS SQL DATA
 	BEGIN
 
-		DECLARE sourceValue varchar(100);
+		DECLARE sourceVal varchar(100);
+		DECLARE tempVar varchar(100);
 		call updateVariables(buyerId);
-		set @tempVar = "";
-		set @tempVar = (select source from variables where id = buyerId);
-		if @tempVar = "bluekai" then
-			set sourceVal = @tempVar;
-		elseif @tempVar = "bomborai" then
+
+		set tempVar = (select source from variables where id = buyerId);
+		if tempVar = "bluekai" then
+			set sourceVal = tempVar;
+		elseif tempVar = "bombora" then
 			set sourceVal = "bombora";
-		elseif @tempVar = "kickfire" then
+		elseif tempVar = "kickfire" then
 			set sourceVal = "reverse_ip_lookup";
-		elseif @tempVar = "ip" then
+		elseif tempVar = "ip" then
 			set sourceVal = "ip_range_match";
 		end if;
-		RETURN sourceValue;
+		RETURN sourceVal;
 
 	END ||
 DELIMITER ;
