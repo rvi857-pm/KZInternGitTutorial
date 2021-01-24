@@ -23,7 +23,28 @@ public class AccountService {
 	@Autowired
 	private AccountRepository accountRepository;
 
-	public Iterable<Account> getAllResults() {
+	public Page<Account> accountServiceUtility(Account account, Integer page, Integer pageSize, String q) {
+		if (page == null) {
+			page = 1;
+		}
+
+		if (pageSize == null) {
+			pageSize = 10;
+		}
+
+		if (q != null) {
+			if (account.getName() == null && account.getIpDomain() == null && account.getCity() == null
+					&& account.getState() == null && account.getCountry() == null && account.getType() == null
+					&& account.getSalesforceId() == null) {
+				return getUniversalSearchResults(page, pageSize, q);
+			}
+			return getMultiSearchResults(page, pageSize, account, q);
+		}
+
+		return getCompoundSearchResults(page, pageSize, account);
+	}
+
+	public List<Account> getAllResults() {
 		return accountRepository.findAll();
 	}
 
