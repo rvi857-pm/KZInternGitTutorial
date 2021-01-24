@@ -5,6 +5,10 @@ CREATE PROCEDURE updateGeo (
 	)
 	BEGIN
 
+		DECLARE cityVal varchar(100);
+		DECLARE stateVal varchar(100);
+		DECLARE countryVal varchar(100);
+
 		drop temporary table if exists geoProto;
 
 		create temporary table geoProto as
@@ -18,6 +22,6 @@ CREATE PROCEDURE updateGeo (
 		set stateVal = (select state from geoProto);
 		set countryVal = (select country from geoProto);
 
-		insert into geo (buyerId, cityVal, stateVal, countryVal);
+		insert into geo values(buyerId, cityVal, stateVal, countryVal);
 	END || 
 DELIMITER ;
