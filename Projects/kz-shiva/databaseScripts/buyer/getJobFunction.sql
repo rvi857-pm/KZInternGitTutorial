@@ -5,8 +5,9 @@ CREATE FUNCTION getJobFunction ( buyerId varchar(100) )
 	READS SQL DATA
 	BEGIN
 
-        set @jobLevelFunction = (select job_function from variables where id = buyerId);
-        RETURN @jobLevelFunction;
+		DECLARE jobFunctionValue varchar(100);
+        set jobFunctionValue = (select job_function from variables where id = buyerId);
+        RETURN jobFunctionValue;
 
 	END ||
 DELIMITER ;
