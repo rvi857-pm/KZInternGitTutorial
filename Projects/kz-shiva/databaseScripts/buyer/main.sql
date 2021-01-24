@@ -1,4 +1,5 @@
 -- initializes buyer table
+alter table buyer drop constraint FK_buyer;
 drop table if exists buyer;
 create table buyer(
     id varchar(100) NOT NULL PRIMARY KEY,
