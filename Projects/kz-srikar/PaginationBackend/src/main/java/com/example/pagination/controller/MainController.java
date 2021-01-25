@@ -1,5 +1,7 @@
 package com.example.pagination.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +28,7 @@ public class MainController {
 	@GetMapping(path = "/accounts")
 	public PageResponse search(@ModelAttribute Account account, @RequestParam(required = false) Integer page,
 			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) String q,
-			@RequestParam(required = false) String metrics) {
+			@RequestParam(required = false) List<String> metrics) {
 
 		Page<Account> searchAccounts = accountService.accountServiceUtility(account, page, pageSize, q);
 

@@ -3,6 +3,7 @@ package com.example.pagination.service;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +18,9 @@ import com.example.pagination.model.PageResponse;
 public class MetricsService {
 
 	private void calculate(List<Buyer> buyers, Map<String, Object> contentItem, String metricType) {
-		if (metricType == "score") {
+		if (metricType.equals("score")) {
 			float score = 0;
+			int numOfBuyersQualified = 0;
 			for (int i = 0; i < buyers.size(); i++) {
 				Buyer buyer = buyers.get(i);
 				List<Activity> activities = buyer.getActivities();
@@ -44,10 +46,21 @@ public class MetricsService {
 				} else if (buyer.getJobLevel().equals("Manager")) {
 					activityScore *= 1.25;
 				}
-
+				if (activityScore >= 4) {
+					numOfBuyersQualified += 1;
+				}
 				score += activityScore;
 			}
+
+			if (score >= 10 && numOfBuyersQualified >= 4) {
+				contentItem.put("marketing_qualified", true);
+			} else {
+				contentItem.put("marketing_qualified", false);
+			}
 			contentItem.put("score", score);
+
+		} else if (metricType.equals("marketing_qualified")) {
+			calculate(buyers, contentItem, "score");
 
 		} else if (metricType.equals("buyer_count")) {
 			contentItem.put("buyer_count", buyers.size());
@@ -84,7 +97,59 @@ public class MetricsService {
 
 		} else if (metricType.equals("persona_count")) {
 
+			Map<String, Map<String, Object>> personas = new HashMap<>();
+			for (int i = 0; i < buyers.size(); i++) {
+				Buyer buyer = buyers.get(i);
+				if (buyer.getJobLevel().equals("") && buyer.getJobFunction().equals("")) {
+					continue;
+				}
+				String key = buyer.getJobLevel() + "$" + buyer.getJobFunction();
+				if (personas.containsKey(key)) {
+					Map<String, Object> persona = personas.get(key);
+					persona.replace("count", (int) persona.get("count") + 1);
+					personas.replace(key, persona);
+				} else {
+					Map<String, Object> persona = new HashMap<>();
+					persona.put("job_level", buyer.getJobLevel());
+					persona.put("job_function", buyer.getJobFunction());
+					persona.put("count", 1);
+					personas.put(key, persona);
+				}
+			}
+			List<Map<String, Object>> personaCount = new ArrayList<Map<String, Object>>();
+
+			for (Map.Entry<String, Map<String, Object>> entry : personas.entrySet()) {
+				personaCount.add(entry.getValue());
+			}
+			contentItem.put("persona_count", personaCount);
+
 		} else if (metricType.equals("location_count")) {
+			Map<String, Map<String, Object>> locations = new HashMap<>();
+			for (int i = 0; i < buyers.size(); i++) {
+				Buyer buyer = buyers.get(i);
+				if (buyer.getCity().equals("") && buyer.getState().equals("") && buyer.getCountry().equals("")) {
+					continue;
+				}
+				String key = buyer.getCity() + "$" + buyer.getState() + "$" + buyer.getCountry();
+				if (locations.containsKey(key)) {
+					Map<String, Object> location = locations.get(key);
+					location.replace("count", (int) location.get("count") + 1);
+					locations.replace(key, location);
+				} else {
+					Map<String, Object> location = new HashMap<>();
+					location.put("city", buyer.getCity());
+					location.put("state", buyer.getState());
+					location.put("country", buyer.getCountry());
+					location.put("count", 1);
+					locations.put(key, location);
+				}
+			}
+			List<Map<String, Object>> locationCount = new ArrayList<Map<String, Object>>();
+
+			for (Map.Entry<String, Map<String, Object>> entry : locations.entrySet()) {
+				locationCount.add(entry.getValue());
+			}
+			contentItem.put("location_count", locationCount);
 
 		} else if (metricType.equals("all")) {
 			calculate(buyers, contentItem, "score");
@@ -96,11 +161,10 @@ public class MetricsService {
 
 	}
 
-	public PageResponse metricsServiceUtility(Page<Account> accountPage, String metrics) {
+	public PageResponse metricsServiceUtility(Page<Account> accountPage, List<String> metricParams) {
 
-		String[] metricParams = new String[0];
-		if (metrics != null) {
-			metricParams = metrics.split("[,]", 0);
+		if (metricParams == null) {
+			metricParams = Collections.emptyList();
 		}
 
 		List<Account> accounts = accountPage.getContent();
@@ -125,10 +189,15 @@ public class MetricsService {
 			contentItem.put("type", account.getType());
 			contentItem.put("salesforce_id", account.getSalesforceId());
 
-			for (int j = 0; j < metricParams.length; j++) {
+			for (int j = 0; j < metricParams.size(); j++) {
 
-				calculate(account.getBuyers(), contentItem, metricParams[j]);
+				calculate(account.getBuyers(), contentItem, metricParams.get(j));
 			}
+
+			if (!metricParams.contains("marketing_qualified")) {
+				contentItem.remove("marketing_qualified");
+			}
+
 			content.add(contentItem);
 		}
 
