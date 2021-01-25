@@ -29,10 +29,13 @@ public class account_controller {
 											@RequestParam(defaultValue="",required=false)String page_size,
 											@RequestParam(defaultValue="",required=false)String q,
 											@RequestParam(defaultValue="",required=false)List<String> metric,
+											@RequestParam(defaultValue="",required=false)String startdate,
+											@RequestParam(defaultValue="",required=false)String enddate,
+											@RequestParam(defaultValue="",required=false)List<String> exclude,
 											account probaccount,
 											Model model) {
 		accountslist = accservice.get_filteredaccounts(page, page_size, q, probaccount, model);
-		List<Map<String,Object>> datamaplist = metricsservice.addmetrics(accountslist, metric);
+		List<Map<String,Object>> datamaplist = metricsservice.addmetrics(accountslist, metric, startdate, enddate, exclude);
 		return datamaplist;
 	}
 
