@@ -161,10 +161,15 @@ public class MetricsService {
 
 	}
 
-	public PageResponse metricsServiceUtility(Page<Account> accountPage, List<String> metricParams) {
+	public PageResponse metricsServiceUtility(Page<Account> accountPage, List<String> metricParams,
+			List<String> exclude) {
 
 		if (metricParams == null) {
 			metricParams = Collections.emptyList();
+		}
+
+		if (exclude == null) {
+			exclude = Collections.emptyList();
 		}
 
 		List<Account> accounts = accountPage.getContent();
@@ -194,8 +199,14 @@ public class MetricsService {
 				calculate(account.getBuyers(), contentItem, metricParams.get(j));
 			}
 
-			if (!metricParams.contains("marketing_qualified")) {
+			if (!metricParams.contains("marketing_qualified") && contentItem.containsKey("marketing_qualified")) {
 				contentItem.remove("marketing_qualified");
+			}
+
+			for (int j = 0; j < exclude.size(); j++) {
+				if (contentItem.containsKey(exclude.get(j))) {
+					contentItem.remove(exclude.get(j));
+				}
 			}
 
 			content.add(contentItem);
