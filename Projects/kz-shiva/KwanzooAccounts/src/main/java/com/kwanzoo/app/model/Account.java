@@ -1,7 +1,10 @@
 package com.kwanzoo.app.model;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Account {
@@ -15,6 +18,17 @@ public class Account {
 	private String country;
 	private String type;
 	private String salesforceId;
+	
+	@OneToMany(mappedBy = "account")
+	private List<Buyer> buyers;
+
+	public List<Buyer> getBuyers() {
+		return buyers;
+	}
+
+	public void setBuyers(List<Buyer> buyers) {
+		this.buyers = buyers;
+	}
 
 	public String getName() {
 		return name;
