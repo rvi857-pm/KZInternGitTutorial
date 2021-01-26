@@ -28,8 +28,8 @@ public class MainController {
 	@GetMapping(path = "/accounts")
 	public PageResponse search(@ModelAttribute Account account, @RequestParam(required = false) Integer page,
 			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) String q,
-			@RequestParam(required = false) List<String> metrics,
-			@RequestParam(required = false) List<String> exclude) {
+			@RequestParam(required = false) List<String> metrics, @RequestParam(required = false) List<String> exclude,
+			@RequestParam(required = false) String start, @RequestParam(required = false) String end) {
 
 		Page<Account> searchAccounts = accountService.accountServiceUtility(account, page, pageSize, q);
 

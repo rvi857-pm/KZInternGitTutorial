@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.cache.annotation.Cacheable;
+
 import org.springframework.data.domain.Page;
 import com.example.pagination.model.Account;
 import com.example.pagination.model.Activity;
@@ -20,7 +22,7 @@ public class MetricsService {
 	private void calculate(List<Buyer> buyers, Map<String, Object> contentItem, String metricType) {
 		if (metricType.equals("score")) {
 			float score = 0;
-			int numOfBuyersQualified = 0;
+			float numOfBuyersQualified = 0;
 			for (int i = 0; i < buyers.size(); i++) {
 				Buyer buyer = buyers.get(i);
 				List<Activity> activities = buyer.getActivities();
@@ -51,7 +53,6 @@ public class MetricsService {
 				}
 				score += activityScore;
 			}
-
 			if (score >= 10 && numOfBuyersQualified >= 4) {
 				contentItem.put("marketing_qualified", true);
 			} else {
@@ -59,7 +60,7 @@ public class MetricsService {
 			}
 			contentItem.put("score", score);
 
-		} else if (metricType.equals("marketing_qualified")) {
+		} else if (metricType.equals("marketing_qualified") && !contentItem.containsKey("marketing_qualified")) {
 			calculate(buyers, contentItem, "score");
 
 		} else if (metricType.equals("buyer_count")) {
@@ -160,6 +161,13 @@ public class MetricsService {
 		}
 
 	}
+	
+	@Cacheable(value = "metrics", key = "#id")
+	private Map<String, Object> getContentItem(Account account, String id){
+		Map<String, Object> contentItem = new HashMap<String, Object>();
+		calculate(account.getBuyers(), contentItem, "all");
+		return contentItem;
+	}
 
 	public PageResponse metricsServiceUtility(Page<Account> accountPage, List<String> metricParams,
 			List<String> exclude) {
@@ -181,9 +189,8 @@ public class MetricsService {
 
 		for (int i = 0; i < accounts.size(); i++) {
 
-			Map<String, Object> contentItem = new HashMap<String, Object>();
-
 			Account account = accounts.get(i);
+			Map<String, Object> contentItem = getContentItem(account, account.getId());
 
 			contentItem.put("id", account.getId());
 			contentItem.put("name", account.getName());
@@ -196,10 +203,10 @@ public class MetricsService {
 
 			for (int j = 0; j < metricParams.size(); j++) {
 
-				calculate(account.getBuyers(), contentItem, metricParams.get(j));
 			}
 
-			if (!metricParams.contains("marketing_qualified") && contentItem.containsKey("marketing_qualified")) {
+			if (!(metricParams.contains("marketing_qualified") || metricParams.contains("all"))
+					&& contentItem.containsKey("marketing_qualified")) {
 				contentItem.remove("marketing_qualified");
 			}
 
