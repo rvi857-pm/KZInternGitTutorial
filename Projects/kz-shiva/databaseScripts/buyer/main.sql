@@ -57,3 +57,5 @@ update buyer set country = getCountry(id);
 update buyer set source = getSource(id);
 update buyer set job_level = getJobLevel(id);
 update buyer set job_function = getJobFunction(id);
+
+drop table geo, variables;
