@@ -20,7 +20,6 @@ public class Account {
 	private String country;
 	private String type;
 	private String salesforceId;
-	private Float score;
 
 	@OneToMany(targetEntity = Buyer.class, mappedBy = "account", orphanRemoval = false)
 	@JsonManagedReference
@@ -88,14 +87,6 @@ public class Account {
 
 	public void setSalesforceId(String salesforceId) {
 		this.salesforceId = salesforceId;
-	}
-
-	public Float getScore() {
-		return score;
-	}
-
-	public void setScore(Float score) {
-		this.score = score;
 	}
 
 }

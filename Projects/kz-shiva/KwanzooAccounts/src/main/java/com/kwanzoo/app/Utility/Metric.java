@@ -1,13 +1,15 @@
 package com.kwanzoo.app.Utility;
 
+import java.util.List;
+
 public class Metric {
 
 	private float score;
 	private boolean qualified;
 	private int buyerCount;
 	private int activityCount;
-	private Persona personaCount;
-	private Location locationCount;
+	private List<Persona> personaCount;
+	private List<Location> locationCount;
 
 	public Metric() {
 		super();
@@ -45,19 +47,19 @@ public class Metric {
 		this.activityCount = activityCount;
 	}
 
-	public Persona getPersonaCount() {
+	public List<Persona> getPersonaCount() {
 		return personaCount;
 	}
 
-	public void setPersonaCount(Persona personaCount) {
+	public void setPersonaCount(List<Persona> personaCount) {
 		this.personaCount = personaCount;
 	}
 
-	public Location getLocationCount() {
+	public List<Location> getLocationCount() {
 		return locationCount;
 	}
 
-	public void setLocationCount(Location locationCount) {
+	public void setLocationCount(List<Location> locationCount) {
 		this.locationCount = locationCount;
 	}
 
