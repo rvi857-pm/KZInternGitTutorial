@@ -11,6 +11,8 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 
+import com.example.kz_assign.KwanzooAssignment12Application;
+import com.example.kz_assign.dao.Redis_repo;
 import com.example.kz_assign.models.account;
 import com.example.kz_assign.models.activity;
 import com.example.kz_assign.models.buyer;
@@ -19,6 +21,9 @@ import com.example.kz_assign.models.buyer;
 public class MetricsService {
 	
 	String startdate,enddate;
+	boolean requestforall = false;
+	
+	private static Redis_repo redisrepo = new Redis_repo(KwanzooAssignment12Application.redisTemplate());
 	
 	private static Map<String, Integer> multipliermapping;
 	
@@ -107,58 +112,62 @@ public class MetricsService {
 		return result;
 	}
 	
-	private void addscoreormqfield(account acc, Map<String,Object> datamapsample, String field){
+	@SuppressWarnings("unchecked")
+	private void addactivityfields(account acc, Map<String,Object> datamapsample, String field, boolean activity_count){
 		int accountscore = 0;
 		boolean market_qualified = false;
 		List<buyer> buyerslist = new ArrayList<buyer>(acc.getBuyers()); 
-		int qualifiedbuyer =0 ;
-		for(int i=0; i<buyerslist.size(); i++) {
-			int buyer_score =0;
-			int multiplier = multipliermapping.getOrDefault(buyerslist.get(i).getJob_level(), 100);
-			List<activity> activitylist = new ArrayList<>(buyerslist.get(i).getActivities());
-			for(activity a:activitylist) {
-				if(comparedatetime(a.getDate())) {
-					buyer_score += (activitymapping.getOrDefault(a.getType(), 1))*multiplier;
+		Map<String,Integer> buyeractivities = new LinkedHashMap<>();
+		Map<String,Object>redismapsample = redisrepo.findById(acc.getId());
+		if(redismapsample==null | !(startdate.equals("")) | !(enddate.equals(""))) {
+			int qualifiedbuyer =0 ;
+			buyeractivities.put("Ad Click", 0);
+			buyeractivities.put("Website Visit", 0);
+			buyeractivities.put("Form Fill", 0);
+			buyeractivities.put("Live Chat", 0);
+			for(int i=0; i<buyerslist.size(); i++) {
+				int buyer_score =0;
+				int multiplier = multipliermapping.getOrDefault(buyerslist.get(i).getJob_level(), 100);
+				List<activity> activitylist = new ArrayList<>(buyerslist.get(i).getActivities());
+				for(activity a:activitylist) {
+					if(comparedatetime(a.getDate())) {
+						buyer_score += (activitymapping.getOrDefault(a.getType(), 1))*multiplier;
+						int temp = buyeractivities.get(a.getType())+1;
+						buyeractivities.replace(a.getType(), temp);
+					}
 				}
+				if(buyer_score >= 4000)
+					qualifiedbuyer+=1;
+				accountscore += buyer_score;
 			}
-			if(buyer_score >= 4000)
-				qualifiedbuyer+=1;
-			accountscore += buyer_score;
+			if(qualifiedbuyer >3 & accountscore>=10000)
+				market_qualified = true;
+			if(startdate.equals("") & enddate.equals("")) {
+				redismapsample = new LinkedHashMap<>();
+				redismapsample.put("id", acc.getId());
+				redismapsample.put("score", accountscore);
+				redismapsample.put("market_qualified", market_qualified);
+				redismapsample.put("activity_count", buyeractivities);
+				redisrepo.save(redismapsample);
+			}
+		}else {
+			accountscore = (int) redismapsample.get("score");
+			buyeractivities = (Map<String, Integer>) redismapsample.get("activity_count");
+			market_qualified = (boolean) redismapsample.get("market_qualified");
 		}
-		if(qualifiedbuyer >3 & accountscore>=10000)
-			market_qualified = true;
 		if(field.equals("score") | (field.equals("scoreandmq")))
 			datamapsample.put("score", ((double)accountscore/(double)1000));
 		if(field.equals("market_qualified") | (field.equals("scoreandmq")))
 			datamapsample.put("market_qualified", market_qualified);
+		if(activity_count)
+			datamapsample.put("activity_count",buyeractivities);
 
 	}
 
 	private void addbuyer_countfield(account acc, Map<String,Object>datamapsample) {
 		datamapsample.put("buyer_count", acc.getBuyers().size());
 	}
-	
-	private void addactivity_countfield(account acc, Map<String,Object>datamapsample) {
-		List<buyer> buyerslist = new ArrayList<buyer>(acc.getBuyers()); 
-		Map<String,Integer> buyeractivities = new LinkedHashMap<>();
-		buyeractivities.put("Ad Click", 0);
-		buyeractivities.put("Website Visit", 0);
-		buyeractivities.put("Form Fill", 0);
-		buyeractivities.put("Live Chat", 0);
-		for(int i=0; i<buyerslist.size(); i++) {
-			List<activity> activitylist = new ArrayList<>(buyerslist.get(i).getActivities());
-			
-			for(activity a:activitylist) {
-				if(comparedatetime(a.getDate())) {
-					int temp = buyeractivities.get(a.getType())+1;
-					buyeractivities.replace(a.getType(), temp);
-				}
-				
-			}
-		}
-		datamapsample.put("activity_count",buyeractivities);
-	}
-	
+		
 	public void addpersona_countfield(account acc, Map<String,Object>datamapsample) {
 		List<buyer> buyerslist = new ArrayList<buyer>(acc.getBuyers());
 		List<Map<String,Object>> persona_countlist = new ArrayList<>();
@@ -217,39 +226,34 @@ public class MetricsService {
 		datamapsample.put("Location_count", location_countlist);
 	}
 	
-	public List<Map<String,Object>> addmetric(List<account> accountslist, String metric, List<Map<String,Object>> datamaplist ){
+	
+	public List<Map<String,Object>> addmetric(List<account> accountslist, String metric, List<Map<String,Object>> datamaplist, boolean activity_count ){
 //		System.out.println(metric);
-		if(metric.equals("score") | metric.equals("scoreandmq") | metric.equals("market_qualified")) {
-//			System.out.println("Check for metrics");
-			for(int i=0; i<accountslist.size(); i++) {
-				addscoreormqfield(accountslist.get(i), datamaplist.get(i), metric);
+		
+		for(int i=0; i<accountslist.size(); i++) {
+//			redisrepo.delete(accountslist.get(i).getId());
+			if(metric.equals("score") | metric.equals("scoreandmq") | metric.equals("market_qualified")) {
+					addactivityfields(accountslist.get(i), datamaplist.get(i), metric, activity_count);
 			}
-		}
-		if(metric.equals("buyer_count")) {
-			for(int i=0; i<accountslist.size(); i++) {
-				addbuyer_countfield(accountslist.get(i), datamaplist.get(i));
+			if(metric.equals("buyer_count")) {
+					addbuyer_countfield(accountslist.get(i), datamaplist.get(i));
 			}
-		}
-		if(metric.equals("activity_count")) {
-			for(int i=0; i<accountslist.size(); i++) {
-				addactivity_countfield(accountslist.get(i), datamaplist.get(i));
+//			if(metric.equals("activity_count")) {
+//					addactivity_countfield(accountslist.get(i), datamaplist.get(i));
+//			}
+			if(metric.equals("persona_count")) {
+					addpersona_countfield(accountslist.get(i), datamaplist.get(i));
 			}
-		}
-		if(metric.equals("persona_count")) {
-			for(int i=0; i<accountslist.size(); i++) {
-				addpersona_countfield(accountslist.get(i), datamaplist.get(i));
-			}
-		}
-		if(metric.equals("location_count")) {
-			for(int i=0; i<accountslist.size(); i++) {
-				addlocation_countfield(accountslist.get(i), datamaplist.get(i));
+			if(metric.equals("location_count")) {
+					addlocation_countfield(accountslist.get(i), datamaplist.get(i));
 			}
 		}
 		return datamaplist;
 	}
 	
-	private void processmetriclist(List<String> metrics) {
-		if(metrics.get(0).equals("all")) {
+	private boolean processmetriclist(List<String> metrics) {
+		if(metrics.contains("all")) {
+			requestforall = true;
 			metrics.remove(0);
 			metrics.add("score");
 			metrics.add("buyer_count");
@@ -257,6 +261,8 @@ public class MetricsService {
 			metrics.add("persona_count");
 			metrics.add("location_count");
 			metrics.add("market_qualified");
+		}else {
+			requestforall = false;
 		}
 		if(metrics.contains("score")) {
 			if(metrics.contains("market_qualified")) {
@@ -269,19 +275,27 @@ public class MetricsService {
 				metrics.add("scoreandmq");
 			}
 		}
+		if(metrics.contains("activity_count")){
+			metrics.remove("activity_count");
+			return true;
+		}
+		return false;
 	}
 	
 	public  List<Map<String,Object>> addmetrics(List<account> accountslist, List<String> metrics, String startdate, String enddate, List<String> exclude){
+		
 		this.startdate = startdate;
 		this.enddate = enddate;
-		processmetriclist(metrics);
+		boolean activity_count = false;
+		if(metrics.size()>0)
+			activity_count = processmetriclist(metrics);
 		//System.out.println("metrics check:" + metrics);
-		System.out.println(accountslist.size());
+		//System.out.println(accountslist.size());
 		List<Map<String,Object>> datamaplist = tomaplist(accountslist, exclude);
 		for(String metric:metrics) {
-			datamaplist = addmetric(accountslist, metric,datamaplist);
+			datamaplist = addmetric(accountslist, metric,datamaplist,activity_count);
 		}
-		
+			
 		return datamaplist;
 	}
 	
