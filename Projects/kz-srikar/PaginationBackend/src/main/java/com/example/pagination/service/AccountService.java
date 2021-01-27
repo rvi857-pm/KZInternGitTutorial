@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
@@ -48,7 +47,6 @@ public class AccountService {
 		return accountRepository.findAll();
 	}
 
-	@Cacheable(value = "universalSearchAccounts", key = "{#page,#pageSize,#q}")
 	public Page<Account> getUniversalSearchResults(int page, int pageSize, String q) {
 		Account account = new Account();
 		account.setAll(q);
