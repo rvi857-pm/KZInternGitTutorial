@@ -1,11 +1,14 @@
 package com.kwanzoo.app.model;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.springframework.data.annotation.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
+@Entity
 public class Activity {
 
 	@Id
@@ -18,7 +21,8 @@ public class Activity {
 	private String details;
 
 	@ManyToOne
-	@JoinColumn(name = "buyer_id", referencedColumnName = "id")
+	@JoinColumn(name = "buyer_id", insertable = false, updatable = false)
+	@JsonBackReference
 	private Buyer buyer;
 
 	public String getId() {

@@ -3,12 +3,16 @@ package com.kwanzoo.app.model;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import org.springframework.data.annotation.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+@Entity
 public class Buyer {
 
 	@Id
@@ -17,18 +21,20 @@ public class Buyer {
 	private String state;
 	private String country;
 	private String source;
-	
+
 	@Column(name = "job_level")
 	private String jobLevel;
-	
+
 	@Column(name = "job_function")
 	private String jobFunction;
-	
+
 	@ManyToOne
-	@JoinColumn(name = "account_id", referencedColumnName = "id")
+	@JoinColumn(name = "account_id", insertable = false, updatable = false)
+	@JsonBackReference
 	private Account account;
-	
-	@OneToMany(mappedBy = "account")
+
+	@OneToMany(targetEntity = Activity.class, mappedBy = "buyer", orphanRemoval = false)
+	@JsonManagedReference
 	private List<Activity> activities;
 
 	public String getId() {
@@ -94,4 +100,13 @@ public class Buyer {
 	public void setAccount(Account account) {
 		this.account = account;
 	}
+
+	public List<Activity> getActivities() {
+		return activities;
+	}
+
+	public void setActivities(List<Activity> activities) {
+		this.activities = activities;
+	}
+
 }

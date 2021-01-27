@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Account {
 
@@ -18,8 +20,10 @@ public class Account {
 	private String country;
 	private String type;
 	private String salesforceId;
-	
-	@OneToMany(mappedBy = "account")
+	private Float score;
+
+	@OneToMany(targetEntity = Buyer.class, mappedBy = "account", orphanRemoval = false)
+	@JsonManagedReference
 	private List<Buyer> buyers;
 
 	public List<Buyer> getBuyers() {
@@ -84,6 +88,14 @@ public class Account {
 
 	public void setSalesforceId(String salesforceId) {
 		this.salesforceId = salesforceId;
+	}
+
+	public Float getScore() {
+		return score;
+	}
+
+	public void setScore(Float score) {
+		this.score = score;
 	}
 
 }
