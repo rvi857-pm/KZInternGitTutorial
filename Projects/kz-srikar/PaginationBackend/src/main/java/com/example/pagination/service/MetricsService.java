@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +41,9 @@ public class MetricsService {
 		for (int i = 0; i < accounts.size(); i++) {
 
 			Account account = accounts.get(i);
-			Map<String, Object> contentItem = redisCache.getContentItem(account, account.getId());
+			Map<String, Object> returnedContentItem = redisCache.getContentItem(account, account.getId());
+
+			Map<String, Object> contentItem = new HashMap<>();
 
 			contentItem.put("id", account.getId());
 			contentItem.put("name", account.getName());
@@ -52,12 +55,19 @@ public class MetricsService {
 			contentItem.put("salesforce_id", account.getSalesforceId());
 
 			for (int j = 0; j < metricParams.size(); j++) {
+				if (metricParams.get(j).equals("all")) {
+					contentItem.put("score", returnedContentItem.get("score"));
+					contentItem.put("marketing_qualified", returnedContentItem.get("marketing_qualified"));
+					contentItem.put("buyer_count", returnedContentItem.get("buyer_count"));
+					contentItem.put("activity_count", returnedContentItem.get("activity_count"));
+					contentItem.put("persona_count", returnedContentItem.get("persona_count"));
+					contentItem.put("location_count", returnedContentItem.get("location_count"));
+				} else {
+					if (!contentItem.containsKey(metricParams.get(j))) {
+						contentItem.put(metricParams.get(j), returnedContentItem.get(metricParams.get(j)));
+					}
 
-			}
-
-			if (!(metricParams.contains("marketing_qualified") || metricParams.contains("all"))
-					&& contentItem.containsKey("marketing_qualified")) {
-				contentItem.remove("marketing_qualified");
+				}
 			}
 
 			for (int j = 0; j < exclude.size(); j++) {
