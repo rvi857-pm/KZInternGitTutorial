@@ -13,14 +13,20 @@ CREATE PROCEDURE updateGeo (
 
 		create temporary table geoProto as
 			select count(opencx_buyer_id), city, state, country from temp
-			where opencx_buyer_id = buyerId and city <> "" or state <> "" or country <>""
+			where opencx_buyer_id = buyerId and (city <> "" or state <> "" or country <>"")
 			group by city, state, country
 			order by count(opencx_buyer_id)
-			DESC limit 1;
+			DESC;
 
-		set cityVal = (select city from geoProto);
-		set stateVal = (select state from geoProto);
-		set countryVal = (select country from geoProto);
+		if (select count(*) from geoProto) >= 1 then
+			set cityVal = (select city from geoProto limit 1);
+			set stateVal = (select state from geoProto limit 1);
+			set countryVal = (select country from geoProto limit 1);
+		else 
+			set cityVal = "";
+			set stateVal = "";
+			set countryVal = "";
+		end if;
 
 		insert into geo values(buyerId, cityVal, stateVal, countryVal);
 	END || 
