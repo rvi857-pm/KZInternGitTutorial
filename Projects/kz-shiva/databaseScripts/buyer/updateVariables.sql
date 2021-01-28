@@ -10,7 +10,12 @@ CREATE PROCEDURE updateVariables (
 		DECLARE jobFuncVal varchar(100);
 
 		drop temporary table if exists variablesProto;
-		create temporary table variablesProto as select * from temp where temp.opencx_buyer_id = buyerId limit 1;
+		create temporary table variablesProto as
+			select count(opencx_buyer_id), domain, job_level, job_function from temp
+			where opencx_buyer_id = buyerId and domain <> "" or job_level <> "" or job_function <>""
+			group by domain, job_level, job_function
+			order by count(opencx_buyer_id)
+			DESC limit 1;
 
         set sourceVal = (select domain from variablesProto);
 		set jobLevelVal = (select job_level from variablesProto);
