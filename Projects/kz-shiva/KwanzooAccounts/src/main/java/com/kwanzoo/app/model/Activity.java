@@ -1,5 +1,7 @@
 package com.kwanzoo.app.model;
 
+import java.sql.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,7 +15,9 @@ public class Activity {
 
 	@Id
 	private String id;
-	private String datetime;
+	
+	@Column(name = "date_time")
+	private Date dateTime;
 
 	@Column(name = "activity_type")
 	private String activityType;
@@ -33,12 +37,12 @@ public class Activity {
 		this.id = id;
 	}
 
-	public String getDatetime() {
-		return datetime;
+	public Date getDateTime() {
+		return dateTime;
 	}
 
-	public void setDatetime(String datetime) {
-		this.datetime = datetime;
+	public void setDateTime(Date datetime) {
+		this.dateTime = datetime;
 	}
 
 	public String getActivityType() {

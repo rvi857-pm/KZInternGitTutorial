@@ -1,5 +1,6 @@
 package com.kwanzoo.app.controller;
 
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kwanzoo.app.Utility.CheckDate;
 import com.kwanzoo.app.Utility.Data;
 import com.kwanzoo.app.Utility.Metric;
 import com.kwanzoo.app.model.Account;
@@ -45,7 +47,26 @@ public class AccountRepositoryImpl {
 		for (int i = 0; i < accounts.size(); i++) {
 
 			Account account = accounts.get(i);
-			Metric metric = metrics.getMetrics(accounts.get(i));
+			CheckDate sample = new CheckDate();
+			if(filter.get("start") != null) {
+				String date = filter.get("start");
+				int year = Integer.parseInt(date.substring(4, 8)) - 1900;
+				int month = Integer.parseInt(date.substring(2, 4)) - 1;
+				int day = Integer.parseInt(date.substring(0, 2));
+				@SuppressWarnings("deprecation")
+				Date first = new Date(year, month, day);
+				sample.setStartDate(first);
+			}
+			if(filter.get("end") != null) {
+				String date = filter.get("end");
+				int year = Integer.parseInt(date.substring(4, 8)) - 1900;
+				int day = Integer.parseInt(date.substring(2, 4)) - 1;
+				int month = Integer.parseInt(date.substring(0, 2));
+				@SuppressWarnings("deprecation")
+				Date end = new Date(year, month, day);
+				sample.setEndDate(end);
+			}
+			Metric metric = metrics.getMetrics(accounts.get(i), sample);
 			data.addData(fillValues(filter, account, metric));
 
 		}
@@ -74,7 +95,7 @@ public class AccountRepositoryImpl {
 				value.put("marketing_qualified", metric.isQualified());
 
 			if (val.contains("buyer_count") || val.contains("all"))
-				value.put("buyer_count", metric.getScore());
+				value.put("buyer_count", metric.getBuyerCount());
 
 			if (val.contains("activity_count") || val.contains("all"))
 				value.put("activity_count", metric.getActivityCount());

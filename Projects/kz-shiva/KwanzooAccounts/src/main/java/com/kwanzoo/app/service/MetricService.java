@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.kwanzoo.app.Utility.ActivityCount;
+import com.kwanzoo.app.Utility.CheckDate;
 import com.kwanzoo.app.Utility.Metric;
 import com.kwanzoo.app.Utility.Parse;
 import com.kwanzoo.app.model.Account;
@@ -21,7 +22,7 @@ public class MetricService {
 	
 	@Autowired
 	private Parse parse;
-
+	
 	/**
 	 * This method calculates the score of an account based on the buyers and their
 	 * activities
@@ -29,7 +30,7 @@ public class MetricService {
 	 * @param account account for which score is calculated
 	 * @return score calculated score
 	 */
-	public Metric getMetrics(Account account) {
+	public Metric getMetrics(Account account, CheckDate date) {
 
 		float accountScore = 0;
 		List<Buyer> buyers = account.getBuyers();
@@ -46,6 +47,14 @@ public class MetricService {
 			List<Activity> activities = buyers.get(i).getActivities();
 
 			for (int j = 0; j < activities.size(); j++) {
+				
+				if(date.getStartDate() != null) {
+					if(activities.get(j).getDateTime().compareTo(date.getStartDate()) < 0) continue;
+				}
+				
+				if(date.getEndDate() != null) {
+					if(activities.get(j).getDateTime().compareTo(date.getEndDate()) > 0) continue;
+				}
 
 				if (activities.get(j).getActivityType().equals("Ad Click")) {
 					buyerScore += 1;
@@ -65,7 +74,6 @@ public class MetricService {
 				}
 				else
 					continue;
-				count++;
 			}
 
 			if (buyers.get(i).getJobLevel().equals("C-Level"))
