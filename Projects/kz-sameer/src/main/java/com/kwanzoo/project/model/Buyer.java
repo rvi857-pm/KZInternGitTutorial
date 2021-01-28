@@ -1,5 +1,6 @@
 package com.kwanzoo.project.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -17,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity()
 @Table(name = "buyer")
 
-public class Buyer {
+public class Buyer implements Serializable{
 	
 	@Id
 	String id;
@@ -38,6 +39,18 @@ public class Buyer {
 	private List<Activity> activities;
 	
 	public Buyer() {
+		
+	}
+	
+	public Buyer(String any) {
+		
+		this.id = any;
+		this.city = any;
+		this.state = any;
+		this.country = any;
+		this.source = any;
+		this.jobLevel = any;
+		this.jobFunction = any;
 		
 	}
 

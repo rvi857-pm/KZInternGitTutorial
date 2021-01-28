@@ -1,5 +1,6 @@
 package com.kwanzoo.project.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -12,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity(name = "accounts")
-public class Account {
+public class Account{
 
 	@Id
 	String id;

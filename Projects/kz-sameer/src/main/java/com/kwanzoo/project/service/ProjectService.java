@@ -81,7 +81,7 @@ public class ProjectService {
 	    	
 	    	List<Account> accounts= pagedAccounts.getContent();
 	    	
-	    	List<AccountReturn> accountReturn = new ArrayList<>();
+	    	List<AccountReturn> content = new ArrayList<>();
 	    	
 	    	for(Account temp : accounts) {
 	    		
@@ -299,11 +299,11 @@ public class ProjectService {
 	    			}
 	    		}
 	    		
-	    		accountReturn.add( new AccountReturn(id, name, ipDomain, city, state, country, type, salesforceId, score ,
+	    		content.add( new AccountReturn(id, name, ipDomain, city, state, country, type, salesforceId, score ,
 	    												marketingQualified, buyerCountObj, activity, personaCount, locationCount));
 	    	}
 	        
-	    	return accountReturn;
+	    	return content;
 	    	
 	    }
 	     
@@ -367,5 +367,65 @@ public class ProjectService {
 	    	
 	    	return new PagedReturn(metric(metrics, pagedAccounts, startDate, endDate, exclude), pagedAccounts.isLast(), pagedAccounts.isFirst(), pagedAccounts.getTotalPages(), pagedAccounts.getNumber()); 
 	    	
+	    }
+	    
+	    
+	   @Cacheable(cacheNames = "buyers", key="#cacheKey")
+	    public Page<Buyer> findBuyerBy(Buyer buyer, PageInfo pageInfo, String cacheKey){
+	    	
+	    	String any = pageInfo.getAny();
+	    	String[] metrics = pageInfo.getMetrics();
+	    	String[] exclude = pageInfo.getExclude();
+	    	
+	    	int pageNo;
+	    	if(pageInfo.getPage() != null) {
+	    		pageNo = pageInfo.getPage();
+	    	}else {
+	    		pageNo = 0;
+	    	}
+	    	
+	    	if(pageInfo.getPageSize() != null) {
+	    		pageSize = pageInfo.getPageSize();
+	    	}
+	    	
+	    	Date endDate = pageInfo.getEnd();
+	    	if(endDate == null) {
+	    		endDate = new Date();
+	    	}
+	    	
+	    	Date startDate = pageInfo.getStart();
+	    	if(startDate == null) {
+	    		startDate = new Date(0);
+	    	}
+	    	
+	    	Pageable paging = PageRequest.of(pageNo, pageSize);
+	    	Page<Buyer> pagedBuyers;
+	        
+	    	if(any != null) {
+	    		
+	    		Buyer newBuyer = new Buyer(any);
+
+	    		ExampleMatcher matcherAny = ExampleMatcher.matchingAny().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+	    		ExampleMatcher matcherAll = ExampleMatcher.matchingAll().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+	    		
+	    		
+	    		List<Buyer> buyerAll = buyerRepo.findAll(Example.of(buyer, matcherAll));
+	    		List<Buyer> buyerAny = buyerRepo.findAll(Example.of(newBuyer, matcherAny));
+	    		
+	    		buyerAll.retainAll(buyerAny);
+	    		
+	    		int start = (int) paging.getOffset();
+	    		int end = (start + paging.getPageSize()) > buyerAll.size() ? buyerAll.size() : (start + paging.getPageSize());
+	    		
+	    		pagedBuyers  = new PageImpl<Buyer>(buyerAll.subList(start, end), paging, buyerAll.size());
+	    		
+	    		return pagedBuyers;
+	    	}
+	    	
+	    	ExampleMatcher matcher = ExampleMatcher.matchingAll().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+	    	
+	    	pagedBuyers = buyerRepo.findAll(Example.of(buyer, matcher), paging);
+	    	
+	    	return pagedBuyers;
 	    }
 }
