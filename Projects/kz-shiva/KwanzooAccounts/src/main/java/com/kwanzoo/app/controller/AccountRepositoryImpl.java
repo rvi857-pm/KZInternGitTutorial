@@ -1,11 +1,11 @@
 package com.kwanzoo.app.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,15 +31,22 @@ public class AccountRepositoryImpl {
 	@Cacheable("accounts")
 	public Object getAccountByParams(@RequestParam Map<String, String> filter) {
 
-		List<Account> accounts = accountService.execute(filter);
-		List<Data> data = new ArrayList<Data>();
+		Data data = new Data();
+		List<Account> accounts;
 
+		if (filter.get("page") == null) {
+			accounts = accountService.execute(filter);
+		} else {
+			Page<Account> page = pageService.execute(filter);
+			data.setTotalElements((int)page.getTotalElements());
+			accounts = page.getContent();
+		}
+		
 		for (int i = 0; i < accounts.size(); i++) {
 
 			Account account = accounts.get(i);
 			Metric metric = metrics.getMetrics(accounts.get(i));
-			Data value = fillValues(filter, account, metric);
-			data.add(value);
+			data.addData(fillValues(filter, account, metric));
 
 		}
 
@@ -47,7 +54,7 @@ public class AccountRepositoryImpl {
 
 	}
 
-	private Data fillValues(Map<String, String> filter, Account account, Metric metric) {
+	private Map<String, Object> fillValues(Map<String, String> filter, Account account, Metric metric) {
 
 		Map<String, Object> value = new HashMap<String, Object>();
 		value.put("name", account.getName());
@@ -65,23 +72,21 @@ public class AccountRepositoryImpl {
 
 			if (val.contains("marketing_qualified") || val.contains("all"))
 				value.put("marketing_qualified", metric.isQualified());
-			
+
 			if (val.contains("buyer_count") || val.contains("all"))
-					value.put("buyer_count", metric.getScore());
+				value.put("buyer_count", metric.getScore());
 
 			if (val.contains("activity_count") || val.contains("all"))
 				value.put("activity_count", metric.getActivityCount());
 
 			if (val.contains("persona_count") || val.contains("all"))
-					value.put("persona_count", metric.getPersonaCount());
+				value.put("persona_count", metric.getPersonaCount());
 
 			if (val.contains("location_count") || val.contains("all"))
 				value.put("location_count", metric.getLocationCount());
 		}
 
-		Data data = new Data();
-		data.setData(value);
-		return data;
+		return value;
 	}
 
 }
