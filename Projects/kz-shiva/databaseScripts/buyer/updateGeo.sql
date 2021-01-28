@@ -13,7 +13,7 @@ CREATE PROCEDURE updateGeo (
 
 		create temporary table geoProto as
 			select count(opencx_buyer_id), city, state, country from temp
-			where opencx_buyer_id = buyerId
+			where opencx_buyer_id = buyerId and city <> "" or state <> "" or country <>""
 			group by city, state, country
 			order by count(opencx_buyer_id)
 			DESC limit 1;
