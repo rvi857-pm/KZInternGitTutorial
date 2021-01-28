@@ -13,6 +13,8 @@ import com.kwanzoo.app.model.Account;
 import com.kwanzoo.app.model.Activity;
 import com.kwanzoo.app.model.Buyer;
 
+import javafx.util.Pair;
+
 @Component
 public class MetricService {
 	
@@ -31,9 +33,8 @@ public class MetricService {
 		float accountScore = 0;
 		List<Buyer> buyers = account.getBuyers();
 		
-		Map<String, Integer> personaStore = new HashMap<String, Integer>();
-		Map<String, Integer> locationStore = new HashMap<String, Integer>();
-		char seperator = '$';
+		Map<Pair<String, String>, Integer> personaStore = new HashMap<Pair<String, String>, Integer>();
+		Map<Pair<String, Pair<String, String>>, Integer> locationStore = new HashMap<Pair<String, Pair<String, String>>, Integer>();
 
 		int count = 0;
 		int activityCount = 0;
@@ -73,24 +74,13 @@ public class MetricService {
 				count++;
 
 			accountScore += buyerScore;
-
-			StringBuilder personaBuilder = new StringBuilder();
-			personaBuilder.append(buyers.get(i).getJobLevel());
-			personaBuilder.append(seperator);
-			personaBuilder.append(buyers.get(i).getJobFunction());
-			String key = personaBuilder.toString();
-
-			personaStore.put(key, personaStore.containsKey(key) ? personaStore.get(key) + 1 : 1);
 			
-			StringBuilder locationBuilder = new StringBuilder();
-			locationBuilder.append(buyers.get(i).getCity());
-			locationBuilder.append(seperator);
-			locationBuilder.append(buyers.get(i).getState());
-			locationBuilder.append(seperator);
-			locationBuilder.append(buyers.get(i).getCountry());
-			key = locationBuilder.toString();
-
-			locationStore.put(key, locationStore.containsKey(key) ? locationStore.get(key) + 1 : 1);
+			Pair<String, String> newPair = new Pair<String, String>(buyers.get(i).getJobLevel(), buyers.get(i).getJobFunction());
+			personaStore.put(newPair, personaStore.containsKey(newPair) ? personaStore.get(newPair) + 1 : 1);
+			
+			Pair<String, String> tempPair = new Pair<String, String>(buyers.get(i).getState(), buyers.get(i).getCountry());
+			Pair<String, Pair<String, String>> locPair = new Pair<String, Pair<String, String>>(buyers.get(i).getCity(), tempPair);
+			locationStore.put(locPair, locationStore.containsKey(locPair) ? locationStore.get(locPair) + 1 : 1);
 
 		}
 

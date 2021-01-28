@@ -11,25 +11,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class Parse {
 
-	public List<Persona> getPersonas(Map<String, Integer> personas) {
+	public List<Persona> getPersonas(Map<Pair<String, String>, Integer> personas) {
+		List<Persona> personaList = new ArrayList<Persona>();
 		
-		char seperator = '$';
-		Pair<String, String> p;
-
-		List<Persona> personaList = new ArrayList();
-		for (Map.Entry<String, Integer> entry : personas.entrySet()) {
+		for (Map.Entry<Pair<String, String>, Integer> entry : personas.entrySet()) {
 			Persona persona = new Persona();
-			String parser = entry.getKey();
-			StringBuilder builder = new StringBuilder();
-			for(int i = 0; i < parser.length(); i++) {
-				if(parser.charAt(i) == seperator) {
-					persona.setJobLevel(builder.toString());
-					builder.delete(0, builder.length());
-					continue;
-				}
-				builder.append(parser.charAt(i));
-			}
-			persona.setJobFunction(builder.toString());
+			Pair<String, String> parser = entry.getKey();
+			
+			persona.setJobLevel(parser.getKey());
+			persona.setJobFunction(parser.getValue());
 			persona.setCount(entry.getValue());
 			
 			personaList.add(persona);
@@ -38,30 +28,16 @@ public class Parse {
 		return personaList;
 	}
 
-	public List<Location> getLocations(Map<String, Integer> locations){
-		List<Location> locationList = new ArrayList();
+	public List<Location> getLocations(Map<Pair<String, Pair<String, String>>, Integer> locations){
+		List<Location> locationList = new ArrayList<Location>();
 		
-		char seperator = '$';
-		for (Map.Entry<String, Integer> entry : locations.entrySet()) {
+		for (Map.Entry<Pair<String, Pair<String, String>>, Integer> entry : locations.entrySet()) {
 			Location location = new Location();
-			String parser = entry.getKey();
-			StringBuilder builder = new StringBuilder();
-			boolean flag = false;
-			for(int i = 0; i < parser.length(); i++) {
-				if(parser.charAt(i) == seperator && flag) {
-					location.setState(builder.toString());
-					builder.delete(0, builder.length());
-					continue;
-				}
-				if(parser.charAt(i) == seperator) {
-					location.setCity(builder.toString());
-					builder.delete(0, builder.length());
-					flag = true;
-					continue;
-				}
-				builder.append(parser.charAt(i));
-			}
-			location.setCountry(builder.toString());
+			Pair<String, String> parser = entry.getKey().getValue();
+			
+			location.setCity(entry.getKey().getKey());
+			location.setState(parser.getKey());
+			location.setCountry(parser.getValue());
 			location.setCount(entry.getValue());
 			
 			locationList.add(location);
