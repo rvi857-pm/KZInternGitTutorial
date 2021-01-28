@@ -7,7 +7,7 @@ public class Metric {
 	private float score;
 	private boolean qualified;
 	private int buyerCount;
-	private int activityCount;
+	private ActivityCount activityCount;
 	private List<Persona> personaCount;
 	private List<Location> locationCount;
 
@@ -39,11 +39,11 @@ public class Metric {
 		this.buyerCount = buyerCount;
 	}
 
-	public int getActivityCount() {
+	public ActivityCount getActivityCount() {
 		return activityCount;
 	}
 
-	public void setActivityCount(int activityCount) {
+	public void setActivityCount(ActivityCount activityCount) {
 		this.activityCount = activityCount;
 	}
 

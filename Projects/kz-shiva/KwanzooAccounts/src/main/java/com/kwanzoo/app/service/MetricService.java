@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.kwanzoo.app.Utility.ActivityCount;
 import com.kwanzoo.app.Utility.Metric;
 import com.kwanzoo.app.Utility.Parse;
 import com.kwanzoo.app.model.Account;
@@ -37,7 +38,7 @@ public class MetricService {
 		Map<Pair<String, Pair<String, String>>, Integer> locationStore = new HashMap<Pair<String, Pair<String, String>>, Integer>();
 
 		int count = 0;
-		int activityCount = 0;
+		ActivityCount activityCount = new ActivityCount(0, 0, 0, 0, 0);
 
 		for (int i = 0; i < buyers.size(); i++) {
 
@@ -46,14 +47,22 @@ public class MetricService {
 
 			for (int j = 0; j < activities.size(); j++) {
 
-				if (activities.get(j).getActivityType().equals("Ad Click"))
+				if (activities.get(j).getActivityType().equals("Ad Click")) {
 					buyerScore += 1;
-				else if (activities.get(j).getActivityType().equals("Website Visit"))
+					activityCount.incrementAdClicks(1);
+				}
+				else if (activities.get(j).getActivityType().equals("Website Visit")) {
 					buyerScore += 0.1;
-				else if (activities.get(j).getActivityType().equals("Form Fill"))
+					activityCount.incrementWebsiteVisits(1);
+				}
+				else if (activities.get(j).getActivityType().equals("Form Fill")) {
 					buyerScore += 3;
-				else if (activities.get(j).getActivityType().equals("Live Chat"))
+					activityCount.incrementFormFills(1);
+				}
+				else if (activities.get(j).getActivityType().equals("Live Chat")) {
 					buyerScore += 3;
+					activityCount.incrementLiveChats(1);
+				}
 				else
 					continue;
 				count++;
