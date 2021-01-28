@@ -33,7 +33,7 @@ public class MainController {
 
 		Page<Account> searchAccounts = accountService.accountServiceUtility(account, page, pageSize, q);
 
-		return metricsService.metricsServiceUtility(searchAccounts, metrics, exclude);
+		return metricsService.metricsServiceUtility(searchAccounts, metrics, exclude, start, end);
 	}
 
 }

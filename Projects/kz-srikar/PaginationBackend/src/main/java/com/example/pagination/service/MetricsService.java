@@ -21,7 +21,7 @@ public class MetricsService {
 	RedisCache redisCache;
 
 	public PageResponse metricsServiceUtility(Page<Account> accountPage, List<String> metricParams,
-			List<String> exclude) {
+			List<String> exclude, String start, String end) {
 
 		if (metricParams == null) {
 			metricParams = Collections.emptyList();
@@ -41,7 +41,16 @@ public class MetricsService {
 		for (int i = 0; i < accounts.size(); i++) {
 
 			Account account = accounts.get(i);
-			Map<String, Object> returnedContentItem = redisCache.getContentItem(account, account.getId());
+			Map<String, Object> staticContentItem;
+			Map<String, Object> dynamicContentItem;
+			staticContentItem = redisCache.getStaticContentItem(account, account.getId());
+			if (start == null && end == null) {
+				dynamicContentItem = redisCache.getDynamicContentItem(account, account.getId());
+			} else {
+				dynamicContentItem = redisCache.getTimedContentItem(account, account.getId(), start, end);
+			}
+
+			staticContentItem.putAll(dynamicContentItem);
 
 			Map<String, Object> contentItem = new HashMap<>();
 
@@ -56,15 +65,15 @@ public class MetricsService {
 
 			for (int j = 0; j < metricParams.size(); j++) {
 				if (metricParams.get(j).equals("all")) {
-					contentItem.put("score", returnedContentItem.get("score"));
-					contentItem.put("marketing_qualified", returnedContentItem.get("marketing_qualified"));
-					contentItem.put("buyer_count", returnedContentItem.get("buyer_count"));
-					contentItem.put("activity_count", returnedContentItem.get("activity_count"));
-					contentItem.put("persona_count", returnedContentItem.get("persona_count"));
-					contentItem.put("location_count", returnedContentItem.get("location_count"));
+					contentItem.put("score", staticContentItem.get("score"));
+					contentItem.put("marketing_qualified", staticContentItem.get("marketing_qualified"));
+					contentItem.put("buyer_count", staticContentItem.get("buyer_count"));
+					contentItem.put("activity_count", staticContentItem.get("activity_count"));
+					contentItem.put("persona_count", staticContentItem.get("persona_count"));
+					contentItem.put("location_count", staticContentItem.get("location_count"));
 				} else {
 					if (!contentItem.containsKey(metricParams.get(j))) {
-						contentItem.put(metricParams.get(j), returnedContentItem.get(metricParams.get(j)));
+						contentItem.put(metricParams.get(j), staticContentItem.get(metricParams.get(j)));
 					}
 
 				}
