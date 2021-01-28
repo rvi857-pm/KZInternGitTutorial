@@ -8,6 +8,8 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity(name = "accounts")
 public class Account {
@@ -23,6 +25,7 @@ public class Account {
 	String salesforceId;
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "account")
+	@JsonIgnore
 	private List<Buyer> buyers;
 	
 	public Account() {
@@ -126,7 +129,12 @@ public class Account {
 	public void setBuyers(List<Buyer> buyers) {
 		this.buyers = buyers;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "Account [id=" + id + ", name=" + name + ", ipDomain=" + ipDomain + ", city=" + city + ", state=" + state
+				+ ", country=" + country + ", type=" + type + ", salesforceId=" + salesforceId + ", buyers=" + buyers
+				+ "]";
+	}
 	
 }

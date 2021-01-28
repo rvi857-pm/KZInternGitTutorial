@@ -1,6 +1,8 @@
 package com.kwanzoo.project.model;
 
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -18,7 +20,7 @@ public class Activity {
 	@Id
 	int id;
 	String activityType;
-	long datetime;
+	Date datetime;
 	String creativeName;
 	String websiteUrl;
 	
@@ -30,10 +32,10 @@ public class Activity {
 	public Activity() {
 	}
 
-	public Activity(int id, String activity_type, long datetime, String creativeName, String websiteUrl, Buyer buyer) {
+	public Activity(int id, String activityType, Date datetime, String creativeName, String websiteUrl, Buyer buyer) {
 		super();
 		this.id = id;
-		this.activityType = activity_type;
+		this.activityType = activityType;
 		this.datetime = datetime;
 		this.creativeName = creativeName;
 		this.websiteUrl = websiteUrl;
@@ -48,19 +50,19 @@ public class Activity {
 		this.id = id;
 	}
 
-	public String getActivity_type() {
+	public String getActivityType() {
 		return activityType;
 	}
 
-	public void setActivity_type(String activity_type) {
-		this.activityType = activity_type;
+	public void setActivityType(String activityType) {
+		this.activityType = activityType;
 	}
 
-	public long getDatetime() {
+	public Date getDatetime() {
 		return datetime;
 	}
 
-	public void setDatetime(long datetime) {
+	public void setDatetime(Date datetime) {
 		this.datetime = datetime;
 	}
 
