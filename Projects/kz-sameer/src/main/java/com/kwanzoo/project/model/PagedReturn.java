@@ -3,16 +3,16 @@ package com.kwanzoo.project.model;
 import java.io.Serializable;
 import java.util.List;
 
-public class PagedReturn implements Serializable {
+public class PagedReturn<T> implements Serializable {
 	
 	private static final long serialVersionUID = -1808817245167346917L;
-	List<AccountReturn> content;
+	List<T> content;
 	boolean last;
 	boolean first;
 	int totalPages;
 	int number;
 	
-	public PagedReturn(List<AccountReturn> content, boolean last, boolean first, int totalPages, int number) {
+	public PagedReturn(List<T> content, boolean last, boolean first, int totalPages, int number) {
 		super();
 		this.content = content;
 		this.last = last;
@@ -21,11 +21,11 @@ public class PagedReturn implements Serializable {
 		this.number = number;
 	}
 
-	public List<AccountReturn> getContent() {
+	public List<T> getContent() {
 		return content;
 	}
 
-	public void setContent(List<AccountReturn> content) {
+	public void setContent(List<T> content) {
 		this.content = content;
 	}
 

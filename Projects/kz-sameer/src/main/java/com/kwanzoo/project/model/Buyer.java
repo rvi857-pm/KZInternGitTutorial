@@ -140,4 +140,11 @@ public class Buyer implements Serializable{
 		this.activities = activities;
 	}
 
+	@Override
+	public String toString() {
+		return "Buyer [id=" + id + ", city=" + city + ", state=" + state + ", country=" + country + ", source=" + source
+				+ ", jobLevel=" + jobLevel + ", jobFunction=" + jobFunction + ", account=" + account + ", activities="
+				+ activities + "]";
+	}
+	
 }

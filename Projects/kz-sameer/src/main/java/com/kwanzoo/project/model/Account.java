@@ -1,6 +1,5 @@
 package com.kwanzoo.project.model;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -10,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.opencsv.bean.CsvBindByName;
 
 
 @Entity(name = "accounts")
@@ -17,12 +17,19 @@ public class Account{
 
 	@Id
 	String id;
+	@CsvBindByName
 	String name;
+	@CsvBindByName
 	String ipDomain;
+	@CsvBindByName
 	String city;
+	@CsvBindByName
 	String state;
+	@CsvBindByName
 	String country;
+	@CsvBindByName
 	String type;
+	@CsvBindByName
 	String salesforceId;
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "account")

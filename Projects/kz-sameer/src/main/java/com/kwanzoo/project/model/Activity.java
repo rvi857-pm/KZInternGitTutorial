@@ -89,5 +89,11 @@ public class Activity {
 	public void setBuyer(Buyer buyer) {
 		this.buyer = buyer;
 	}
+
+	@Override
+	public String toString() {
+		return "Activity [id=" + id + ", activityType=" + activityType + ", datetime=" + datetime + ", creativeName="
+				+ creativeName + ", websiteUrl=" + websiteUrl + ", buyer=" + buyer + "]";
+	}
 	
 }
