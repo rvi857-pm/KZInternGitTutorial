@@ -18,7 +18,7 @@ import com.example.pagination.model.PageResponse;
 public class MetricsService {
 
 	@Autowired
-	RedisCache redisCache;
+	MetricsCalculation redisCache;
 
 	public PageResponse metricsServiceUtility(Page<Account> accountPage, List<String> metricParams,
 			List<String> exclude, String start, String end) {

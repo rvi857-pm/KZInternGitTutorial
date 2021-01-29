@@ -16,7 +16,7 @@ import com.example.pagination.model.Activity;
 import com.example.pagination.model.Buyer;
 
 @Service
-public class RedisCache {
+public class MetricsCalculation {
 
 	private Date convertString(String dateString, String format) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
@@ -65,7 +65,7 @@ public class RedisCache {
 			for (int j = 0; j < activities.size(); j++) {
 				Activity activity = activities.get(j);
 				if (conditionCheckDate(start, end, activity.getDatetime().replaceAll(" .*", ""))) {
-					if (activity.getActivityType().equals("ad click")) {
+					if (activity.getActivityType().equals("Ad Click")) {
 						activityScore += 1;
 						adClicks += 1;
 					} else if (activity.getActivityType().equals("Website Visit")) {
