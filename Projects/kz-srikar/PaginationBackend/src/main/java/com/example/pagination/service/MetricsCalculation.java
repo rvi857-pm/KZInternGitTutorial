@@ -24,7 +24,6 @@ public class MetricsCalculation {
 		try {
 			date = dateFormat.parse(dateString);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return date;
@@ -48,15 +47,20 @@ public class MetricsCalculation {
 		return false;
 	}
 
-	private void calculateDynamicContent(List<Buyer> buyers, Map<String, Object> contentItem, String start,
-			String end) {
+	private void calculateContent(List<Buyer> buyers, Map<String, Object> contentItem, String start, String end) {
 		// score and marketing qualified
 		float score = 0;
-		float numOfBuyersQualified = 0;
+		int numOfBuyersQualified = 0;
 
 		// activity count
 		int adClicks, websiteVisits, formFills, liveChats;
 		adClicks = websiteVisits = formFills = liveChats = 0;
+		contentItem.put("buyer_count", buyers.size());
+		// persona count
+		Map<String, Map<String, Object>> personas = new HashMap<>();
+
+		// location count
+		Map<String, Map<String, Object>> locations = new HashMap<>();
 
 		for (int i = 0; i < buyers.size(); i++) {
 			Buyer buyer = buyers.get(i);
@@ -90,39 +94,9 @@ public class MetricsCalculation {
 				activityScore *= 1.25;
 			}
 			if (activityScore >= 4) {
-				numOfBuyersQualified += 1;
+				numOfBuyersQualified++;
 			}
 			score += activityScore;
-		}
-
-		if (score >= 10 && numOfBuyersQualified >= 4) {
-			contentItem.put("marketing_qualified", true);
-		} else {
-			contentItem.put("marketing_qualified", false);
-		}
-		contentItem.put("score", score);
-
-		Map<String, Object> activityCount = new HashMap<>();
-		activityCount.put("ad_clicks", adClicks);
-		activityCount.put("website_visits", websiteVisits);
-		activityCount.put("form_fills", formFills);
-		activityCount.put("live_chats", liveChats);
-		activityCount.put("total", adClicks + websiteVisits + formFills + liveChats);
-		contentItem.put("activity_count", activityCount);
-
-	}
-
-	private void calculateStaticContent(List<Buyer> buyers, Map<String, Object> contentItem) {
-		contentItem.put("buyer_count", buyers.size());
-		// persona count
-		Map<String, Map<String, Object>> personas = new HashMap<>();
-
-		// location count
-		Map<String, Map<String, Object>> locations = new HashMap<>();
-
-		for (int i = 0; i < buyers.size(); i++) {
-			Buyer buyer = buyers.get(i);
-
 			// persona count
 			if (!(buyer.getJobLevel().equals("") && buyer.getJobFunction().equals(""))) {
 
@@ -157,6 +131,20 @@ public class MetricsCalculation {
 				}
 			}
 		}
+		if (score >= 10 && numOfBuyersQualified >= 4) {
+			contentItem.put("marketing_qualified", true);
+		} else {
+			contentItem.put("marketing_qualified", false);
+		}
+		contentItem.put("score", score);
+
+		Map<String, Object> activityCount = new HashMap<>();
+		activityCount.put("ad_clicks", adClicks);
+		activityCount.put("website_visits", websiteVisits);
+		activityCount.put("form_fills", formFills);
+		activityCount.put("live_chats", liveChats);
+		activityCount.put("total", adClicks + websiteVisits + formFills + liveChats);
+		contentItem.put("activity_count", activityCount);
 
 		// persona count
 		List<Map<String, Object>> personaCount = new ArrayList<Map<String, Object>>();
@@ -173,23 +161,11 @@ public class MetricsCalculation {
 		contentItem.put("location_count", locationCount);
 	}
 
-	@Cacheable(value = "staticMetrics", key = "#id")
-	public Map<String, Object> getStaticContentItem(Account account, String id) {
+	@Cacheable(value = "staticMetrics", key = "{#id, #start, #end}")
+	public Map<String, Object> getContentItem(Account account, String id, String start, String end) {
 		Map<String, Object> contentItem = new HashMap<String, Object>();
-		calculateStaticContent(account.getBuyers(), contentItem);
+		calculateContent(account.getBuyers(), contentItem, start, end);
 		return contentItem;
 	}
 
-	@Cacheable(value = "dynamicMetrics", key = "#id")
-	public Map<String, Object> getDynamicContentItem(Account account, String id) {
-		Map<String, Object> contentItem = new HashMap<>();
-		calculateDynamicContent(account.getBuyers(), contentItem, null, null);
-		return contentItem;
-	}
-
-	public Map<String, Object> getTimedContentItem(Account account, String id, String start, String end) {
-		Map<String, Object> contentItem = new HashMap<>();
-		calculateDynamicContent(account.getBuyers(), contentItem, start, end);
-		return contentItem;
-	}
 }
