@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import com.example.demo.model.Account;
 
 
-public interface AccountRepository extends JpaRepository<Account, Integer>{
+public interface AccountRepository extends JpaRepository<Account, String>{
 
 	
 	/*@Query ( "select s from Account s where "

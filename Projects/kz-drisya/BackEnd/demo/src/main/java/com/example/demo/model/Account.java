@@ -1,12 +1,15 @@
 package com.example.demo.model;
 
-import java.util.Map;
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table ( name = "account")
@@ -14,7 +17,7 @@ public class Account {
 
 	@Id
 	@Column ( name = "id")
-	private UUID id;
+	private String id;
 	
 	@Column( name = "name")
 	private String name;
@@ -51,11 +54,20 @@ public class Account {
 		this.state = search;
 	}
 
-	public UUID getId() {
+	/**
+	 * 
+	 * @JsonManagedReference is the forward part of reference - the one that get serialized normally
+	 * @JsonBackReference is back part of reference , it will be omitted from the serialization
+	 */
+	@OneToMany( targetEntity = Buyer.class, mappedBy = "account", orphanRemoval = false)
+	@JsonManagedReference
+	private List<Buyer> buyers;
+	
+	public String getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -118,12 +130,21 @@ public class Account {
 	
 	}
 	
+	public List<Buyer> getBuyers(){
+		return buyers;
+	}
+	
+	public void setBuyers(List<Buyer> buyers) {
+		this.buyers = buyers;
+	}
+	
 	public boolean isEmpty() {
 		
 		if ( this.name == null && this.ipDomain == null && this.city == null && this.country == null && this.state == null && this.salesforceId == null && this.type == null)
 			return true;
 		return false;
 	}
+	
 	
 }
 
