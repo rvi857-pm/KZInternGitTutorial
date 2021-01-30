@@ -21,27 +21,27 @@ public class Redis_repo {
     }
     
     @SuppressWarnings("unchecked")
-	public void save(Map<String,Object> datamapsample) {
+	public void save(Map<String,Object> datamapsample, String domainname) {
 //    	if(hashOperations.size("accountsdata") >= 700) {
 //    		//listOperations.rightPop("accountsdata");
 //    		return;
 //    	}
-    	hashOperations.put("accountdata",datamapsample.get("id"),datamapsample);
+    	hashOperations.put(domainname,datamapsample.get("id"),datamapsample);
     }
     
     @SuppressWarnings("unchecked")
-	public Map<String,Map<String,Object>> findAll() {
-        return hashOperations.entries("accountdata");
+	public Map<String,Map<String,Object>> findAll(String domainname) {
+        return hashOperations.entries(domainname);
     }
     
     @SuppressWarnings("unchecked")
-	public Map<String,Object> findById(String id) {
-        return (Map<String,Object>)hashOperations.get("accountdata",id);
+	public Map<String,Object> findById(String id, String domainname) {
+        return (Map<String,Object>)hashOperations.get(domainname,id);
     }
     
     
     public void update(Map<String,Object> datamapsample) {
-      save(datamapsample);
+      save(datamapsample,"accountdata");
     }
     
     @SuppressWarnings("unchecked")

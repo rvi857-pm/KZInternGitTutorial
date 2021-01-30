@@ -22,6 +22,7 @@ public class MetricsService {
 	
 	String startdate,enddate;
 	boolean requestforall = false;
+	String redisstring = "accountsdata";
 	
 	private static Redis_repo redisrepo = new Redis_repo(KwanzooAssignment12Application.redisTemplate());
 	
@@ -112,13 +113,45 @@ public class MetricsService {
 		return result;
 	}
 	
+	
+	public List<Map<String,Object>> getbuyermetrics(List<buyer> buyerslist, List<Map<String,Object>> buyerdatamap, List<String>metrics) { 
+		for(int i=0;i<buyerslist.size();i++) {
+			int buyer_score=0;
+			boolean qualified_buyer = false;
+			Map<String,Integer> buyeractivities = new LinkedHashMap<>();
+			buyeractivities.put("Ad Click", 0);
+			buyeractivities.put("Website Visit", 0);
+			buyeractivities.put("Form Fill", 0);
+			buyeractivities.put("Live Chat", 0);
+			buyer b = buyerslist.get(i);
+			List<activity> activitylist = new ArrayList<>(b.getActivities());
+			int multiplier = multipliermapping.getOrDefault(b.getJob_level(), 100);
+			for(activity a:activitylist) {
+				if(comparedatetime(a.getDate())) {
+					buyer_score += (activitymapping.getOrDefault(a.getType(), 1))*multiplier;
+					int temp = buyeractivities.get(a.getType())+1;
+					buyeractivities.replace(a.getType(), temp);
+				}
+			}
+			if(buyer_score >= 4000)
+				qualified_buyer=true;
+			if(metrics.contains("score"))
+				buyerdatamap.get(i).put("score", (double)buyer_score/1000.0);
+			if(metrics.contains("activity_count"))
+				buyerdatamap.get(i).put("activity_count", buyeractivities);
+			if(metrics.contains("market_qualified"))
+				buyerdatamap.get(i).put("market_qualified", qualified_buyer);
+		}
+		return buyerdatamap;
+	}
+	
 	@SuppressWarnings("unchecked")
 	private void addactivityfields(account acc, Map<String,Object> datamapsample, String field, boolean activity_count){
 		int accountscore = 0;
 		boolean market_qualified = false;
 		List<buyer> buyerslist = new ArrayList<buyer>(acc.getBuyers()); 
 		Map<String,Integer> buyeractivities = new LinkedHashMap<>();
-		Map<String,Object>redismapsample = redisrepo.findById(acc.getId());
+		Map<String,Object>redismapsample = redisrepo.findById(acc.getId(),redisstring);
 		if(redismapsample==null | !(startdate.equals("")) | !(enddate.equals(""))) {
 			int qualifiedbuyer =0 ;
 			buyeractivities.put("Ad Click", 0);
@@ -127,8 +160,9 @@ public class MetricsService {
 			buyeractivities.put("Live Chat", 0);
 			for(int i=0; i<buyerslist.size(); i++) {
 				int buyer_score =0;
-				int multiplier = multipliermapping.getOrDefault(buyerslist.get(i).getJob_level(), 100);
-				List<activity> activitylist = new ArrayList<>(buyerslist.get(i).getActivities());
+				buyer b = buyerslist.get(i);
+				List<activity> activitylist = new ArrayList<>(b.getActivities());
+				int multiplier = multipliermapping.getOrDefault(b.getJob_level(), 100);
 				for(activity a:activitylist) {
 					if(comparedatetime(a.getDate())) {
 						buyer_score += (activitymapping.getOrDefault(a.getType(), 1))*multiplier;
@@ -148,7 +182,7 @@ public class MetricsService {
 				redismapsample.put("score", accountscore);
 				redismapsample.put("market_qualified", market_qualified);
 				redismapsample.put("activity_count", buyeractivities);
-				redisrepo.save(redismapsample);
+				redisrepo.save(redismapsample, redisstring);
 			}
 		}else {
 			accountscore = (int) redismapsample.get("score");

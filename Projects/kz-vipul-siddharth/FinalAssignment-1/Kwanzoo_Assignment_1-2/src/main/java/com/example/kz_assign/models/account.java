@@ -50,13 +50,7 @@ public class account{
 	public void setId(String id) {
 		this.id = id;
 	}
-//	
-//	public String getAccountName() {
-//		return AccountName;
-//	}
-//	public void setAccountName(String accountName) {
-//		AccountName = accountName;
-//	}
+
 	public String getName() {
 		return name;
 	}
@@ -105,4 +99,20 @@ public class account{
 	public void setSalesforce_id(String salesforce_id) {
 		this.salesforce_id = salesforce_id;
 	}
+	
+	public account(String name, String city, String state, String country, String type, String ip_domain, String salesforce_id) {
+		this.name = name;
+		this.city = city;
+		this.country = country;
+		this.state = state;
+		this.type = type;
+		this.ip_domain = ip_domain;
+		this.salesforce_id = salesforce_id;
+	}
+	
+	public account(){
+		
+	}
+	
+	
 }

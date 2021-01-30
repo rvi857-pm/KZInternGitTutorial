@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -31,7 +32,7 @@ public class activity {
 	@Column(name="datetime")
 	Timestamp date;
 	
-	@JsonManagedReference
+	@JsonIgnore
 	@ManyToOne(cascade= CascadeType.ALL)
     @JoinColumn(name = "buyer_id",  insertable = false, updatable = false)
     private buyer activity_buyer;

@@ -1,5 +1,6 @@
 package com.example.kz_assign.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.kz_assign.dao.account_repo;
 import com.example.kz_assign.models.account;
+import com.example.kz_assign.models.buyer;
 
 @Service
 public class AccountsService {
@@ -51,15 +53,7 @@ public class AccountsService {
 	    List<account> accountslist = repo.findAll(strict_example);
 	    if(!(q.equals(""))) {
 	    	//System.out.println("check");
-			account querymodel = new account();
-			querymodel.setName(q);
-			querymodel.setCity(q);
-			querymodel.setCountry(q);
-			querymodel.setState(q);
-			querymodel.setIp_domain(q);
-			querymodel.setIp_domain(q);
-			querymodel.setSalesforce_id(q);
-			querymodel.setType(q);
+			account querymodel = new account(q,q,q,q,q,q,q);
 			q_example = Example.of(querymodel, QueryMatcher);
 			accountslist.retainAll(repo.findAll(q_example));
 		}
@@ -110,58 +104,27 @@ public class AccountsService {
 		}
 	}
 
-//	public List<account> get_accounts(@RequestParam(defaultValue="",required=false)String page, 		//getting the optional parameters
-//											@RequestParam(defaultValue="",required=false)String page_size,
-//											@RequestParam(defaultValue="",required=false)String q,
-//											account probaccount,
-//											Model model) {
-//		
-//		ExampleMatcher QueryMatcher = ExampleMatcher.matchingAny()
-//			      .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-//			      .withMatcher("city", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-//			      .withMatcher("state", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-//			      .withMatcher("country", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-//			      .withMatcher("ip_domain", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-//			      .withMatcher("type", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-//			      .withMatcher("salesforce_id", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
-//		
-//		ExampleMatcher StrictMatcher = ExampleMatcher.matchingAll()
-//			      .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-//			      .withMatcher("city", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-//			      .withMatcher("state", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-//			      .withMatcher("country", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-//			      .withMatcher("ip_domain", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-//			      .withMatcher("type", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-//			      .withMatcher("salesforce_id", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
-//		
-//		Example<account> q_example = Example.of(probaccount, QueryMatcher);
-//		
-//		if(!(q.equals(""))) {
-//	    	//System.out.println("check");
-//			account querymodel = new account();
-//			querymodel.setName(q);
-//			querymodel.setCity(q);
-//			querymodel.setCountry(q);
-//			querymodel.setState(q);
-//			querymodel.setIp_domain(q);
-//			querymodel.setIp_domain(q);
-//			querymodel.setSalesforce_id(q);
-//			querymodel.setType(q);
-//			q_example = Example.of(querymodel, QueryMatcher);
-//			accountslist.retainAll(repo.findAll(q_example));
-//		}
-//		int ps = Integer.parseInt(page_size);
-//		int p = Integer.parseInt(page);
-//		
-//		Example<account> strict_example = Example.of(probaccount, StrictMatcher );
-//		Pageable paging = PageRequest.of(p, ps);
-//		Page<account> accounts_page= repo.findAll(strict_example,paging);
-//	    List<account> accountslist = accounts_page.getContent();
-//	    
-//	    
-//		
-//		return accountslist;
-//	}
-	
+	public List<buyer> getaccountbuyers(account probaccount){
+		
+		ExampleMatcher StrictMatcher = ExampleMatcher.matchingAll()
+					.withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+					.withMatcher("city", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+					.withMatcher("state", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+					.withMatcher("country", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+					.withMatcher("ip_domain", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+					.withMatcher("type", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+					.withMatcher("salesforce_id", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+				
+//		System.out.println(a.getName()+ " "+ a.getSalesforce_id() + " "+ a.getCity());
+		Example<account> strict_example = Example.of(probaccount, StrictMatcher );
+		//System.out.println(strict_example);
+		List<account> alist = repo.findAll(strict_example);
+		List<buyer> buyerslist = new ArrayList<>();
+		for(account acc:alist) {
+			buyerslist.addAll(acc.getBuyers());
+		}
+		return buyerslist;
+//		return null;
+	}
 
 }
