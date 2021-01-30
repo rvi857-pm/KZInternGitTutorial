@@ -13,6 +13,7 @@ var app =angular.module("AccountsModule",[]);
 			type:""
 		};
 		$scope.account={
+			id:"",
 			name:"",
 			city:"",
 			state:"",
@@ -28,6 +29,9 @@ var app =angular.module("AccountsModule",[]);
 		$scope.accountview=false;
 		$scope.querystring="";
 		$scope.lastpage=false;
+		$scope.locationlist=[];
+		$scope.personalist=[];
+		$scope.activitylist=[];
 		refreshAccountslist();
 		function refreshAccountslist() {
 					$scope.pagenumber="1";
@@ -46,7 +50,7 @@ var app =angular.module("AccountsModule",[]);
    		};
    		$scope.AccountQuery = function(){
    			urlgenerator();
-			console.log($scope.url);
+			//console.log($scope.url);
    			$http({
                         method : 'GET',
                         url : $scope.url
@@ -150,6 +154,7 @@ var app =angular.module("AccountsModule",[]);
 		
 		$scope.ShowAccount= function(index){
 			//console.log("check");
+			($scope.account).id = ($scope.accounts[index]).id;
 			($scope.account).name = ($scope.accounts[index]).name;
 			($scope.account).city = ($scope.accounts[index]).city;
 			($scope.account).state = ($scope.accounts[index]).state;
@@ -157,9 +162,13 @@ var app =angular.module("AccountsModule",[]);
 			($scope.account).type = ($scope.accounts[index]).type;
 			($scope.account).salesforce_id = ($scope.accounts[index]).salesforce_id;
 			($scope.account).ip_domain = ($scope.accounts[index]).ip_domain;
-			
+			// loadlocationdata(($scope.account).id);
+			// //createlocationchart();
+			// loadpersonadata(($scope.account).id);
+			// loadactivitydata(($scope.account).id);
+			loadaccountdata(($scope.account).id);
 			$scope.accountview=true;
-			console.log(name);
+			//console.log(name);
 		};
    		
 		$scope.ProcessString= function(){
@@ -185,6 +194,87 @@ var app =angular.module("AccountsModule",[]);
 				$scope.AccountQuery();
 			}
 		}  		
-		
+	
+		function processlocationlist(acclocationlist){
+			($scope.locationlist) = [['Location', 'Number of Buyers']];
+			for(locationobj of acclocationlist){
+				var locationsample = Array.from([locationobj.city + "," +locationobj.state + ","+ locationobj.country, locationobj.count]);
+				($scope.locationlist).push(locationsample);
+			}
+			//console.log($scope.locationlist);
+		}
 
-     });
+		function processpersonalist(accpersonalist){
+			($scope.personalist) = [['Persona', 'Number of Buyers']];
+			for(personaobj of accpersonalist){
+				var personasample = Array.from([personaobj.job_level + "," +personaobj.job_function , personaobj.count]);
+				($scope.personalist).push(personasample);
+			}
+			//console.log($scope.locationlist);
+		}
+
+		function processactivitylist(accactivitylist){
+			($scope.activitylist) = [['Activity', 'Number of Buyers']];
+			for(var activity_type in accactivitylist){
+				var activitysample = Array.from([activity_type,accactivitylist[activity_type]]);
+				($scope.activitylist).push(activitysample);
+			}
+			//console.log($scope.locationlist);
+		}
+
+		function loadaccountdata(account_id){
+			accactivitylist = [];
+			if(!(account_id==="")){
+				$http({
+					method : 'GET',
+					data: $scope.accountsform,
+					url : "http://localhost:8080/accounts?metric=all&id=" + account_id,
+				}).then(function successCallback(response) {
+					
+					var temp = response.data;
+					accactivitylist = (temp[0]).activity_count;
+					acclocationlist = (temp[0]).Location_count;
+					accpersonalist = (temp[0]).Persona_count;
+					// console.log(accactivitylist);
+					processlocationlist(acclocationlist);
+					processpersonalist(accpersonalist);
+					processactivitylist(accactivitylist);
+					createchart($scope.activitylist,'activity_piechart');
+					createchart($scope.locationlist,'location_piechart');
+					createchart($scope.personalist,'persona_piechart');
+				}, function errorCallback(response) {
+
+					console.log(response.statusText);
+				});
+			}
+		}
+
+		function createchart(datalist,element_id){
+			//loadpersonadata(($scope.account).id);
+			google.charts.load("current", {packages:["corechart"]});
+			google.charts.setOnLoadCallback(drawChart);
+			function drawChart() {
+				var data = google.visualization.arrayToDataTable(Array.from(datalist));
+
+				var options = {
+				title: 'Account activity Count',
+				is3D: true,
+				legend:{
+					maxLines: 5
+				},
+				sliceVisibilityThreshold: 0,
+				forceIFrame:true,
+				chartArea:{
+					left:15
+				}
+				};
+				console.log($scope.activitylist);
+				var chart = new google.visualization.PieChart(document.getElementById(element_id));
+				chart.draw(data, options);
+			}
+		}
+
+
+
+
+});

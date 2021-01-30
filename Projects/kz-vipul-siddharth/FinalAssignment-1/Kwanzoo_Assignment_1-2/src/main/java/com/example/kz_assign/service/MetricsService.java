@@ -272,9 +272,9 @@ public class MetricsService {
 			if(metric.equals("buyer_count")) {
 					addbuyer_countfield(accountslist.get(i), datamaplist.get(i));
 			}
-//			if(metric.equals("activity_count")) {
-//					addactivity_countfield(accountslist.get(i), datamaplist.get(i));
-//			}
+			if(metric.equals("activity_count")) {
+					addactivityfields(accountslist.get(i), datamaplist.get(i),metric,activity_count);
+			}
 			if(metric.equals("persona_count")) {
 					addpersona_countfield(accountslist.get(i), datamaplist.get(i));
 			}
@@ -303,16 +303,24 @@ public class MetricsService {
 				metrics.remove("score");
 				metrics.add("scoreandmq");
 			}
+			if(metrics.contains("activity_count")){
+				metrics.remove("activity_count");
+				return true;
+			}
 		}else if(metrics.contains("market_qualified")) {
 			if(metrics.contains("score")) {
 				metrics.remove("market_qualified");
 				metrics.add("scoreandmq");
 			}
+			if(metrics.contains("activity_count")){
+				metrics.remove("activity_count");
+				return true;
+			}
+		}else {
+			if(metrics.contains("activity_count"))
+				return true;
 		}
-		if(metrics.contains("activity_count")){
-			metrics.remove("activity_count");
-			return true;
-		}
+		
 		return false;
 	}
 	
