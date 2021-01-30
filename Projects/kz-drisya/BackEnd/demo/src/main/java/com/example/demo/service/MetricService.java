@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Account;
+import com.example.demo.model.Buyer;
 
 @Service
 public class MetricService {

@@ -103,7 +103,6 @@ private String check( String string) {
  * @param end
  * @return activity score for each buyer
  */
-//@Cacheable(value = "staticMetrics", key = "{#buyer_id, #start, #end}")
 private double calculate( Buyer buyer,String buyer_id,String start, String end) {
 	
 
@@ -128,8 +127,7 @@ private double calculate( Buyer buyer,String buyer_id,String start, String end) 
  * @return
  */
 
-@Cacheable(value = "staticMetrics", key = "{#id}")
-public Map<String, Object>  getComputed(Account account, String id, String start, String end) {
+public Map<String, Object> compute(List<Buyer> buyers,String start, String end) {
 		
 	
 	Map<String, Object> mapAccount = new HashMap<String , Object>();
@@ -141,7 +139,7 @@ public Map<String, Object>  getComputed(Account account, String id, String start
 	List<Map<String,Object>> personCount = new ArrayList<Map<String, Object>>();
 	
 	
-	List<Buyer> buyers = account.getBuyers();
+	
 	int buyerSize = buyers.size();
 	mapAccount.put("buyers_count", buyerSize);
 	
@@ -221,4 +219,11 @@ public Map<String, Object>  getComputed(Account account, String id, String start
 	mapAccount.put("marketing_qualified", marketing_qualified);
 	return mapAccount;
 }
+
+@Cacheable(value = "staticMetrics", key = "{#id, #start, #end}")
+public Map<String, Object> getComputed(Account account , String id, String start, String end){
+		
+		List<Buyer> buyers = account.getBuyers();
+		return compute( buyers,start, end);
+	}
 }
