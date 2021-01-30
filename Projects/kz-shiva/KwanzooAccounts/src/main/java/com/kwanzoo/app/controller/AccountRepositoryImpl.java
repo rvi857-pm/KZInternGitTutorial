@@ -30,9 +30,7 @@ public class AccountRepositoryImpl {
 	private MetricService metrics;
 
 	@GetMapping(path = "/accounts")
-	@Cacheable("accounts")
 	public Object getAccountByParams(@RequestParam Map<String, String> filter) {
-
 		Data data = new Data();
 		List<Account> accounts;
 
@@ -66,7 +64,7 @@ public class AccountRepositoryImpl {
 				Date end = new Date(year, month, day);
 				sample.setEndDate(end);
 			}
-			Metric metric = metrics.getMetrics(accounts.get(i), sample);
+			Metric metric = metrics.getMetrics(accounts.get(i), sample, accounts.get(i).getId(), filter.get("start"), filter.get("end"));
 			data.addData(fillValues(filter, account, metric));
 
 		}

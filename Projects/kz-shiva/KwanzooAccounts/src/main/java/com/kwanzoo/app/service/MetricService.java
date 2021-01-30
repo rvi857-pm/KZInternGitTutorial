@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import com.kwanzoo.app.Utility.ActivityCount;
@@ -30,8 +31,8 @@ public class MetricService {
 	 * @param account account for which score is calculated
 	 * @return score calculated score
 	 */
-	public Metric getMetrics(Account account, CheckDate date) {
-
+	@Cacheable(value = "accounts", key = "{#id, #start, #end}")
+	public Metric getMetrics(Account account, CheckDate date, String id, String start, String end) {
 		float accountScore = 0;
 		List<Buyer> buyers = account.getBuyers();
 		

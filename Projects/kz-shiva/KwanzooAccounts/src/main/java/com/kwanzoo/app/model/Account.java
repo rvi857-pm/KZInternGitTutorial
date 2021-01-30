@@ -25,6 +25,14 @@ public class Account {
 	@JsonManagedReference
 	private List<Buyer> buyers;
 
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	public List<Buyer> getBuyers() {
 		return buyers;
 	}
