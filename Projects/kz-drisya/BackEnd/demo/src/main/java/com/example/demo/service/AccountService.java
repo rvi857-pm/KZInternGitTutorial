@@ -100,7 +100,7 @@ public class AccountService {
 		return new PageImpl<Account>(accounts.subList(startIndex, endIndex), paging, list_length);
 	}
 	
-	private Pageable getPageUtils( Integer page_no, Integer page_size) {
+	public Pageable getPageUtils( Integer page_no, Integer page_size) {
 		if ( page_no == null)
 			page_no = 1;
 		
@@ -116,7 +116,7 @@ public class AccountService {
 		else
 			return ExampleMatcher.matchingAll();
 	}
-	private ExampleMatcher rules(int type) {
+	public ExampleMatcher rules(int type) {
 
 		ExampleMatcher expMatcher = selectMatcher(type)
 				.withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
