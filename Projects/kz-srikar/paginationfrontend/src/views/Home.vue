@@ -1,5 +1,6 @@
 <template>
     <div id="home">
+        <FileUpload :refresh="refresh"/>
         <div class="searchBox">
             <b-form-input
                 class="p-10"
@@ -15,24 +16,29 @@
                 type:"xyz" salesforce_id:"xyz" xyz
             </mark>
         </p>
-        <b-col sm="1">
-            <label>Page Size :</label>
-            <b-form-input
-                v-model="pageSize"
-                min="1"
-                type="number"
-            ></b-form-input>
-        </b-col>
-        <b-pagination
-            v-model="currentPage"
-            :total-rows="totalResults"
-            :per-page="pageSize"
-            aria-controls="my-table"
-            align="center"
-        ></b-pagination>
-
-        <FileUpload/>
-        <Page :pageSize="getPageSize()" :results="results" />
+        <div class="Pagination">
+            <b-col sm="1">
+                <b-form-input
+                    v-model="pageSize"
+                    min="1"
+                    type="number"
+                ></b-form-input>
+            </b-col>
+            <b-pagination
+                v-model="currentPage"
+                :total-rows="totalResults"
+                :per-page="pageSize"
+                aria-controls="my-table"
+                align="center"
+            ></b-pagination>
+        </div>
+        <Page
+            :pageSize="getPageSize()"
+            :results="results"
+            :fields="fields"
+            :myRowClickHandler="setAccount"
+        />
+        <br />
     </div>
 </template>
 
@@ -43,12 +49,25 @@ import accountApi from "@/util/accountsApi";
 
 export default {
     name: "home",
+    props: {
+        setAccount: Function,
+    },
     components: {
         Page,
-        FileUpload
+        FileUpload,
     },
     data() {
         return {
+            fields: [
+                "id",
+                "name",
+                "ip_domain",
+                "city",
+                "state",
+                "country",
+                "type",
+                "salesforce_id",
+            ],
             searchText: "",
             totalResults: 0,
             results: [],
@@ -128,6 +147,9 @@ export default {
             this.getSearchResults(1);
             this.currentPage = 0;
         },
+        refresh() {
+            this.getSearchResults(this.currentPage);
+        }
     },
     watch: {
         currentPage: function(newVal, oldVal) {
@@ -156,7 +178,13 @@ export default {
 .searchBox {
     display: flex;
     flex-direction: row;
-    margin: 10px;
+    margin-right: 100px;
+    margin-left: 100px;
     align-items: center;
+}
+.Pagination {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 </style>

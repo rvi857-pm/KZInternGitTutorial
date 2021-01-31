@@ -1,6 +1,26 @@
 import api from './apiExports';
 
 const accountsApi = {
+    getActivities(buyerId) {
+        return fetch(`${api.serverAddress}activities?id=${buyerId}`, {
+            method: 'get',
+        }).then(response => {
+            return response.json();
+        }).then(jsonResponse => {
+            return jsonResponse;
+        }).catch(error => console.log(error));
+    },
+
+    getBuyers(accountId) {
+        return fetch(`${api.serverAddress}buyers?id=${accountId}`, {
+            method: 'get',
+        }).then(response => {
+            return response.json();
+        }).then(jsonResponse => {
+            return jsonResponse;
+        }).catch(error => console.log(error));
+    },
+
     getAllAccounts() {
         return fetch(`${api.serverAddress}accounts`, {
             method: 'get',
@@ -30,7 +50,7 @@ const accountsApi = {
         if (obj.salesforce_id != "")
             reqParams = reqParams + `&salesforceId=${obj.salesforce_id}`;
 
-        return fetch(`${api.serverAddress}accounts?${reqParams}`, {
+        return fetch(`${api.serverAddress}accounts?${reqParams}&metrics=all`, {
             method: 'get',
         }).then(response => {
             return response.json();
