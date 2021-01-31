@@ -31,18 +31,21 @@
             align="center"
         ></b-pagination>
 
+        <FileUpload/>
         <Page :pageSize="getPageSize()" :results="results" />
     </div>
 </template>
 
 <script>
 import Page from "@/components/Page.vue";
+import FileUpload from "@/components/FileUpload.vue";
 import accountApi from "@/util/accountsApi";
 
 export default {
     name: "home",
     components: {
         Page,
+        FileUpload
     },
     data() {
         return {
