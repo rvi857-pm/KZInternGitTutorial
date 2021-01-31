@@ -24,7 +24,9 @@ public class AccountService {
 
 	public Page<Account> accountServiceUtility(Account account, Integer page, Integer pageSize, String q) {
 		if (page == null) {
-			page = 1;
+			List<Account> allResults = getAllResults();
+			Pageable pageableInstance = PageRequest.of(0, allResults.size());
+			return pageUtility(pageableInstance, allResults);
 		}
 
 		if (pageSize == null) {

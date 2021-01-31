@@ -18,6 +18,7 @@ public class Buyer {
 	private String city;
 	private String state;
 	private String country;
+	private String source;
 	private String jobLevel;
 	private String jobFunction;
 
@@ -60,6 +61,14 @@ public class Buyer {
 
 	public void setCountry(String country) {
 		this.country = country;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
 	}
 
 	public String getJobLevel() {
