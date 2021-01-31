@@ -17,7 +17,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Page;
 
 import com.example.pagination.dao.AccountRepository;
+import com.example.pagination.dao.ActivityRepository;
+import com.example.pagination.dao.BuyerRepository;
 import com.example.pagination.model.Account;
+import com.example.pagination.model.Activity;
+import com.example.pagination.model.Buyer;
 import com.example.pagination.model.PageResponse;
 import com.example.pagination.service.AccountService;
 import com.example.pagination.service.MetricsService;
@@ -32,6 +36,10 @@ public class MainController {
 
 	@Autowired
 	private AccountRepository accountRepo;
+	@Autowired
+	private BuyerRepository buyerRepo;
+	@Autowired
+	private ActivityRepository activityRepo;
 
 	@Autowired
 	private MetricsService metricsService;
@@ -58,7 +66,7 @@ public class MainController {
 			try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
 
 				// create csv bean reader
-				CsvToBean<Account> csvToBean = new CsvToBeanBuilder(reader).withType(Account.class)
+				CsvToBean<Account> csvToBean = new CsvToBeanBuilder<Account>(reader).withType(Account.class)
 						.withIgnoreLeadingWhiteSpace(true).build();
 
 				// convert `CsvToBean` object to list of users
@@ -74,6 +82,16 @@ public class MainController {
 			}
 		}
 
+	}
+
+	@GetMapping(path = "/buyers")
+	public List<Buyer> buyers(@ModelAttribute Account account) {
+		return buyerRepo.findByAccount(account);
+	}
+
+	@GetMapping(path = "/activities")
+	public List<Activity> activities(@ModelAttribute Buyer buyer) {
+		return activityRepo.findByBuyer(buyer);
 	}
 
 }
