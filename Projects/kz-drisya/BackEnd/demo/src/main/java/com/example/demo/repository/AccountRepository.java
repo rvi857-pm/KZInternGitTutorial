@@ -25,4 +25,8 @@ public interface AccountRepository extends JpaRepository<Account, String>{
 	//Page<Account> findAll(Pageable pageRequest);
 	//Page<Account> findAllByNameContainingOrCityContainingOrStateContainingOrCountryContaining ( String name,String city, String state, String country,Pageable pageRequest);
 	//Page<Account> findByNameContains(String x, Pageable pagerequest);
+	//@Query ( "select accountId from Account where Account.name = :account_name")
+	//String getAccountId( @Param("account_name") String name, Pageable paging);
+	
+	Account findAllByName(String name);
 }
