@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,8 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kwanzoo.project.model.Account;
 import com.kwanzoo.project.model.AccountReturn;
-import com.kwanzoo.project.model.Activity;
+import com.kwanzoo.project.model.ActivityReturn;
 import com.kwanzoo.project.model.Buyer;
+import com.kwanzoo.project.model.BuyerReturn;
 import com.kwanzoo.project.model.PageInfo;
 import com.kwanzoo.project.model.PagedReturn;
 import com.kwanzoo.project.service.ActivityService;
@@ -48,22 +49,27 @@ public class Api {
 	}
 	
 	@GetMapping("/buyers")
-	public Page<Buyer> getBuyers( @ModelAttribute Buyer buyer, @ModelAttribute PageInfo pageInfo){
+	public PagedReturn<BuyerReturn> getBuyers( @RequestParam(value = "account_name", required = false) String account_name,
+										@RequestParam(value = "account_id", required = false) String account_id,
+										@ModelAttribute Buyer buyer,
+										@ModelAttribute PageInfo pageInfo){
 		
-		String cacheKey = buyer.toString() + pageInfo.toString();
+		String cacheKey = account_id + account_name +  pageInfo.toString() + buyer.toString();
 		
-		return buyerService.findBuyerBy(buyer, pageInfo, cacheKey);	
+		return buyerService.findBuyers(buyer, account_name, account_id, pageInfo, cacheKey);	
 	}
 	
 	@GetMapping("/activites")
-	public Page<Activity> getBuyers( @ModelAttribute Activity activity, @ModelAttribute PageInfo pageInfo){
+	public PagedReturn<ActivityReturn> getBuyers( @RequestParam(value = "buyer_id", required = false) String buyer_id,
+									@RequestParam(value = "page", required = false, defaultValue = "0") int page,
+									@RequestParam(value = "pageSize", required = false, defaultValue = "0") int pageSize){
 		
-		String cacheKey = activity.toString() + pageInfo.toString();
+		String cacheKey = buyer_id + Integer.toString(page) + Integer.toString(pageSize);
 		
-		return activityService.findActivityBy(activity, pageInfo, cacheKey);	
+		return activityService.findActivities(buyer_id, page, pageSize, cacheKey);	
 	}
 
-
+	@CrossOrigin()
 	@PostMapping("/file")
     public String uploadCSVFile(@RequestParam("file") MultipartFile file) {
 
@@ -88,10 +94,10 @@ public class Api {
                 
                 accountService.addAccounts(users);
  
-                return "ok";
+                return "Accounts added successfully";
 
             } catch (Exception ex) {
-            	return "Error Occured";
+            	return "Please ensure your csv file has valid format";
             }
         }
     }

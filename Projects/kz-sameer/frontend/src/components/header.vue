@@ -5,7 +5,7 @@
 
             <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
-            <b-collapse id="nav-collapse" is-nav>
+            <b-collapse id="nav-collapse" v-if="load" is-nav>
 
              <!-- Right aligned nav items -->
                 <b-navbar-nav class="ml-auto">
@@ -31,11 +31,12 @@ export default {
         return{
             searchBy: 'any',
             input: '',
-            searchList: ["any", "id", "ip Domain", "city", "state", "country", "type", "salesforce Id"]
+            searchList: ["any", "id", "ip Domain", "city", "state", "country", "type", "salesforce Id"],
         }
     },
     props: [
-        'search'
+        'search',
+        'load'
     ],
     methods: {
 

@@ -1,8 +1,8 @@
 <template>
   <div id ='t'>
-    <b-table small responsive="lg" hover :items="items">
-      <template #cell(name)="data">
-        <router-link :to="`/single/${data.index}`">{{ data.value }}</router-link>
+    <b-table small sort-by="datetime" responsive=true hover :items="items">
+      <template #cell(id)="data">
+        <router-link :to="link + `${data.value}`">{{ data.value }}</router-link>
       </template>
     </b-table>
   </div>
@@ -11,7 +11,8 @@
 <script>
   export default {
     props: [
-      'items'
+      'items',
+      'link'
     ],
   };
 </script>

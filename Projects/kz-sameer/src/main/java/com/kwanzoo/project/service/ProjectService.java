@@ -34,8 +34,9 @@ public class ProjectService {
 	    ActivityDao activityRepo;
 	    
 	    int pageSize = 10;
+	    int bPageSize = 10;
 	    
-	    MetricsUtility metricUtiity;
+	    MetricsUtility metricUtiity = new MetricsUtility();
 	     
 	    @Cacheable(cacheNames = "accounts", key="#cacheKey")
 	    public PagedReturn<AccountReturn> findBy(Account account, PageInfo pageInfo, String cacheKey){
@@ -87,7 +88,7 @@ public class ProjectService {
 	    		
 	    		pagedAccounts  = new PageImpl<Account>(accountAll.subList(start, end), paging, accountAll.size());
 	    		
-	    		return new PagedReturn<AccountReturn>(metricUtiity.metric(metrics, pagedAccounts, startDate, endDate, exclude), pagedAccounts.isLast(), pagedAccounts.isFirst(), pagedAccounts.getTotalPages(), pagedAccounts.getNumber()); 
+	    		return metricUtiity.metric(metrics, pagedAccounts, startDate, endDate, exclude, pageNo, pageSize); 
 	    
 	    	}
 	    	
@@ -95,7 +96,7 @@ public class ProjectService {
 	    	
 	    	pagedAccounts = repository.findAll(Example.of(account, matcher), paging);
 	    	
-	    	return new PagedReturn<AccountReturn>(metricUtiity.metric(metrics, pagedAccounts, startDate, endDate, exclude), pagedAccounts.isLast(), pagedAccounts.isFirst(), pagedAccounts.getTotalPages(), pagedAccounts.getNumber()); 
+	    	return metricUtiity.metric(metrics, pagedAccounts, startDate, endDate, exclude, pageNo, pageSize); 
 	    	
 	    }
 	   
@@ -103,3 +104,4 @@ public class ProjectService {
 		   repository.saveAll(accounts);
 	   }
 }
+	   

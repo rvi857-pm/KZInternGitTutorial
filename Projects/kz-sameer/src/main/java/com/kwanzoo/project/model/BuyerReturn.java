@@ -1,11 +1,14 @@
 package com.kwanzoo.project.model;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @JsonInclude(Include.NON_NULL)
-public class BuyerReturn {
+public class BuyerReturn implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	String id;
 	String city;
 	String state;
@@ -15,12 +18,12 @@ public class BuyerReturn {
 	String jobFunction;
 	String account_id;
 	String account_name;
-	Integer score;
+	Float score;
 	Boolean marketingQualified;
 	ActivityCount activityCount;
 	
 	public BuyerReturn(String id, String city, String state, String country, String source, String jobLevel,
-			String jobFunction, String account_id, String account_name, Integer score, Boolean marketingQualified,
+			String jobFunction, String account_id, String account_name, Float score, Boolean marketingQualified,
 			ActivityCount activityCount) {
 		super();
 		this.id = id;
@@ -109,11 +112,11 @@ public class BuyerReturn {
 		this.account_name = account_name;
 	}
 
-	public Integer getScore() {
+	public Float getScore() {
 		return score;
 	}
 
-	public void setScore(Integer score) {
+	public void setScore(Float score) {
 		this.score = score;
 	}
 

@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Single from './views/single.vue'
+import Single from './views/account.vue'
 import Home from './views/Home.vue'
+import Buyer from './views/buyer.vue'
 
 Vue.use(Router)
 
@@ -10,9 +11,14 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '/single/:id',
-      name: 'single',
+      path: '/account/:id',
+      name: 'account',
       component: Single
+    },
+    {
+      path: '/buyer/:id',
+      name: 'buyer',
+      component: Buyer
     },
     {
         path: '/',

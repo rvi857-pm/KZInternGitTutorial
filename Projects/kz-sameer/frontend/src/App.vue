@@ -14,6 +14,9 @@
                   :fPage="fPage"
                   :lPage="lPage"
                   :search="search"
+                  :size="size"
+                  :link="link"
+                  :load="load"
                   />
 
   </div>
@@ -33,7 +36,10 @@ export default
       last: false,
       first: false,
       lastPage: 0,
-      page: 1
+      page: 1,
+      size: 10,
+      link: "/account/",
+      load: true
 
     }
   },
@@ -42,28 +48,29 @@ export default
   },
   methods:{
     pageSize(size){
-      this.request("?pageSize=" + size)
+      this.size = size
+      this.request("?page=0&pageSize=" + size)
     },
     nextPage(){
       this.page++
-      this.request("?page=" + (this.page - 1))
+      this.request("?page=" + (this.page - 1)+ "&pageSize=" + this.size)
     },
     prevPage(){
       this.page--
-      this.request("?page=" + (this.page - 1))
+      this.request("?page=" + (this.page - 1)+ "&pageSize=" + this.size)
     },
     lPage(){
         this.page = this.lastPage
-        this.request("?page=" + (this.page - 1))
+        this.request("?page=" + (this.page - 1)+ "&pageSize=" + this.size)
     },
     fPage(){
         this.page = 1
-        this.request("?page=" + (this.page - 1))
+        this.request("?page=" + (this.page - 1)+ "&pageSize=" + this.size)
     },
     search(input){
       
       this.str = input
-      this.request("?")
+      this.request("?&pageSize=" + this.size)
     },
     request(input){
       if(this.str === '' || this.str.endsWith('=')){

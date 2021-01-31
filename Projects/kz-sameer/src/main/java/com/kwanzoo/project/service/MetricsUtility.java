@@ -13,12 +13,14 @@ import com.kwanzoo.project.model.AccountReturn;
 import com.kwanzoo.project.model.Activity;
 import com.kwanzoo.project.model.ActivityCount;
 import com.kwanzoo.project.model.Buyer;
+import com.kwanzoo.project.model.BuyerReturn;
 import com.kwanzoo.project.model.LocationCount;
+import com.kwanzoo.project.model.PagedReturn;
 import com.kwanzoo.project.model.PersonaCount;
 
 public class MetricsUtility {
 	
-	public List<AccountReturn> metric(String[] metrics, Page<Account> pagedAccounts, Date startDate, Date endDate, String[] exclude){
+	public PagedReturn<AccountReturn> metric(String[] metrics, Page<Account> pagedAccounts, Date startDate, Date endDate, String[] exclude, int pageNo, int pageSize){
     	
     	boolean boolScore = false;
     	boolean boolMarketing = false;
@@ -278,8 +280,138 @@ public class MetricsUtility {
     												marketingQualified, buyerCountObj, activity, personaCount, locationCount));
     	}
         
-    	return content;
+    	PagedReturn<AccountReturn> pagedAccounReturn = new PagedReturn<AccountReturn>(content, pagedAccounts.isLast(), pagedAccounts.isFirst(), pagedAccounts.getTotalPages(), pagedAccounts.getNumber());
+    	
+    	return pagedAccounReturn;
     	
     }
+	
+	
+	public PagedReturn<BuyerReturn> metricBuyer(Page<Buyer> buyers, String[] metrics, Date startDate, Date endDate, int pageNo, int pageSize){
+    	
+    	boolean boolScore = false;
+    	boolean boolMarketing = false;
+    	boolean boolActivityCount = false;
+    	boolean boolAll = false;
+		
+		
+	  	if(metrics != null) {
+	    	for(int i = 0; i < metrics.length ; i++) {
+	    		if(metrics[i].equals("score")) {
+	    			boolScore = true;
+	    		}
+	    		if(metrics[i].equals("marketing_qualified")) {
+	    			boolMarketing = true;
+	    		}
+	    		if(metrics[i].equals("activity_count")) {
+	    			boolActivityCount = true;
+	    		}
+	    		if(metrics[i].equals("all")) {
+	    			boolAll = true;
+	    		}
+	    	}
+    	}
+		
+		List<BuyerReturn> buyerReturn = new ArrayList<>();
+		
+		for(Buyer buyer : buyers.getContent()) {
+			
+			String id = buyer.getId();
+			String city = buyer.getCity();
+			String state = buyer.getState();
+			String country = buyer.getCountry();
+			String source = buyer.getSource();
+			String jobLevel = buyer.getJobLevel();
+			String jobFunction = buyer.getJobFunction();
+			String account_id = buyer.getAccount().getId();
+			String account_name = buyer.getAccount().getName();
+			Float score = null;
+			Boolean marketingQualified = null;
+			ActivityCount activityCount = null;
+			
+			
+			List<Activity> activities = buyer.getActivities();
+			
+			int[] activityCountArray = {0,0,0,0};
+			
+			int buyerScore = 0;
+			
+			int sumActivityScore = 0;
+			
+			if(boolScore == true || boolAll == true || boolActivityCount == true || boolMarketing == true) {
+    			for(Activity temp3 : activities) {
+    				
+    				if(temp3.getDatetime().after(startDate) && temp3.getDatetime().before(endDate)) {
+    				
+	    				String activityType = temp3.getActivityType();
+	    				
+	    				if(activityType.equals("Ad Click")) {
+	    					sumActivityScore += 10;
+	    					activityCountArray[0]++;
+	    				}
+	    				else if(activityType.equals("Website Visit")) {
+	    					sumActivityScore += 1;
+	    					activityCountArray[1]++;
+	    				}
+	    				else if(activityType.equals("Form Fill")) {
+	    					sumActivityScore += 30;
+	    					activityCountArray[2]++;
+	    				}
+	    				else if(activityType.equals("Live Chat")) {
+	    					sumActivityScore += 30;
+	    					activityCountArray[3]++;
+	    				}
+    				}
+    			}
+			}
+			
+			String jobLevelTemp = buyer.getJobLevel();
+			
+			if(boolScore == true || boolAll == true || boolMarketing == true) {
+    			if(jobLevelTemp.equals("C-Level")) {
+    				buyerScore = sumActivityScore * 200;
+    			}
+    			else if(jobLevelTemp.equals("Owner,Board Member")) {
+    				buyerScore = sumActivityScore * 175;
+    			}
+    			else if(jobLevelTemp.equals("VP,Director")) {
+    				buyerScore = sumActivityScore * 150;
+    			}
+    			else if(jobLevelTemp.equals("Manager")) {
+    				buyerScore = sumActivityScore * 125;
+    			}
+    			else {
+    				buyerScore = sumActivityScore * 100;
+    			}
+			}
+			if(!boolMarketing && !boolAll) {
+				
+			}	
+			else if(buyerScore > 4000) {
+				marketingQualified = true;
+			}
+			else {
+				marketingQualified = false;
+			}
+			
+			if(!boolScore && !boolAll) {
+			}
+			else {
+				score = (float)buyerScore/1000;
+			}
+			
+			if(!boolActivityCount && !boolAll) {
+				
+			}
+			else {
+				activityCount = new  ActivityCount(activityCountArray[0], activityCountArray[1], activityCountArray[2], activityCountArray[3]);
+			}
+			buyerReturn.add(new BuyerReturn(id, city, state, country, source, jobLevel, jobFunction, account_id, account_name, score, marketingQualified, activityCount));
+		}
+		
+		PagedReturn<BuyerReturn> pagedBuyers = new PagedReturn<>(buyerReturn, buyers.isLast(), buyers.isFirst(), buyers.getTotalPages(), buyers.getNumber());
+		
+		return pagedBuyers;
+	}
 
 }

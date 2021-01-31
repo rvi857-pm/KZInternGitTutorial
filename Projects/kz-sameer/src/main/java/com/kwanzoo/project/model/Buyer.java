@@ -1,6 +1,5 @@
 package com.kwanzoo.project.model;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -18,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity()
 @Table(name = "buyer")
 
-public class Buyer implements Serializable{
+public class Buyer{
 	
 	@Id
 	String id;
@@ -34,7 +33,7 @@ public class Buyer implements Serializable{
     @JsonIgnore
 	private Account account;
 	
-	
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "buyer")
 	private List<Activity> activities;
 	

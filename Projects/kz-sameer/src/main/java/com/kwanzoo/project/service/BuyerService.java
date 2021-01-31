@@ -1,30 +1,35 @@
 package com.kwanzoo.project.service;
 
 import java.util.Date;
-import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import com.kwanzoo.project.dao.BuyerDao;
+import com.kwanzoo.project.model.Account;
 import com.kwanzoo.project.model.Buyer;
+import com.kwanzoo.project.model.BuyerReturn;
 import com.kwanzoo.project.model.PageInfo;
+import com.kwanzoo.project.model.PagedReturn;
 
+@Service
 public class BuyerService {
 	
+	@Autowired
 	BuyerDao buyerRepo;
 	
 	int pageSize = 10;
 	
-   @Cacheable(cacheNames = "buyers", key="#cacheKey")
-    public Page<Buyer> findBuyerBy(Buyer buyer, PageInfo pageInfo, String cacheKey){
+	MetricsUtility metricUtiity = new MetricsUtility();
+	
+	@Cacheable(cacheNames = "buyers", key="#cacheKey")
+	public PagedReturn<BuyerReturn> findBuyers(Buyer buyer, String name, String id, PageInfo pageInfo, String cacheKey){
     	
-    	String any = pageInfo.getAny();
     	String[] metrics = pageInfo.getMetrics();
     	
     	int pageNo;
@@ -49,34 +54,13 @@ public class BuyerService {
     	}
     	
     	Pageable paging = PageRequest.of(pageNo, pageSize);
-    	Page<Buyer> pagedBuyers;
-        
-    	if(any != null) {
-    		
-    		Buyer newBuyer = new Buyer(any);
-
-    		ExampleMatcher matcherAny = ExampleMatcher.matchingAny().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
-    		ExampleMatcher matcherAll = ExampleMatcher.matchingAll().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
-    		
-    		
-    		List<Buyer> buyerAll = buyerRepo.findAll(Example.of(buyer, matcherAll));
-    		List<Buyer> buyerAny = buyerRepo.findAll(Example.of(newBuyer, matcherAny));
-    		
-    		buyerAll.retainAll(buyerAny);
-    		
-    		int start = (int) paging.getOffset();
-    		int end = (start + paging.getPageSize()) > buyerAll.size() ? buyerAll.size() : (start + paging.getPageSize());
-    		
-    		pagedBuyers  = new PageImpl<Buyer>(buyerAll.subList(start, end), paging, buyerAll.size());
-    		
-    		return pagedBuyers;
-    	}
+    	
+    	buyer.setAccount(new Account(id, name, null, null, null, null, null, null, null));
     	
     	ExampleMatcher matcher = ExampleMatcher.matchingAll().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
     	
-    	pagedBuyers = buyerRepo.findAll(Example.of(buyer, matcher), paging);
     	
-    	return pagedBuyers;
+    	return metricUtiity.metricBuyer(buyerRepo.findAll(Example.of(buyer, matcher), paging), metrics, startDate, endDate, pageNo, pageSize);
     }
 
 }

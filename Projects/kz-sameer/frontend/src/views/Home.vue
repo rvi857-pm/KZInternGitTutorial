@@ -1,10 +1,20 @@
 <template>
   <div id="app">
-    <Header :search="search" />
+    
+    <Header :search="search"
+            :load="load"
+             />
+    <p></p>
+
+    <file-upload/>
+
+    <p></p>
+
+    <Comp :items="items"
+          :link="link"
+           id='t' />
 
     <b-container>
-    <Comp :items = "items" id='t' />
-    </b-container>
     <Nav :page = "page"
         :pageSize="pageSize"
         :nextPage="nextPage"
@@ -12,8 +22,9 @@
         :last="last"
         :first="first"
         :fPage="fPage"
-        :lPage="lPage" />
-
+        :lPage="lPage"
+        :size="size" />
+    </b-container>
   </div>
 
 </template>
@@ -22,15 +33,17 @@
 import Comp from '../components/comp.vue';
 import Nav from '../components/nav.vue'
 import Header from '../components/header.vue'
+import FileUpload from '../components/fileUpload.vue';
 
 export default
 {
   components: { 
     Comp,
     Nav,
-    Header
+    Header,
+    FileUpload
    },
-   props: [
+   props:[
         'items',
         'request',
         'str',
@@ -43,7 +56,10 @@ export default
         'prevPage',
         'lPage',
         'fPage',
-        'search'
+        'search',
+        'size',
+        'link',
+        'load'
    ]
 };
 

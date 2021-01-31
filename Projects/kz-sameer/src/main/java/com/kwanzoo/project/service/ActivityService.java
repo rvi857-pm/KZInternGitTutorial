@@ -1,56 +1,55 @@
 package com.kwanzoo.project.service;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import com.kwanzoo.project.dao.ActivityDao;
 import com.kwanzoo.project.model.Activity;
-import com.kwanzoo.project.model.PageInfo;
+import com.kwanzoo.project.model.ActivityReturn;
+import com.kwanzoo.project.model.Buyer;
+import com.kwanzoo.project.model.PagedReturn;
 
+@Service
 public class ActivityService {
 	
+	@Autowired
 	ActivityDao activityRepo;
 	
 	int pageSize = 10;
 	
-    @Cacheable(cacheNames = "activities", key="#cacheKey")
-    public Page<Activity> findActivityBy(Activity buyer, PageInfo pageInfo, String cacheKey){
+	@Cacheable(cacheNames = "activity", key = "#cacheKey")
+	public PagedReturn<ActivityReturn> findActivities(String id, int pageNo, int pageSize_, String cacheKey){
     	
-    	int pageNo;
-    	if(pageInfo.getPage() != null) {
-    		pageNo = pageInfo.getPage();
-    	}else {
-    		pageNo = 0;
+		Activity activity = new Activity(null, null, null, null, null);
+    	
+    	if(pageSize_ != 0) {
+    		pageSize = pageSize_;
     	}
     	
-    	if(pageInfo.getPageSize() != null) {
-    		pageSize = pageInfo.getPageSize();
-    	}
-    	
-    	Date endDate = pageInfo.getEnd();
-    	if(endDate == null) {
-    		endDate = new Date();
-    	}
-    	
-    	Date startDate = pageInfo.getStart();
-    	if(startDate == null) {
-    		startDate = new Date(0);
-    	}
-    	
-    	Pageable paging = PageRequest.of(pageNo, pageSize);
-    	Page<Activity> pagedActivities;
+    	activity.setBuyer(new Buyer(id, null, null, null, null, null, null, null, null));
     	
     	ExampleMatcher matcher = ExampleMatcher.matchingAll().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
     	
-    	pagedActivities = activityRepo.findAll(Example.of(buyer, matcher), paging);
+    	Pageable paging = PageRequest.of(pageNo, pageSize);
     	
-    	return pagedActivities;
+    	Page<Activity> pagedActivities = activityRepo.findAll(Example.of(activity, matcher), paging);
+    	
+    	List<ActivityReturn> activityReturn = new ArrayList<>();
+    	
+    	for(Activity act : pagedActivities.getContent() ) {
+    		activityReturn.add(new ActivityReturn(act.getActivityType(), act.getDatetime(), act.getDetails(), act.getBuyer().getId()));
+    	}
+    	
+    	return new PagedReturn<>(activityReturn, pagedActivities.isLast(), pagedActivities.isFirst(), pagedActivities.getTotalPages(), pagedActivities.getNumber());
     }
-   
+	
 }

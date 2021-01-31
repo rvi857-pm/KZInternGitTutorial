@@ -10,19 +10,20 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity()
 @Table(name = "activity")
-public class Activity {
+public class Activity{
 	
 	@Id
-	int id;
+	Integer id;
 	String activityType;
+	@JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss Z")
 	Date datetime;
-	String creativeName;
-	String websiteUrl;
+	String details;
 	
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "buyer_id", nullable = false)
@@ -32,21 +33,20 @@ public class Activity {
 	public Activity() {
 	}
 
-	public Activity(int id, String activityType, Date datetime, String creativeName, String websiteUrl, Buyer buyer) {
+	public Activity(Integer id, String activityType, Date datetime, String details, Buyer buyer) {
 		super();
 		this.id = id;
 		this.activityType = activityType;
 		this.datetime = datetime;
-		this.creativeName = creativeName;
-		this.websiteUrl = websiteUrl;
+		this.details = details;
 		this.buyer = buyer;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -66,20 +66,12 @@ public class Activity {
 		this.datetime = datetime;
 	}
 
-	public String getCreativeName() {
-		return creativeName;
+	public String getDetails() {
+		return details;
 	}
 
-	public void setCreativeName(String creativeName) {
-		this.creativeName = creativeName;
-	}
-
-	public String getWebsiteUrl() {
-		return websiteUrl;
-	}
-
-	public void setWebsiteUrl(String websiteUrl) {
-		this.websiteUrl = websiteUrl;
+	public void setDetails(String details) {
+		this.details = details;
 	}
 
 	public Buyer getBuyer() {
@@ -92,8 +84,8 @@ public class Activity {
 
 	@Override
 	public String toString() {
-		return "Activity [id=" + id + ", activityType=" + activityType + ", datetime=" + datetime + ", creativeName="
-				+ creativeName + ", websiteUrl=" + websiteUrl + ", buyer=" + buyer + "]";
+		return "Activity [id=" + id + ", activityType=" + activityType + ", datetime=" + datetime + ", details="
+				+ details + ", buyer=" + buyer + "]";
 	}
 	
 }

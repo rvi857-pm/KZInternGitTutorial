@@ -11,7 +11,7 @@
         <b-col lg='3'>
             <b-button-group>
                 <b-button>{{ page }}</b-button>
-                <b-dropdown right text="Page Size">
+                <b-dropdown right :text="'Page Size : ' + this.size">
                     <b-dropdown-item @click="pageSize(5)">5</b-dropdown-item>
                     <b-dropdown-item @click="pageSize(10)">10</b-dropdown-item>
                     <b-dropdown-item @click="pageSize(15)">15</b-dropdown-item>
@@ -45,7 +45,8 @@ export default
         'last',
         'first',
         'lPage',
-        'fPage'
+        'fPage',
+        'size'
     ]
 };
 </script>
