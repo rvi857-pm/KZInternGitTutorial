@@ -81,9 +81,9 @@ public class AccountsService {
 		//
 		//System.out.println(ps);
 		if(page.equals("")) {									//Same as the above two steps (comments)
-			if(defaultstringchecker(page_size))
-				return accountslist;
-			else
+//			if(defaultstringchecker(page_size))
+//				return accountslist;
+//			else
 				return Custom_Pagination("1",page_size,accountslist);
 		}else {
 			int pa = Integer.parseInt(page);

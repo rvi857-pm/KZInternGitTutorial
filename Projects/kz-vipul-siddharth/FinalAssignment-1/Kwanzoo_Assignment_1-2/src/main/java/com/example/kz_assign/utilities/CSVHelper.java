@@ -20,8 +20,9 @@ public class CSVHelper {
   static String[] HEADERs = { "Account Name", "IP Geo City", "IP Geo State", "IP Geo Country", "IP Domain", "Type", "SFDC Account Id" };
 
   public static boolean hasCSVFormat(MultipartFile file) {
-    if (TYPE.equals(file.getContentType())
-    		|| file.getContentType().equals("application/vnd.ms-excel")) {
+    if (file.getContentType().equals("application/vnd.ms-excel")
+    		|| file.getContentType().equals("text/csv")
+    		|| file.getContentType().equals("application/vnd.openxmlfornats-officedocument.spreadsheetml.sheet")) {
       return true;
     }
 

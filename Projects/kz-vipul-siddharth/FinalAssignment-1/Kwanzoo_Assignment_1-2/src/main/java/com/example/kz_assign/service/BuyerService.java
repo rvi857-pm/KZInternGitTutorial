@@ -20,11 +20,7 @@ public class BuyerService {
 	@Autowired
 	buyer_repo brepo;
 	
-//	public int getbuyerscore(buyer b) {
-//		int buyer_score = 0;
-//		
-//		return 
-//	}
+
 	
 	private Map<String, Object> toMap(buyer b, List<String> exclude) {
 	    Map<String, Object> result = new LinkedHashMap<String, Object>();

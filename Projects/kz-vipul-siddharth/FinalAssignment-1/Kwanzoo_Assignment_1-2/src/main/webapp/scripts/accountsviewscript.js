@@ -1,6 +1,9 @@
 var app =angular.module("AccountsModule",[]);
 	app.controller("AccountsController",function($scope,$http){
 		$scope.accounts = [];
+		$scope.buyers=[];
+		$scope.activities=[];
+		$scope.breadcrumblist=[];
 		$scope.accountsform={
 			page:"",
 			page_size:"",
@@ -23,11 +26,35 @@ var app =angular.module("AccountsModule",[]);
 			salesforce_id:""
 		};
 		
+		$scope.buyer={
+			id: "",
+			name: "",
+			account_id: "",
+			job_level: "",
+			job_function: "",
+			city: "",
+			state: "",
+			country: "",
+			source: ""
+		}
+
+		$scope.activity={
+			date:"",
+			type:"",
+			details:""
+		}
+
+		$scope.buyertableheader = ["Job_Level","Job_Function","City","State","Country", "Source"];
+		$scope.activitytableheader=["Date", "Type", "Details"];
 		$scope.fields=["name","city","country","state", "ip_domain", "type", "salesforce_id"];
 		$scope.pagenumber="";
 		$scope.url="http://localhost:8080/accounts?";
 		$scope.accountview=false;
+		$scope.accountstableview=true;
+		$scope.buyerview = false;
+		$scope.activityview=false;
 		$scope.querystring="";
+		$scope.currentview = "Accounts Table"
 		$scope.lastpage=false;
 		$scope.locationlist=[];
 		$scope.personalist=[];
@@ -162,12 +189,9 @@ var app =angular.module("AccountsModule",[]);
 			($scope.account).type = ($scope.accounts[index]).type;
 			($scope.account).salesforce_id = ($scope.accounts[index]).salesforce_id;
 			($scope.account).ip_domain = ($scope.accounts[index]).ip_domain;
-			// loadlocationdata(($scope.account).id);
-			// //createlocationchart();
-			// loadpersonadata(($scope.account).id);
-			// loadactivitydata(($scope.account).id);
 			loadaccountdata(($scope.account).id);
-			$scope.accountview=true;
+			setview("Account",true)
+			loadbuyerdata(($scope.account).id);
 			//console.log(name);
 		};
    		
@@ -257,7 +281,7 @@ var app =angular.module("AccountsModule",[]);
 				var data = google.visualization.arrayToDataTable(Array.from(datalist));
 
 				var options = {
-				title: 'Account activity Count',
+				title: element_id,
 				is3D: true,
 				legend:{
 					maxLines: 5
@@ -268,13 +292,110 @@ var app =angular.module("AccountsModule",[]);
 					left:15
 				}
 				};
-				console.log($scope.activitylist);
+				//console.log($scope.activitylist);
 				var chart = new google.visualization.PieChart(document.getElementById(element_id));
 				chart.draw(data, options);
 			}
 		}
 
+		function loadbuyerdata(account_id){
+			$http({
+				method : 'GET',
+				data: $scope.accountsform,
+				url : "http://localhost:8080/buyers?id=" + account_id,
+			}).then(function successCallback(response) {
+					
+				$scope.buyers = response.data;
+				// console.log($scope.buyers);
+			}, function errorCallback(response) {
 
+				console.log(response.statusText);
+			});
+		}
 
+		function loadactivitydata(buyer_id){
+			$http({
+				method : 'GET',
+				data: $scope.accountsform,
+				url : "http://localhost:8080/activities?buyer_id=" + buyer_id,
+			}).then(function successCallback(response) {
+					
+				$scope.activities = response.data;
+				// console.log($scope.buyers);
+			}, function errorCallback(response) {
+
+				console.log(response.statusText);
+			});
+		}
+
+		$scope.ShowBuyer = function(index){
+			($scope.buyer).id = ($scope.buyers[index]).id;
+			($scope.buyer).name = ($scope.buyers[index]).name;
+			($scope.buyer).account_id = ($scope.buyers[index]).account_id;
+			($scope.buyer).city = ($scope.buyers[index]).city;
+			($scope.buyer).state = ($scope.buyers[index]).state;
+			($scope.buyer).country = ($scope.buyers[index]).country;
+			($scope.buyer).source = ($scope.buyers[index]).source;
+			($scope.buyer).job_function = ($scope.buyers[index]).job_function;
+			($scope.buyer).job_level = ($scope.buyers[index]).job_level;
+			// $scope.accountview = false;
+			// $scope.buyerview=true;
+			setview("Buyer",true);
+			loadactivitydata(($scope.buyer).id);
+		}
+
+		$scope.ShowActivity = function(index){
+			($scope.activity).date = ($scope.activities[index]).date;
+			($scope.activity).type = ($scope.activities[index]).type;
+			($scope.activity).details = ($scope.activities[index]).details;
+			setview("Activity",true);
+		}
+
+		$scope.Navigateto = function(view){
+			while(!(($scope.breadcrumblist).pop() === view));
+			setview(view, false);
+			// console.log(($scope.breadcrumblist).pop());
+		}
+
+		function setview(view, addcurretview){
+			$scope.accountstableview =false;
+			$scope.accountview =false;
+			$scope.buyerview=false;
+			$scope.activityview = false;
+			if(view === "Accounts Table")
+				$scope.accountstableview =true;
+			if(view === "Account")
+				$scope.accountview = true;
+			if(view === "Buyer")
+				$scope.buyerview = true;
+			if(view==="Activity")
+				$scope.activityview = true;
+			if(addcurretview)
+				($scope.breadcrumblist).push($scope.currentview);	
+			$scope.currentview = view;
+		}
+
+		$scope.uploadFile = function() {
+            var fd = new FormData();  
+			var file = document.getElementById("file").files[0];
+			console.log('file is ' );
+			console.dir(file);
+			fd.append('type',file.type);
+			fd.append('file',file);
+			
+			console.log(fd);
+			$http({
+				method : 'POST',
+				url : "http://localhost:8080/uploadaccountlist",
+				headers: {"Content-Type": undefined },
+				data:fd,
+				
+			}).then(function successCallback(response) {
+				window.alert("File Upload Successful!")
+			}, function errorCallback(response) {
+
+				console.log(response.statusText);
+			});
+		 };
 
 });

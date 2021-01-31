@@ -4,13 +4,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.example.kz_assign.models.account;
 import com.example.kz_assign.models.activity;
@@ -78,26 +85,24 @@ public class account_controller {
 	}
 	
 	
-	@PostMapping("/accounts")
+	@RequestMapping(path="/uploadaccountlist",method=RequestMethod.POST,consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
+	@ResponseBody
 	public String uploadFile(@RequestParam("file") MultipartFile file) {
 	    String message = "";
-	
-	    if (CSVHelper.hasCSVFormat(file)) {
+	    //System.out.println((MultipartHttpServletRequest)request);
+//	    System.out.println(file.getContentType());
 	      try {
-	        fileService.save(file);
-	
+	    	  fileService.save(file);
+//	    	  System.out.println("check");
 	        message = "Uploaded the file successfully";
 	
 	        return message;
 	      } catch (Exception e) {
 	        message = "Could not upload the file";
+//	        System.out.println("Error");
 	        return message;
 	      }
-	    }
-	
-	    message = "Please upload a csv file!";
-	    return message;
-	}
+    }
 
 	
 //	@GetMapping("/temp")
