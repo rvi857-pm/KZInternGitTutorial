@@ -1,8 +1,8 @@
 package com.example.demo.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import com.example.demo.model.Buyer;
 
@@ -14,5 +14,6 @@ public interface BuyerRepository extends JpaRepository<Buyer, String> {
 	
 	//@Query ("SELECT jobLevel, count(id) FROM :buyers GROUP BY jobLevel")
 	//Object findPersonCount( @Param("Id") String Id, @Param("buyers") Object buyers);
-	
+
+	Page<Buyer> findAllByAccountId(String account_id, Pageable paging);
 }
