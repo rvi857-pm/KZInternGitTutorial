@@ -121,8 +121,8 @@ export default {
       this.page = "1";
     },
     getParameter() {
-      const url = `http://localhost:8080/accounts`;
-      let requestParam = url + `?page=${this.page}&page_size=${this.page_size}`;
+      const url = `http://localhost:8080/accounts?metrics=all`;
+      let requestParam = url + `&page=${this.page}&page_size=${this.page_size}`;
       if (this.input.name !== "") requestParam += `&name=${this.input.name}`;
       if (this.input.city !== "") requestParam += `&city=${this.input.city}`;
       if (this.input.state !== "") requestParam += `&state=${this.input.state}`;
@@ -155,7 +155,7 @@ export default {
             delete x[i]["id"];
             delete x[i]["empty"];
           }
-          console.log(jsonResponse);
+          //console.log(jsonResponse);
           this.accounts = x;
         });
     },
