@@ -26,8 +26,8 @@ public class AccountPage {
 	private Matcher accountMatcher;
 
 	public Page<Account> getPage(Map<String, String> filter, int page, int pageSize) {
-		Example<Account> example = Example.of(accountProbe.getProbe(filter, false),
-				accountMatcher.getMatcher(filter, false));
+		Example<Account> example = Example.of(accountProbe.getAccountProbe(filter, false),
+				accountMatcher.getAccountMatcher(filter, false));
 		Pageable obj = PageRequest.of(page, pageSize);
 		Page<Account> retVal = accountRepo.findAll(example, obj);
 		return retVal;

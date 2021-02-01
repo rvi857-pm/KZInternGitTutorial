@@ -25,7 +25,7 @@ public class PageService {
 
 		if (filter.get("search") != null) {
 
-			List<Account> list = accountList.getList(filter);
+			List<Account> list = accountList.getAccountList(filter);
 			int page = Integer.parseInt(filter.get("page"));
 			int size = Integer.parseInt(filter.get("page_size"));
 			Pageable obj = PageRequest.of(page, size);
