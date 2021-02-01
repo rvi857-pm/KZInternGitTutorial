@@ -10,6 +10,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
 import com.kwanzoo.app.model.Account;
+import com.kwanzoo.app.model.Activity;
 import com.kwanzoo.app.model.Buyer;
 import com.kwanzoo.app.repo.AccountRepository;
 import com.kwanzoo.app.repo.BuyerRepository;
@@ -48,5 +49,15 @@ public class AccountList {
 			buyers.addAll(accounts.get(i).getBuyers());
 		}
 		return buyers;
+	}
+	
+	public List<Activity>  getActivityList(Map<String, String> filter){
+		Example<Buyer> example = Example.of(accountProbe.getBuyerProbe(filter));
+		List<Buyer> list = buyerRepo.findAll(example);
+		List<Activity> activities = new ArrayList<Activity>();
+		for(int i = 0; i < list.size(); i++) {
+			activities.addAll(list.get(i).getActivities());
+		}
+		return activities;
 	}
 }

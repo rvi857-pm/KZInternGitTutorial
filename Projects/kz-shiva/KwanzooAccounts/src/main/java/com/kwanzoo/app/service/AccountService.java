@@ -1,7 +1,6 @@
 package com.kwanzoo.app.service;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +13,7 @@ import com.kwanzoo.app.Utility.CheckDate;
 import com.kwanzoo.app.Utility.Data;
 import com.kwanzoo.app.Utility.Metric;
 import com.kwanzoo.app.model.Account;
+import com.kwanzoo.app.model.Activity;
 import com.kwanzoo.app.model.Buyer;
 
 @Component
@@ -48,19 +48,19 @@ public class AccountService {
 		return sample;
 
 	}
-	
-	private void fillMetrics(Map<String,Object> value, String val, Metric metric, boolean flag){
+
+	private void fillMetrics(Map<String, Object> value, String val, Metric metric, boolean flag) {
 		if (val.contains("score") || val.contains("all"))
 			value.put("score", metric.getScore());
 
 		if (val.contains("marketing_qualified") || val.contains("all"))
 			value.put("marketing_qualified", metric.isQualified());
-		
+
 		if (val.contains("activity_count") || val.contains("all"))
 			value.put("activity_count", metric.getActivityCount());
 
 		if (flag & (val.contains("buyer_count") || val.contains("all")))
-			value.put("buyer_count", metric.getBuyerCount());	
+			value.put("buyer_count", metric.getBuyerCount());
 
 		if (flag & (val.contains("persona_count") || val.contains("all")))
 			value.put("persona_count", metric.getPersonaCount());
@@ -68,7 +68,7 @@ public class AccountService {
 		if (flag & (val.contains("location_count") || val.contains("all")))
 			value.put("location_count", metric.getLocationCount());
 	}
-	
+
 	private Map<String, Object> fillValues(Map<String, String> filter, Buyer buyer, Metric metric) {
 		Map<String, Object> value = new HashMap<String, Object>();
 		value.put("id", buyer.getId());
@@ -88,7 +88,6 @@ public class AccountService {
 
 		return value;
 	}
-	
 
 	private Map<String, Object> fillValues(Map<String, String> filter, Account account, Metric metric) {
 
@@ -105,6 +104,13 @@ public class AccountService {
 			String val = filter.get("metrics");
 			fillMetrics(value, val, metric, true);
 		}
+
+		return value;
+	}
+
+	private Map<String, Object> fillValues(Map<String, String> filter, Activity activity) {
+
+		Map<String, Object> value = new HashMap<String, Object>();
 
 		return value;
 	}
@@ -130,11 +136,21 @@ public class AccountService {
 		Data data = new Data();
 		List<Buyer> buyers = accountList.getBuyerList(filter);
 		CheckDate sample = getCheckDate(filter);
-		
-		for( int i = 0; i < buyers.size(); i++) {
-			Metric metric = metricService.getMetrics(buyers.get(i), sample, buyers.get(i).getId(), filter.get("start"), filter.get("end"));
+
+		for (int i = 0; i < buyers.size(); i++) {
+			Metric metric = metricService.getMetrics(buyers.get(i), sample, buyers.get(i).getId(), filter.get("start"),
+					filter.get("end"));
 			data.addData(fillValues(filter, buyers.get(i), metric));
 		}
-		return buyers;
+		return data;
+	}
+
+	public Object activityData(Map<String, String> filter) {
+		Data data = new Data();
+		List<Activity> activities = accountList.getActivityList(filter);
+		for (int i = 0; i < activities.size(); i++) {
+			data.addData(fillValues(filter, activities.get(i)));
+		}
+		return data;
 	}
 }

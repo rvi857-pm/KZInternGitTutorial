@@ -24,16 +24,16 @@ public class Probe {
 		return account;
 	}
 	
-	public Buyer getBuyerProbe(Map<String, String> filter, boolean flag) {
+	public Buyer getBuyerProbe(Map<String, String> filter) {
 		Buyer buyer = new Buyer();
 		
 		buyer.setId(filter.get("buyer_id"));
-		buyer.setCity(flag ? filter.get("search") : filter.get("city"));
-		buyer.setState(flag ? filter.get("search") : filter.get("state"));
-		buyer.setCountry(flag ? filter.get("search") : filter.get("country"));
-		buyer.setSource(flag ? filter.get("search") : filter.get("source"));
-		buyer.setState(flag ? filter.get("search") : filter.get("job_level"));
-		buyer.setState(flag ? filter.get("search") : filter.get("job_function"));
+//		buyer.setCity(flag ? filter.get("search") : filter.get("city"));
+//		buyer.setState(flag ? filter.get("search") : filter.get("state"));
+//		buyer.setCountry(flag ? filter.get("search") : filter.get("country"));
+//		buyer.setSource(flag ? filter.get("search") : filter.get("source"));
+//		buyer.setState(flag ? filter.get("search") : filter.get("job_level"));
+//		buyer.setState(flag ? filter.get("search") : filter.get("job_function"));
 		
 		return buyer;
 	}
