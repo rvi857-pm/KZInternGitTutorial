@@ -20,70 +20,69 @@ import javafx.util.Pair;
 
 @Component
 public class MetricService {
-	
+
 	@Autowired
 	private Parse parse;
+
+	private float getBuyerScore(Buyer buyer, CheckDate date, ActivityCount activityCount) {
+		float buyerScore = 0;
+		List<Activity> activities = buyer.getActivities();
+
+		for (int j = 0; j < activities.size(); j++) {
+
+			if (date.getStartDate() != null) {
+				if (activities.get(j).getDateTime().compareTo(date.getStartDate()) < 0)
+					continue;
+			}
+
+			if (date.getEndDate() != null) {
+				if (activities.get(j).getDateTime().compareTo(date.getEndDate()) > 0)
+					continue;
+			}
+
+			if (activities.get(j).getActivityType().equals("Ad Click")) {
+				buyerScore += 1;
+				activityCount.incrementAdClicks(1);
+			} else if (activities.get(j).getActivityType().equals("Website Visit")) {
+				buyerScore += 0.1;
+				activityCount.incrementWebsiteVisits(1);
+			} else if (activities.get(j).getActivityType().equals("Form Fill")) {
+				buyerScore += 3;
+				activityCount.incrementFormFills(1);
+			} else if (activities.get(j).getActivityType().equals("Live Chat")) {
+				buyerScore += 3;
+				activityCount.incrementLiveChats(1);
+			} else
+				continue;
+		}
+		
+		return buyerScore;
+	}
 	
-	/**
-	 * This method calculates the score of an account based on the buyers and their
-	 * activities
-	 * 
-	 * @param account account for which score is calculated
-	 * @return score calculated score
-	 */
 	@Cacheable(value = "accounts", key = "{#id, #start, #end}")
 	public Metric getMetrics(Account account, CheckDate date, String id, String start, String end) {
-		float accountScore = 0;
-		List<Buyer> buyers = account.getBuyers();
-		
+
 		Map<Pair<String, String>, Integer> personaStore = new HashMap<Pair<String, String>, Integer>();
 		Map<Pair<String, Pair<String, String>>, Integer> locationStore = new HashMap<Pair<String, Pair<String, String>>, Integer>();
 
 		int count = 0;
 		ActivityCount activityCount = new ActivityCount(0, 0, 0, 0, 0);
 
+		float accountScore = 0;
+		List<Buyer> buyers = account.getBuyers();
+
 		for (int i = 0; i < buyers.size(); i++) {
 
-			float buyerScore = 0;
-			List<Activity> activities = buyers.get(i).getActivities();
+			Buyer buyer = buyers.get(i);
+			float buyerScore = getBuyerScore(buyer, date, activityCount);
 
-			for (int j = 0; j < activities.size(); j++) {
-				
-				if(date.getStartDate() != null) {
-					if(activities.get(j).getDateTime().compareTo(date.getStartDate()) < 0) continue;
-				}
-				
-				if(date.getEndDate() != null) {
-					if(activities.get(j).getDateTime().compareTo(date.getEndDate()) > 0) continue;
-				}
-
-				if (activities.get(j).getActivityType().equals("Ad Click")) {
-					buyerScore += 1;
-					activityCount.incrementAdClicks(1);
-				}
-				else if (activities.get(j).getActivityType().equals("Website Visit")) {
-					buyerScore += 0.1;
-					activityCount.incrementWebsiteVisits(1);
-				}
-				else if (activities.get(j).getActivityType().equals("Form Fill")) {
-					buyerScore += 3;
-					activityCount.incrementFormFills(1);
-				}
-				else if (activities.get(j).getActivityType().equals("Live Chat")) {
-					buyerScore += 3;
-					activityCount.incrementLiveChats(1);
-				}
-				else
-					continue;
-			}
-
-			if (buyers.get(i).getJobLevel().equals("C-Level"))
+			if (buyer.getJobLevel().equals("C-Level"))
 				buyerScore *= 2;
-			else if (buyers.get(i).getJobLevel().equals("Owner,Board Member"))
+			else if (buyer.getJobLevel().equals("Owner,Board Member"))
 				buyerScore *= 1.75;
-			else if (buyers.get(i).getJobLevel().equals("VP,Director"))
+			else if (buyer.getJobLevel().equals("VP,Director"))
 				buyerScore *= 1.5;
-			else if (buyers.get(i).getJobLevel().equals("Manager"))
+			else if (buyer.getJobLevel().equals("Manager"))
 				buyerScore *= 1.25;
 			else
 				buyerScore *= 1;
@@ -92,26 +91,46 @@ public class MetricService {
 				count++;
 
 			accountScore += buyerScore;
-			
-			Pair<String, String> newPair = new Pair<String, String>(buyers.get(i).getJobLevel(), buyers.get(i).getJobFunction());
-			personaStore.put(newPair, personaStore.containsKey(newPair) ? personaStore.get(newPair) + 1 : 1);
-			
-			Pair<String, String> tempPair = new Pair<String, String>(buyers.get(i).getState(), buyers.get(i).getCountry());
-			Pair<String, Pair<String, String>> locPair = new Pair<String, Pair<String, String>>(buyers.get(i).getCity(), tempPair);
-			locationStore.put(locPair, locationStore.containsKey(locPair) ? locationStore.get(locPair) + 1 : 1);
 
+			Pair<String, String> newPair = new Pair<String, String>(buyers.get(i).getJobLevel(),
+					buyers.get(i).getJobFunction());
+			personaStore.put(newPair, personaStore.containsKey(newPair) ? personaStore.get(newPair) + 1 : 1);
+
+			Pair<String, String> tempPair = new Pair<String, String>(buyers.get(i).getState(),
+					buyers.get(i).getCountry());
+			Pair<String, Pair<String, String>> locPair = new Pair<String, Pair<String, String>>(buyers.get(i).getCity(),
+					tempPair);
+			locationStore.put(locPair, locationStore.containsKey(locPair) ? locationStore.get(locPair) + 1 : 1);
 		}
 
 		Metric metric = new Metric();
 		boolean flag = count >= 3 ? true : false;
-		
+
 		metric.setScore(accountScore);
 		metric.setQualified(flag);
 		metric.setBuyerCount(buyers.size());
 		metric.setActivityCount(activityCount);
 		metric.setPersonaCount(parse.getPersonas(personaStore));
 		metric.setLocationCount(parse.getLocations(locationStore));
-		
+
+		return metric;
+
+	}
+	
+	@Cacheable(value = "buyers", key = "{#id, #start, #end}")
+	public Metric getMetrics(Buyer buyer, CheckDate date, String id, String start, String end) {
+
+		ActivityCount activityCount = new ActivityCount(0, 0, 0, 0, 0);
+
+		float buyerScore = getBuyerScore(buyer, date, activityCount);
+
+		Metric metric = new Metric();
+		boolean flag = buyerScore >= 4 ? true : false;
+
+		metric.setScore(buyerScore);
+		metric.setQualified(flag);
+		metric.setActivityCount(activityCount);
+
 		return metric;
 
 	}
