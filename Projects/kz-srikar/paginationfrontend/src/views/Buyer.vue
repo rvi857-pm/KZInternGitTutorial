@@ -52,12 +52,10 @@
 import PieExample from "@/util/PieExample";
 import Page from "@/components/Page.vue";
 import accountApi from "@/util/accountsApi";
+import { mapState, mapActions } from "vuex";
 
 export default {
     name: "buyer",
-    props: {
-        buyer: Object,
-    },
     components: {
         Page,
         PieExample,
@@ -78,7 +76,11 @@ export default {
             activityInfo: {},
         };
     },
+    computed: {
+        ...mapState(["buyer", "account"]),
+    },
     methods: {
+        ...mapActions(["setItems"]),
         getPageSize() {
             if (this.pageSize == "") return 0;
             return parseInt(this.pageSize);
@@ -143,8 +145,28 @@ export default {
             this.getSearchResults(this.currentPage);
         },
     },
+
     mounted: function() {
         this.getSearchResults(1);
+        let items = [
+            {
+                text: "All Accounts",
+                disabled: false,
+                to: "/",
+            },
+            {
+                text: this.account.name,
+                disabled: false,
+                to: `/${this.account.name}`,
+                exact: true,
+            },
+            {
+                text: this.buyer.id,
+                disabled: true,
+                to: `/${this.account.name}/${this.buyer.id}`,
+            },
+        ];
+        this.setItems(items);
     },
 };
 </script>

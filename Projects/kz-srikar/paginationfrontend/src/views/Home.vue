@@ -36,7 +36,7 @@
             :pageSize="getPageSize()"
             :results="results"
             :fields="fields"
-            :myRowClickHandler="setAccount"
+            :myRowClickHandler="onClickAccount"
         />
         <br />
     </div>
@@ -46,12 +46,10 @@
 import Page from "@/components/Page.vue";
 import FileUpload from "@/components/FileUpload.vue";
 import accountApi from "@/util/accountsApi";
+import { mapActions } from "vuex";
 
 export default {
     name: "home",
-    props: {
-        setAccount: Function,
-    },
     components: {
         Page,
         FileUpload,
@@ -86,6 +84,11 @@ export default {
         };
     },
     methods: {
+        ...mapActions(["setAccount", "setItems"]),
+        onClickAccount(account) {
+            this.setAccount(account);
+            this.$router.push(`/${account.name}`);
+        },
         parseSearchText() {
             this.searchParam = {
                 q: "",
@@ -166,6 +169,14 @@ export default {
     },
     mounted: function() {
         this.getSearchResults(1);
+        let items = [
+            {
+                text: "All Accounts",
+                disabled: false,
+                to: "/",
+            },
+        ];
+        this.setItems(items);
     },
 };
 </script>

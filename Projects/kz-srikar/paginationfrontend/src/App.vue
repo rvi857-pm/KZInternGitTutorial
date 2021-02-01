@@ -4,78 +4,27 @@
             <b-navbar-brand href="#">@kz-srikar</b-navbar-brand>
         </b-navbar>
         <br />
-
-        <div v-if="isHome === true">
-            <div id="breadCrumb">
-                <p>All Accounts</p>
-            </div>
-            <Home :setAccount="setAccount" />
-        </div>
-        <div v-else-if="isAccount === true">
-            <div id="breadCrumb">
-                <p>
-                    <a @click="goToHome">All Accounts</a>
-                    / {{ account.name }}
-                </p>
-            </div>
-            <Account :account="account" :setBuyer="setBuyer" />
-        </div>
-        <div v-else-if="isBuyer === true">
-            <div id="breadCrumb">
-                <p>
-                    <a @click="goToHome">All Accounts</a>
-                    / <a @click="goToAccount">{{ account.name }}</a> /
-                    {{ buyer.id }}
-                </p>
-            </div>
-            <Buyer :buyer="buyer" />
-        </div>
+        <v-breadcrumbs :items="items">
+            <template v-slot:divider>
+                <v-icon>mdi-chevron-right</v-icon>
+            </template>
+        </v-breadcrumbs>
+        <router-view />
     </div>
 </template>
 
 <script>
-import Home from "./views/Home";
-import Account from "./views/Account";
-import Buyer from "./views/Buyer";
+import { mapState } from "vuex";
 
 export default {
     name: "App",
-    components: {
-        Home,
-        Account,
-        Buyer,
-    },
     data() {
-        return {
-            isHome: true,
-            isAccount: false,
-            isBuyer: false,
-            account: {},
-            buyer: {},
-        };
+        return {};
     },
-    methods: {
-        setAccount(account) {
-            this.account = account;
-            this.isHome = false;
-            this.isAccount = true;
-        },
-        setBuyer(buyer) {
-            this.buyer = buyer;
-            this.isAccount = false;
-            this.isBuyer = true;
-        },
-        goToHome() {
-            this.isHome = true;
-            this.isAccount = false;
-            this.isBuyer = false;
-        },
-        goToAccount() {
-            this.isHome = false;
-            this.isAccount = true;
-            this.isBuyer = false;
-        },
+    computed: {
+        ...mapState(["items"]),
     },
+    methods: {},
 };
 </script>
 
@@ -91,12 +40,5 @@ export default {
     display: flex;
     align-items: flex-start;
     padding-left: 50px;
-}
-a {
-    color: green;
-    cursor: pointer;
-}
-p {
-    font-weight: bold;
 }
 </style>

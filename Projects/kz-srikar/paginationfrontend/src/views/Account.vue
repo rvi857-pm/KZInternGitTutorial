@@ -46,7 +46,7 @@
         <Page
             :results="results"
             :fields="fields"
-            :myRowClickHandler="setBuyer"
+            :myRowClickHandler="onClickBuyer"
         />
         <br />
     </div>
@@ -56,13 +56,10 @@
 import PieExample from "@/util/PieExample";
 import Page from "@/components/Page.vue";
 import accountApi from "@/util/accountsApi";
+import { mapState, mapActions } from "vuex";
 
 export default {
     name: "account",
-    props: {
-        account: Object,
-        setBuyer: Function,
-    },
     components: {
         Page,
         PieExample,
@@ -87,7 +84,15 @@ export default {
             activityInfo: {},
         };
     },
+    computed: {
+        ...mapState(["account"]),
+    },
     methods: {
+        ...mapActions(["setBuyer", "setItems"]),
+        onClickBuyer(buyer) {
+            this.setBuyer(buyer);
+            this.$router.push(`/${this.account.name}/${buyer.id}`);
+        },
         getPageSize() {
             if (this.pageSize == "") return 0;
             return parseInt(this.pageSize);
@@ -195,6 +200,19 @@ export default {
     },
     mounted: function() {
         this.getSearchResults(1);
+        let items = [
+            {
+                text: "All Accounts",
+                disabled: false,
+                to: "/",
+            },
+            {
+                text: this.account.name,
+                disabled: true,
+                to: `/${this.account.name}`,
+            },
+        ];
+        this.setItems(items);
     },
 };
 </script>
