@@ -67,12 +67,12 @@ public class BuyerService {
 			Map<String, Object> contentItem = new HashMap<>();
 
 			contentItem.put("id", buyer.getId());
-			contentItem.put("name", buyer.getCity());
-			contentItem.put("ip_domain", buyer.getState());
-			contentItem.put("city", buyer.getCountry());
-			contentItem.put("state", buyer.getSource());
-			contentItem.put("country", buyer.getJobLevel());
-			contentItem.put("type", buyer.getJobFunction());
+			contentItem.put("city", buyer.getCity());
+			contentItem.put("state", buyer.getState());
+			contentItem.put("country", buyer.getCountry());
+			contentItem.put("source", buyer.getSource());
+			contentItem.put("job_level", buyer.getJobLevel());
+			contentItem.put("job_function", buyer.getJobFunction());
 
 			for (int j = 0; j < metricParams.size(); j++) {
 				if (metricParams.get(j).equals("all")) {
