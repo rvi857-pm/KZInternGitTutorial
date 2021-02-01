@@ -22,7 +22,7 @@
         <p>Type : {{ row.type }}</p>
         <p>Salesforce Id : {{ row.salesforce_id }}</p>
         <p>Marketing qualified: {{ row.marketing_qualified }}</p>
-        <Chart v-bind:label="label" v-bind:dataset="dataset" />
+        <pie-chart :data="chartData" :options="chartOptions"></pie-chart>
       </div>
 
       <b-button class="mt-3" block @click="toggle">Close</b-button>
@@ -30,10 +30,10 @@
   </div>
 </template>
 <script>
-import Chart from "@/utils/Piechart.js";
+import PieChart from "@/utils/Piechart.js";
 export default {
   components: {
-    Chart,
+    PieChart,
   },
   props: {
     accounts: Array,
@@ -51,8 +51,35 @@ export default {
         domain: "",
         sfdc: "",
       },
-      label: [],
-      dataset: [],
+      chartOptions: {
+        hoverBorderWidth: 2,
+      },
+      chartData: {
+        labels: ["Green", "Red", "Blue"],
+        datasets: [
+          {
+            label: "Data One",
+            backgroundColor: [
+              "#0074D9",
+              "#FF4136",
+              "#2ECC40",
+              "#FF851B",
+              "#7FDBFF",
+              "#B10DC9",
+              "#FFDC00",
+              "#001f3f",
+              "#39CCCC",
+              "#01FF70",
+              "#85144b",
+              "#F012BE",
+              "#3D9970",
+              "#111111",
+              "#AAAAAA",
+            ],
+            data: [1, 10, 5],
+          },
+        ],
+      },
       column: [
         { name: "NAME" },
         { ip_domain: "IP DOMAIN" },
@@ -68,15 +95,21 @@ export default {
     toggle(record) {
       //  console.log(this.record.location_count);
 
-      this.label = [];
-      this.dataset = [];
+      let label = [];
+      let dataset = [];
+      //let color = [];
 
+      //  let colour = "#41B883";
       for (let i in record.location_count) {
         let x = record.location_count[i]["city"];
         x = x + "/" + record.location_count[i]["state"];
-        this.label.push(x);
-        this.dataset.push(record.location_count[i]["count"]);
+        //  colour[6] = i;
+        label.push(x);
+        dataset.push(record.location_count[i]["count"]);
       }
+      this.chartData.labels = label;
+      this.chartData.datasets[0].data = dataset;
+      console.log(this.chartData.datasets[0].data);
       this.details = !this.details;
       this.row = record;
     },
