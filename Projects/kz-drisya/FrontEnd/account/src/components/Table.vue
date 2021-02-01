@@ -9,13 +9,6 @@
       @row-clicked="toggle"
     >
     </b-table>
-    <!-- <b-modal v-model="details" :title="row.name">
-      <p class="my-4">Ip Domain : {{ row.ipDomain }}</p>
-      <p class="my-4">City : {{ row.city }}</p>
-      <p class="my-4">State : {{ row.state }}</p>
-      <p class="my-4">Country : {{ row.country }}</p>
-      <p class="my-4">Salesforce Id : {{ row.salesforceId }}</p>
-    </b-modal>-->
     <b-modal v-model="details" id="bv-model-example" hide-footer>
       <template #modal-title>
         {{ row.name }}

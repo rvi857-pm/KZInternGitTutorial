@@ -2,17 +2,20 @@
   <div>
     <NavBar />
     <h1 id="img">Welcome to Accounts!!</h1>
+    <Addacc />
     <Account />
   </div>
 </template>
 <script>
 import NavBar from "./components/NavBar";
 import Account from "./components/Acounts";
+import Addacc from "./components/Addacc";
 export default {
   name: "App",
   components: {
     NavBar,
     Account,
+    Addacc,
   },
 };
 </script>
