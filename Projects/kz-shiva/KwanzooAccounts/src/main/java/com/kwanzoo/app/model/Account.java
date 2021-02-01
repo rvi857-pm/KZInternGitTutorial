@@ -14,12 +14,12 @@ public class Account {
 	@Id
 	private String id;
 	private String name;
-	private String ipDomain;
+	private String ip_domain;
 	private String city;
 	private String state;
 	private String country;
 	private String type;
-	private String salesforceId;
+	private String salesforce_id;
 
 	@OneToMany(targetEntity = Buyer.class, mappedBy = "account", orphanRemoval = false)
 	@JsonManagedReference
@@ -49,12 +49,12 @@ public class Account {
 		this.name = name;
 	}
 
-	public String getIpDomain() {
-		return ipDomain;
+	public String getIp_domain() {
+		return ip_domain;
 	}
 
-	public void setIpDomain(String ipDomain) {
-		this.ipDomain = ipDomain;
+	public void setIp_domain(String ipDomain) {
+		this.ip_domain = ipDomain;
 	}
 
 	public String getCity() {
@@ -89,12 +89,12 @@ public class Account {
 		this.type = type;
 	}
 
-	public String getSalesforceId() {
-		return salesforceId;
+	public String getSalesforce_id() {
+		return salesforce_id;
 	}
 
-	public void setSalesforceId(String salesforceId) {
-		this.salesforceId = salesforceId;
+	public void setSalesforce_id(String salesforceId) {
+		this.salesforce_id = salesforceId;
 	}
 
 }

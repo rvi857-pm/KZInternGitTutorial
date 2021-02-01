@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,7 +19,7 @@ import com.kwanzoo.app.service.MetricService;
 import com.kwanzoo.app.service.PageService;
 
 @RestController
-public class AccountRepositoryImpl {
+public class AccountController {
 
 	@Autowired
 	private AccountService accountService;
@@ -77,12 +76,12 @@ public class AccountRepositoryImpl {
 
 		Map<String, Object> value = new HashMap<String, Object>();
 		value.put("name", account.getName());
-		value.put("ipDomain", account.getIpDomain());
+		value.put("ipDomain", account.getIp_domain());
 		value.put("city", account.getCity());
 		value.put("state", account.getState());
 		value.put("country", account.getCountry());
 		value.put("type", account.getType());
-		value.put("salesforceId", account.getSalesforceId());
+		value.put("salesforceId", account.getSalesforce_id());
 
 		if (filter.get("metrics") != null) {
 			String val = filter.get("metrics");

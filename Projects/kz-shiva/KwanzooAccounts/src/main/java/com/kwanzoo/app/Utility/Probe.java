@@ -13,12 +13,12 @@ public class Probe {
 		Account account = new Account();
 
 		account.setName(flag ? filter.get("search") : filter.get("name"));
-		account.setIpDomain(flag ? filter.get("search") : filter.get("ipDomain"));
+		account.setIp_domain(flag ? filter.get("search") : filter.get("ipDomain"));
 		account.setCity(flag ? filter.get("search") : filter.get("city"));
 		account.setState(flag ? filter.get("search") : filter.get("state"));
 		account.setCountry(flag ? filter.get("search") : filter.get("country"));
 		account.setType(flag ? filter.get("search") : filter.get("type"));
-		account.setSalesforceId(flag ? filter.get("search") : filter.get("salesforceId"));
+		account.setSalesforce_id(flag ? filter.get("search") : filter.get("salesforceId"));
 		return account;
 	}
 
