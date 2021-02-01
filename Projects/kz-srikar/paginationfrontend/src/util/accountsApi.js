@@ -1,8 +1,8 @@
 import api from './apiExports';
 
 const accountsApi = {
-    getActivities(buyerId) {
-        return fetch(`${api.serverAddress}activities?id=${buyerId}`, {
+    getActivities(obj) {
+        return fetch(`${api.serverAddress}activities?id=${obj.buyerId}&page=${obj.currentPage}&pageSize=${obj.pageSize}`, {
             method: 'get',
         }).then(response => {
             return response.json();
@@ -11,8 +11,8 @@ const accountsApi = {
         }).catch(error => console.log(error));
     },
 
-    getBuyers(accountId) {
-        return fetch(`${api.serverAddress}buyers?id=${accountId}`, {
+    getBuyers(obj) {
+        return fetch(`${api.serverAddress}buyers?id=${obj.accountId}&page=${obj.currentPage}&pageSize=${obj.pageSize}&metrics=all`, {
             method: 'get',
         }).then(response => {
             return response.json();

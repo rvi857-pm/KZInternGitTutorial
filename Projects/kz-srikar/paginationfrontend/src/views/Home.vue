@@ -1,6 +1,6 @@
 <template>
     <div id="home">
-        <FileUpload :refresh="refresh"/>
+        <FileUpload :refresh="refresh" />
         <div class="searchBox">
             <b-form-input
                 class="p-10"
@@ -149,7 +149,7 @@ export default {
         },
         refresh() {
             this.getSearchResults(this.currentPage);
-        }
+        },
     },
     watch: {
         currentPage: function(newVal, oldVal) {
