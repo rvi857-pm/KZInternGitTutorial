@@ -21,6 +21,7 @@ public class KwanzooAccountsApplication {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/accounts").allowedOrigins("http://localhost:3000");
+				registry.addMapping("/upload-accounts").allowedOrigins("http://localhost:3000");
 			}
 		};
 	}

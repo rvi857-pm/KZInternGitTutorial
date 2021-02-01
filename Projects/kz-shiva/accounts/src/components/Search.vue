@@ -36,12 +36,33 @@
 						>
 					</b-form>
 				</b-col>
+				<b-col cols="2">
+					<b-button v-b-modal.upload-file variant="primary"
+						>Add Accounts</b-button
+					>
+
+					<b-modal
+						id="upload-file"
+						centered
+						title="upload the file"
+						ok-title="Submit"
+						@ok="onOk"
+					>
+						<b-form-file
+							id="file-input"
+							v-model="file"
+							type="multipart/form-data"
+						></b-form-file>
+					</b-modal>
+				</b-col>
 			</b-row>
 		</b-container>
 	</div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
 	props: {
 		state: Object,
@@ -56,6 +77,7 @@ export default {
 			value: "",
 			size: "",
 			show: true,
+			file: null,
 		};
 	},
 	methods: {
@@ -83,6 +105,26 @@ export default {
 					this.search();
 				})
 				.catch();
+		},
+		onOk() {
+			this.fileUpload(this.file)
+			.then(res => {
+				console.log(res)
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},
+		fileUpload(file) {
+			const url = "http://localhost:8080/upload-accounts";
+			const formData = new FormData();
+			formData.append("file", file);
+			const config = {
+				headers: {
+					"content-type": "multipart/form-data",
+				},
+			};
+			return axios.post(url, formData, config);
 		},
 	},
 };
