@@ -11,7 +11,10 @@ import org.springframework.stereotype.Component;
 
 import com.kwanzoo.app.Utility.AccountList;
 import com.kwanzoo.app.Utility.AccountPage;
+import com.kwanzoo.app.Utility.Data;
 import com.kwanzoo.app.model.Account;
+import com.kwanzoo.app.model.Activity;
+import com.kwanzoo.app.model.Buyer;
 
 @Component
 public class PageService {
@@ -20,24 +23,51 @@ public class PageService {
 	private AccountPage accountPage;
 	@Autowired
 	private AccountList accountList;
+	@Autowired
+	private AccountService accountService;
 
-	public Page<Account> execute(Map<String, String> filter) {
-
+	public Data accountData(Map<String, String> filter) {
+		Data data = new Data();
 		if (filter.get("search") != null) {
 
-			List<Account> list = accountList.getAccountList(filter);
+			List<Account> accounts = accountList.getAccountList(filter);
 			int page = Integer.parseInt(filter.get("page"));
 			int size = Integer.parseInt(filter.get("page_size"));
 			Pageable obj = PageRequest.of(page, size);
-			return accountPage.pageUtility(obj, list);
+			Page<Account> res = accountPage.getAccountPage(obj, accounts);
+			data.setTotalElements((int) res.getTotalElements());
+			return accountService.accountUtil(filter, res.getContent(), data);
 
 		} else {
 
 			int page = Integer.parseInt(filter.get("page"));
 			int size = filter.get("page_size") != null ? Integer.parseInt(filter.get("page_size")) : 10;
-			return accountPage.getPage(filter, page, size);
-
+			Page<Account> res = accountPage.getAccountPage(filter, page, size);
+			data.setTotalElements((int) res.getTotalElements());
+			return accountService.accountUtil(filter, res.getContent(), data);
 		}
+	}
+
+	public Data buyerData(Map<String, String> filter) {
+		Data data = new Data();
+		List<Buyer> buyers = accountList.getBuyerList(filter);
+		int page = Integer.parseInt(filter.get("page"));
+		int size = Integer.parseInt(filter.get("page_size"));
+		Pageable obj = PageRequest.of(page, size);
+		Page<Buyer> res = accountPage.getBuyerPage(obj, buyers);
+		data.setTotalElements((int) res.getTotalElements());
+		return accountService.buyerUtil(filter, res.getContent(), data);
+	}
+
+	public Data activityData(Map<String, String> filter) {
+		Data data = new Data();
+		List<Activity> activities = accountList.getActivityList(filter);
+		int page = Integer.parseInt(filter.get("page"));
+		int size = Integer.parseInt(filter.get("page_size"));
+		Pageable obj = PageRequest.of(page, size);
+		Page<Activity> res = accountPage.getActivityPage(obj, activities);
+		data.setTotalElements((int) res.getTotalElements());
+		return accountService.activityUtil(filter, res.getContent(), data);
 	}
 
 }

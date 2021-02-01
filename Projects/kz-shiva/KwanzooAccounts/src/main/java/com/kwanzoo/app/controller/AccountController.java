@@ -20,17 +20,17 @@ public class AccountController {
 
 	@GetMapping(path = "/accounts")
 	public Object getAccounts(@RequestParam Map<String, String> filter) {
-		return accountService.accountData(filter);
+		return filter.get("page") != null ? pageService.accountData(filter) : accountService.accountData(filter);
 	}
 
 	@GetMapping(path = "/buyers")
 	public Object getBuyers(@RequestParam Map<String, String> filter) {
-		return accountService.buyerData(filter);
+		return filter.get("page") != null ? pageService.buyerData(filter) : accountService.buyerData(filter);
 	}
 
 	@GetMapping(path = "/activities")
 	public Object getActivities(@RequestParam Map<String, String> filter) {
-		return accountService.activityData(filter);
+		return filter.get("page") != null ? pageService.activityData(filter) : accountService.activityData(filter);
 	}
 
 }
