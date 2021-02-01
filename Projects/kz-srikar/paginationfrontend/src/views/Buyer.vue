@@ -1,6 +1,6 @@
 <template>
     <div id="buyer">
-        <Page :results="results" :myRowClickHandler="onRowClick" />
+        <Page :results="results" :myRowClickHandler="onRowClick" :fields="fields" />
     </div>
 </template>
 
@@ -20,6 +20,12 @@ export default {
     data() {
         return {
             results: [],
+            fields: [
+                "id",
+                { key: "datetime", sortable: true },
+                "activityType",
+                "details",
+            ],
         };
     },
     methods: {
