@@ -1,12 +1,28 @@
 <template>
     <div id="buyer">
-        <h1 style="text-decoration: underline">Score - {{ buyer.score }}</h1>
-        <p>Marketing Qualified : {{ buyer.marketing_qualified }}</p>
         <br />
-        <div>
-            <h1 style="text-align:center;">Activity Count</h1>
-            <PieExample :info="activityInfo" />
+        <div class="Chart">
+            <div>
+                <h1 style="text-decoration: underline">
+                    Score - {{ buyer.score }}
+                </h1>
+                <p>Buyer Id : {{ buyer.id }}</p>
+                <p>
+                    Location : {{ buyer.city }} , {{ buyer.state }} ,
+                    {{ buyer.country }}
+                </p>
+                <p>Source : {{ buyer.source }}</p>
+                <p>Job Level : {{ buyer.job_level }}</p>
+                <p>Job Function : {{ buyer.job_function }}</p>
+                <p>Marketing Qualified : {{ buyer.marketing_qualified }}</p>
+                <p>Total Activities : {{ totalResults }}</p>
+            </div>
+            <div>
+                <h1 style="text-align:center;">Activity Count</h1>
+                <PieExample :info="activityInfo" />
+            </div>
         </div>
+
         <br />
         <div class="Pagination">
             <b-col sm="1">
@@ -134,6 +150,11 @@ export default {
 </script>
 
 <style scoped>
+.Chart {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
 .Pagination {
     display: flex;
     flex-direction: row;

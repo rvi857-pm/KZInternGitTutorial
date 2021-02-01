@@ -1,8 +1,14 @@
 <template>
     <div id="account">
-        <h1 style="text-decoration: underline">
-            {{ account.name }} - {{ account.score }}
-        </h1>
+        <h1 style="text-decoration: underline">Score - {{ account.score }}</h1>
+        <p>Name : {{ account.name }}</p>
+        <p>IP Domain : {{ account.ip_domain }}</p>
+        <p>
+            Location : {{ account.city }}, {{ account.state }} ,
+            {{ account.country }}
+        </p>
+        <p>Type : {{ account.type }}</p>
+        <p>Salesforce Id : {{ account.salesforce_id }}</p>
         <p>Marketing Qualified : {{ account.marketing_qualified }}</p>
         <p>Total Buyers : {{ account.buyer_count }}</p>
         <br />
