@@ -1,5 +1,6 @@
 package com.example.kz_assign;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -56,8 +57,11 @@ public class account_controller {
 											account probaccount,
 											Model model) {
 		accountslist = accservice.get_filteredaccounts(page, page_size, q, probaccount, model);
-		List<Map<String,Object>> datamaplist = metricsservice.addmetrics(accountslist, metric, startdate, enddate, exclude);
-		return datamaplist;
+		if(accountslist!=null) {
+			List<Map<String,Object>> datamaplist = metricsservice.addmetrics(accountslist, metric, startdate, enddate, exclude);
+			return datamaplist;
+		}
+		return new ArrayList<>();
 	}
 
 	@GetMapping("/buyers")
@@ -89,26 +93,14 @@ public class account_controller {
 	@ResponseBody
 	public String uploadFile(@RequestParam("file") MultipartFile file) {
 	    String message = "";
-	    //System.out.println((MultipartHttpServletRequest)request);
-//	    System.out.println(file.getContentType());
 	      try {
 	    	  fileService.save(file);
-//	    	  System.out.println("check");
 	        message = "Uploaded the file successfully";
 	
 	        return message;
 	      } catch (Exception e) {
 	        message = "Could not upload the file";
-//	        System.out.println("Error");
 	        return message;
 	      }
     }
-
-	
-//	@GetMapping("/temp")
-//	public List<Map<String,Object>> show_buyeraccount() {
-//		List<Map<String,Object>> datamaplist = metricsservice.addmetrics(accountslist, "score"); 
-//		
-//		return datamaplist;
-//	}
 }

@@ -1,0 +1,18 @@
+
+
+<div ng-show="tableview">
+    <table class="table table-responsive table-sm table-hover table-fixed">
+        <thead class="table-secondary">
+        <tr>
+            <th scope="col" ng-repeat="header in Template.tableheader"> {{header | capitalize}}</th>
+    
+        </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in Template.list | orderBy:'date'" style="cursor:pointer;" ng-click="(Template.clickfn)($index)">
+                <td scope="row" ng-repeat="field in Template.tableheader">{{ item[field] }}</td>
+            </tr>
+        </tbody>
+
+    </table>
+</div>

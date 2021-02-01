@@ -1,0 +1,40 @@
+<div class="container mt-4 p-2">
+    <div ng-show="detailedview">
+        <div class="row mb-4">
+            <div class="col-12 d-flex justify-content-center">
+                <strong>{{currentview}} Information</strong>
+            </div>
+        </div>
+        <div ng-repeat="(field,data) in Template.object">
+            <div class="row" >
+                <div class="col-6 d-flex justify-content-evenly">
+                    <strong>{{field | uppercase}}</strong>
+                </div>
+                <div class="col-6 d-flex justify-content-evenly">
+                    {{data}}
+                </div>
+            </div>
+            <hr/>
+        </div>
+    </div>
+
+   <div ng-show="tableview">
+        <table class="table table-responsive table-sm table-hover table-fixed mt-4">
+            <thead class="table-secondary">
+            <tr>
+                <th scope="col" ng-repeat="header in Template.tableheader"> {{header}}</th>
+        
+            </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in Template.list | orderBy:'date'" style="cursor:pointer;" ng-click="(Template.clickfn)($index)">
+                    <td scope="row">{{ item.date }}</td>
+                    <td >{{ item.type}}</td>
+                    <td >{{ item.details}}</td>
+                </tr>
+            </tbody>
+
+        </table>
+   </div>
+   
+</div>

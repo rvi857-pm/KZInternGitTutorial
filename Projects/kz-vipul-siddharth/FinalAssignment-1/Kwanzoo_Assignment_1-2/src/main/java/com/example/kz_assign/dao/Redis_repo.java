@@ -13,8 +13,6 @@ public class Redis_repo {
     @SuppressWarnings("rawtypes")
 	private HashOperations hashOperations; 
     
-//    private ListOperations listOperations;
-    
     public Redis_repo(RedisTemplate<String, Map<String,Object>> redisTemplate) {
         this.redisTemplate = redisTemplate;
         hashOperations = this.redisTemplate.opsForHash();
@@ -22,10 +20,6 @@ public class Redis_repo {
     
     @SuppressWarnings("unchecked")
 	public void save(Map<String,Object> datamapsample, String domainname) {
-//    	if(hashOperations.size("accountsdata") >= 700) {
-//    		//listOperations.rightPop("accountsdata");
-//    		return;
-//    	}
     	hashOperations.put(domainname,datamapsample.get("id"),datamapsample);
     }
     

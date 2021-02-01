@@ -262,10 +262,8 @@ public class MetricsService {
 	
 	
 	public List<Map<String,Object>> addmetric(List<account> accountslist, String metric, List<Map<String,Object>> datamaplist, boolean activity_count ){
-//		System.out.println(metric);
 		
 		for(int i=0; i<accountslist.size(); i++) {
-//			redisrepo.delete(accountslist.get(i).getId());
 			if(metric.equals("score") | metric.equals("scoreandmq") | metric.equals("market_qualified")) {
 					addactivityfields(accountslist.get(i), datamaplist.get(i), metric, activity_count);
 			}
@@ -331,8 +329,6 @@ public class MetricsService {
 		boolean activity_count = false;
 		if(metrics.size()>0)
 			activity_count = processmetriclist(metrics);
-		//System.out.println("metrics check:" + metrics);
-		//System.out.println(accountslist.size());
 		List<Map<String,Object>> datamaplist = tomaplist(accountslist, exclude);
 		for(String metric:metrics) {
 			datamaplist = addmetric(accountslist, metric,datamaplist,activity_count);

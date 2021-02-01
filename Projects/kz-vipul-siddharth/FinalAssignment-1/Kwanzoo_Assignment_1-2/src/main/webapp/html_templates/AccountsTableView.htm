@@ -1,0 +1,82 @@
+<div ng-show="accountstableview">   
+		     
+    <div class="container mt-4">
+          <div class="row mb-4">	
+            <div class="col-3 d-flex align-items-center">
+                <div class="dropdown">
+                  <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    Number of Entries
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item"  ng-click="setpagesize('10')" href="#" >10 </a></li>
+                    <li><a class="dropdown-item" ng-click="setpagesize('25')"  href="#">25</a></li>
+                    <li><a class="dropdown-item" ng-click="setpagesize('50')"  href="#">50</a></li>
+                  </ul>
+                </div>
+            </div>
+            
+            <div class="col-6 d-flex justify-content-center">
+                <div class="input-group input-group-lg">
+                  <input type="text" class="form-control" placeholder='ex. name:"abc" city:"cde" new york ' ng-model="querystring">
+                  <button class="btn btn-primary" type="submit" ng-click="ProcessString()">Search</button>
+                </div>
+            </div>
+            
+            <div class="col-3 d-flex justify-content-end  mr-4">
+                
+                <nav aria-label="Page navigation example m-5 d-flex">
+                    <div class=" d-flex align-items-center">
+                      <ul class="pagination d-flex justify-content-center align-items-center mb-0">
+                        <li class="page-item disabled" ng-click="decreamentpage()" id="PreviousButton">
+                          <a class="page-link" href="#" aria-label="Previous" >
+                            <span aria-hidden="true" >&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                          </a>
+                        </li>
+                        <li class="page-item active"><a class="page-link " href="#" >{{pagenumber}}</a></li>
+                        <li class="page-item" ng-click="increamentpage()" id="NextButton">
+                          <a class="page-link" href="#" aria-label="Next">
+                            <span class="sr-only">Next</span>
+                            <span aria-hidden="true" >&raquo;</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                </nav>
+            </div>
+        <div ng-hide = "lastpage">
+            <table class="table table-responsive table-sm table-hover table-fixed">
+                <thead class="table-secondary">
+                    <tr>
+            
+                        <th scope="col">Account Name</th>
+                        <th scope="col">IP Domain</th>
+                        <th scope="col">IP Geo City</th>
+                        <th scope="col">IP Geo State</th>
+                        <th scope="col">IP Geo Country</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">SFDCAccount ID</th>
+            
+                    </tr>
+                </thead>
+                <tbody>
+                        <tr ng-repeat="account in accounts" ng-click="ShowAccount($index)"
+                            style="cursor:pointer;"
+                        >
+                            <td scope="row">{{ account.name }}</td>
+                            <td >{{ account.ip_domain}}</td>
+                            <td >{{ account.city}}</td>
+                            <td >{{ account.state}}</td>
+                            <td >{{ account.country}}</td>
+                            <td >{{ account.type}}</td>
+                            <td >{{ account.salesforce_id}}</td>
+                        </tr>
+                </tbody>
+    
+            </table>
+        </div>
+        <div ng-show="lastpage">
+            <p> Seems Like you have reached the end :) or try quering again!</p>
+        </div>
+  </div>
+</div>

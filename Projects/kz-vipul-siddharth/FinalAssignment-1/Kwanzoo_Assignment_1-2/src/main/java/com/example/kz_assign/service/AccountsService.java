@@ -62,11 +62,6 @@ public class AccountsService {
 	}
 
 	
-	private boolean defaultstringchecker(String sample) {
-		return (sample.equals(""));
-	}
-	
-	
 	private List<account> Custom_Pagination(String page, String page_size, List<account> accountslist){ 
 		int ps = 10;
 		if(!(page_size.equals(""))) {							//checking if parameter given or not
@@ -78,12 +73,7 @@ public class AccountsService {
 				return null;
 			}
 		}
-		//
-		//System.out.println(ps);
 		if(page.equals("")) {									//Same as the above two steps (comments)
-//			if(defaultstringchecker(page_size))
-//				return accountslist;
-//			else
 				return Custom_Pagination("1",page_size,accountslist);
 		}else {
 			int pa = Integer.parseInt(page);

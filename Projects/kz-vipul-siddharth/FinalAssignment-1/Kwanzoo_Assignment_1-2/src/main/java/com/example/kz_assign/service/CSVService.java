@@ -22,7 +22,7 @@ public class CSVService {
       if(accountslist == null)
     	  throw new Exception("CSVHelper Error");
       else
-    	  System.out.println(accountslist.get(0).getName());
+    	  System.out.println(accountslist);
 //    	  repository.saveAll(accountslist);
     } catch (IOException e) {
       throw new RuntimeException("fail to store csv data: " + e.getMessage());
