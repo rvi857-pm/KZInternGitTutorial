@@ -1,21 +1,15 @@
 import { Pie } from "vue-chartjs";
+//import { Pie } from './BaseCharts'
 export default {
     extends: Pie,
-    props: {
-        label: Array,
-        dataset: Array
-    },
+    props: ["data", "options"],
     mounted() {
-        console.log("chart");
-        console.log(this.dataset);
-        this.renderChart({
-            labels: this.label,
-            datasets: [
-                {
-                    backgroundColor: this.dataset,
-                    data: this.dataset
-                }
-            ]
-        }, { responsive: true, maintainAspectRatio: false })
+        // this.chartData is created in the mixin.
+        // If you want to pass options please create a local options object
+        this.renderChart(this.data, {
+            borderWidth: "1px",
+            hoverBackgroundColor: "red",
+            hoverBorderWidth: "1px"
+        });
     }
-}
+};
