@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <div class="large-12 medium-12 small-12 cell">
-      <label
-        >Add accounts here(file format csv)
+      <label id="l"
+        >Add accounts
         <input
           type="file"
           id="file"
@@ -10,7 +10,8 @@
           v-on:change="handleFileUpload()"
         />
       </label>
-      <button v-on:click="submitFile()">Submit</button>
+      <br />
+      <b-button variant="success" v-on:click="submitFile()">Submit</b-button>
     </div>
   </div>
 </template>
@@ -37,9 +38,11 @@ export default {
           },
         })
         .then(function () {
+          alert(" Uploaded successfully");
           console.log("Success");
         })
         .catch(function () {
+          alert(" Error ");
           console.log("failure");
         });
     },
@@ -48,4 +51,11 @@ export default {
 </script>
 
 <style>
+#l {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  color: Black;
+  font-weight: bold;
+}
 </style>
