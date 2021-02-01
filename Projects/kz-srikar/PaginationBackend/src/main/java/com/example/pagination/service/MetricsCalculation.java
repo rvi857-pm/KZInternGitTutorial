@@ -161,10 +161,71 @@ public class MetricsCalculation {
 		contentItem.put("location_count", locationCount);
 	}
 
-	@Cacheable(value = "staticMetrics", key = "{#id, #start, #end}")
+	private void calculateBuyerContent(Buyer buyer, Map<String, Object> contentItem, String start, String end) {
+		// score and marketing qualified
+		float score = 0;
+
+		// activity count
+		int adClicks, websiteVisits, formFills, liveChats;
+		adClicks = websiteVisits = formFills = liveChats = 0;
+
+		List<Activity> activities = buyer.getActivities();
+		for (int j = 0; j < activities.size(); j++) {
+			Activity activity = activities.get(j);
+			if (conditionCheckDate(start, end, activity.getDatetime().replaceAll(" .*", ""))) {
+				if (activity.getActivityType().equals("Ad Click")) {
+					score += 1;
+					adClicks += 1;
+				} else if (activity.getActivityType().equals("Website Visit")) {
+					score += 0.1;
+					websiteVisits += 1;
+				} else if (activity.getActivityType().equals("Form Fill")) {
+					score += 3;
+					formFills += 1;
+				} else if (activity.getActivityType().equals("Live chat")) {
+					score += 3;
+					liveChats += 1;
+				}
+			}
+		}
+		if (buyer.getJobLevel().equals("C-Level")) {
+			score *= 2;
+		} else if (buyer.getJobLevel().equals("Owner,Board Member")) {
+			score *= 1.75;
+		} else if (buyer.getJobLevel().equals("VP,Director")) {
+			score *= 1.5;
+		} else if (buyer.getJobLevel().equals("Manager")) {
+			score *= 1.25;
+		}
+
+		if (score >= 4) {
+			contentItem.put("marketing_qualified", true);
+		} else {
+			contentItem.put("marketing_qualified", false);
+		}
+		contentItem.put("score", score);
+
+		Map<String, Object> activityCount = new HashMap<>();
+		activityCount.put("ad_clicks", adClicks);
+		activityCount.put("website_visits", websiteVisits);
+		activityCount.put("form_fills", formFills);
+		activityCount.put("live_chats", liveChats);
+		activityCount.put("total", adClicks + websiteVisits + formFills + liveChats);
+		contentItem.put("activity_count", activityCount);
+
+	}
+
+	@Cacheable(value = "accountcMetrics", key = "{#id, #start, #end}")
 	public Map<String, Object> getContentItem(Account account, String id, String start, String end) {
 		Map<String, Object> contentItem = new HashMap<String, Object>();
 		calculateContent(account.getBuyers(), contentItem, start, end);
+		return contentItem;
+	}
+
+	@Cacheable(value = "buyerMetrics", key = "{#id, #start, #end}")
+	public Map<String, Object> getBuyerContentItem(Buyer buyer, String id, String start, String end) {
+		Map<String, Object> contentItem = new HashMap<String, Object>();
+		calculateBuyerContent(buyer, contentItem, start, end);
 		return contentItem;
 	}
 

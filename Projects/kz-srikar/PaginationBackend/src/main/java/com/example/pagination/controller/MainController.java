@@ -17,14 +17,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Page;
 
 import com.example.pagination.dao.AccountRepository;
-import com.example.pagination.dao.ActivityRepository;
-import com.example.pagination.dao.BuyerRepository;
 import com.example.pagination.model.Account;
 import com.example.pagination.model.Activity;
 import com.example.pagination.model.Buyer;
 import com.example.pagination.model.PageResponse;
 import com.example.pagination.service.AccountService;
-import com.example.pagination.service.MetricsService;
+import com.example.pagination.service.BuyerService;
+import com.example.pagination.service.ActivityService;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
@@ -35,14 +34,13 @@ public class MainController {
 	private AccountService accountService;
 
 	@Autowired
-	private AccountRepository accountRepo;
-	@Autowired
-	private BuyerRepository buyerRepo;
-	@Autowired
-	private ActivityRepository activityRepo;
+	private BuyerService buyerService;
 
 	@Autowired
-	private MetricsService metricsService;
+	private ActivityService activityService;
+
+	@Autowired
+	private AccountRepository accountRepo;
 
 	@GetMapping(path = "/accounts")
 	public PageResponse search(@ModelAttribute Account account, @RequestParam(required = false) Integer page,
@@ -52,7 +50,7 @@ public class MainController {
 
 		Page<Account> searchAccounts = accountService.accountServiceUtility(account, page, pageSize, q);
 
-		return metricsService.metricsServiceUtility(searchAccounts, metrics, exclude, start, end);
+		return accountService.metricsUtility(searchAccounts, metrics, exclude, start, end);
 	}
 
 	@PostMapping(path = "/upload-accounts-csv")
@@ -85,13 +83,18 @@ public class MainController {
 	}
 
 	@GetMapping(path = "/buyers")
-	public List<Buyer> buyers(@ModelAttribute Account account) {
-		return buyerRepo.findByAccount(account);
+	public PageResponse buyers(@ModelAttribute Account account, @RequestParam(required = false) Integer page,
+			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) List<String> metrics,
+			@RequestParam(required = false) List<String> exclude, @RequestParam(required = false) String start,
+			@RequestParam(required = false) String end) {
+		Page<Buyer> buyersPage = buyerService.buyerServiceUtility(account, page, pageSize);
+		return buyerService.metricsUtility(buyersPage, metrics, exclude, start, end);
 	}
 
 	@GetMapping(path = "/activities")
-	public List<Activity> activities(@ModelAttribute Buyer buyer) {
-		return activityRepo.findByBuyer(buyer);
+	public Page<Activity> activities(@ModelAttribute Buyer buyer, @RequestParam(required = false) Integer page,
+			@RequestParam(required = false) Integer pageSize) {
+		return activityService.activityServiceUtility(buyer, page, pageSize);
 	}
 
 }
