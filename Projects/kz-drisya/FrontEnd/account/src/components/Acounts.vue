@@ -142,17 +142,20 @@ export default {
         method: "get",
       })
         .then((response) => {
+          // console.log(response.json);
           return response.json();
         })
         .then((jsonResponse) => {
           return jsonResponse;
         })
         .then((jsonResponse) => {
-          let x = jsonResponse.content;
+          // console.log(jsonResponse);
+          let x = jsonResponse;
           for (let i in x) {
             delete x[i]["id"];
             delete x[i]["empty"];
           }
+          console.log(jsonResponse);
           this.accounts = x;
         });
     },
