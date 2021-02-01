@@ -16,9 +16,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.example.pagination.constants.Constants;
 import com.example.pagination.dao.AccountRepository;
 import com.example.pagination.model.Account;
 import com.example.pagination.model.PageResponse;
+
 
 @Service
 public class AccountService {
@@ -37,7 +39,7 @@ public class AccountService {
 		}
 
 		if (pageSize == null) {
-			pageSize = 10;
+			pageSize = Constants.DEFAULT_PAGE_SIZE;
 		}
 
 		if (q != null) {

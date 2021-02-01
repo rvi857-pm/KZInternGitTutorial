@@ -11,6 +11,7 @@ import java.util.Map;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import com.example.pagination.constants.Constants;
 import com.example.pagination.model.Account;
 import com.example.pagination.model.Activity;
 import com.example.pagination.model.Buyer;
@@ -70,28 +71,28 @@ public class MetricsCalculation {
 				Activity activity = activities.get(j);
 				if (conditionCheckDate(start, end, activity.getDatetime().replaceAll(" .*", ""))) {
 					if (activity.getActivityType().equals("Ad Click")) {
-						activityScore += 1;
+						activityScore += Constants.AD_CLICK_SCORE;
 						adClicks += 1;
 					} else if (activity.getActivityType().equals("Website Visit")) {
-						activityScore += 0.1;
+						activityScore += Constants.WEBSITE_VISIT_SCORE;
 						websiteVisits += 1;
 					} else if (activity.getActivityType().equals("Form Fill")) {
-						activityScore += 3;
+						activityScore += Constants.FORM_FILL_SCORE;
 						formFills += 1;
 					} else if (activity.getActivityType().equals("Live chat")) {
-						activityScore += 3;
+						activityScore += Constants.LIVE_CHAT_SCORE;
 						liveChats += 1;
 					}
 				}
 			}
 			if (buyer.getJobLevel().equals("C-Level")) {
-				activityScore *= 2;
+				activityScore *= Constants.C_LEVEL;
 			} else if (buyer.getJobLevel().equals("Owner,Board Member")) {
-				activityScore *= 1.75;
+				activityScore *= Constants.OWNER_BOARD_MEMBER;
 			} else if (buyer.getJobLevel().equals("VP,Director")) {
-				activityScore *= 1.5;
+				activityScore *= Constants.VP_DIRECTOR;
 			} else if (buyer.getJobLevel().equals("Manager")) {
-				activityScore *= 1.25;
+				activityScore *= Constants.MANAGER;
 			}
 			if (activityScore >= 4) {
 				numOfBuyersQualified++;
@@ -174,30 +175,29 @@ public class MetricsCalculation {
 			Activity activity = activities.get(j);
 			if (conditionCheckDate(start, end, activity.getDatetime().replaceAll(" .*", ""))) {
 				if (activity.getActivityType().equals("Ad Click")) {
-					score += 1;
+					score += Constants.AD_CLICK_SCORE;
 					adClicks += 1;
 				} else if (activity.getActivityType().equals("Website Visit")) {
-					score += 0.1;
+					score += Constants.WEBSITE_VISIT_SCORE;
 					websiteVisits += 1;
 				} else if (activity.getActivityType().equals("Form Fill")) {
-					score += 3;
+					score += Constants.FORM_FILL_SCORE;
 					formFills += 1;
 				} else if (activity.getActivityType().equals("Live chat")) {
-					score += 3;
+					score += Constants.LIVE_CHAT_SCORE;
 					liveChats += 1;
 				}
 			}
 		}
 		if (buyer.getJobLevel().equals("C-Level")) {
-			score *= 2;
+			score *= Constants.C_LEVEL;
 		} else if (buyer.getJobLevel().equals("Owner,Board Member")) {
-			score *= 1.75;
+			score *= Constants.OWNER_BOARD_MEMBER;
 		} else if (buyer.getJobLevel().equals("VP,Director")) {
-			score *= 1.5;
+			score *= Constants.VP_DIRECTOR;
 		} else if (buyer.getJobLevel().equals("Manager")) {
-			score *= 1.25;
+			score *= Constants.MANAGER;
 		}
-
 		if (score >= 4) {
 			contentItem.put("marketing_qualified", true);
 		} else {

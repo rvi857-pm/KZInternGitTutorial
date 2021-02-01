@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.example.pagination.constants.Constants;
 import com.example.pagination.dao.ActivityRepository;
 import com.example.pagination.model.Buyer;
 import com.example.pagination.model.Activity;
@@ -27,7 +28,7 @@ public class ActivityService {
 			return pageUtility(pageableInstance, allResults);
 		}
 		if (pageSize == null) {
-			pageSize = 10;
+			pageSize = Constants.DEFAULT_PAGE_SIZE;
 		}
 
 		Pageable pageableInstance = PageRequest.of(page - 1, pageSize);
