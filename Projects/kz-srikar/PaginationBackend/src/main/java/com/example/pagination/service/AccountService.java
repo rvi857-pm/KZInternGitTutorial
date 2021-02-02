@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,7 @@ import com.example.pagination.constants.Constants;
 import com.example.pagination.dao.AccountRepository;
 import com.example.pagination.model.Account;
 import com.example.pagination.model.PageResponse;
-
+import com.example.pagination.utility.PaginationHelper;
 
 @Service
 public class AccountService {
@@ -35,7 +34,8 @@ public class AccountService {
 		if (page == null) {
 			List<Account> allResults = accountRepository.findAll();
 			Pageable pageableInstance = PageRequest.of(0, allResults.size());
-			return pageUtility(pageableInstance, allResults);
+			PaginationHelper<Account> ph = new PaginationHelper<Account>();
+			return ph.pageUtility(pageableInstance, allResults);
 		}
 
 		if (pageSize == null) {
@@ -148,20 +148,8 @@ public class AccountService {
 		List<Account> multiSearchList = universalAccountList.stream().distinct().filter(compoundAccountList::contains)
 				.collect(Collectors.toList());
 		Pageable pageableInstance = PageRequest.of(page - 1, pageSize);
-		return pageUtility(pageableInstance, multiSearchList);
-	}
-
-	// https://stackoverflow.com/questions/37136679/how-to-convert-a-list-of-enity-object-to-page-object-in-spring-mvc-jpa/46765495
-	private Page<Account> pageUtility(Pageable obj, List<Account> list) {
-		int total = list.size();
-		int start = (int) obj.getOffset();
-		int end = Math.min((start + obj.getPageSize()), total);
-
-		List<Account> output = new ArrayList<>();
-		if (start <= end)
-			output = list.subList(start, end);
-
-		return new PageImpl<Account>(output, obj, total);
+		PaginationHelper<Account> ph = new PaginationHelper<Account>();
+		return ph.pageUtility(pageableInstance, multiSearchList);
 	}
 
 	private ExampleMatcher generateExampleMatcher(ExampleMatcher searchMatcher) {

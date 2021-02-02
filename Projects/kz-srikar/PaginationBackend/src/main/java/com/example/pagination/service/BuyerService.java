@@ -8,7 +8,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,6 +17,7 @@ import com.example.pagination.dao.BuyerRepository;
 import com.example.pagination.model.Account;
 import com.example.pagination.model.Buyer;
 import com.example.pagination.model.PageResponse;
+import com.example.pagination.utility.PaginationHelper;
 
 @Service
 public class BuyerService {
@@ -30,16 +30,17 @@ public class BuyerService {
 
 	public Page<Buyer> buyerServiceUtility(Account account, Integer page, Integer pageSize) {
 		List<Buyer> allResults = buyerRepository.findByAccount(account);
+		PaginationHelper<Buyer> ph = new PaginationHelper<Buyer>();
 		if (page == null) {
 			Pageable pageableInstance = PageRequest.of(0, allResults.size());
-			return pageUtility(pageableInstance, allResults);
+			return ph.pageUtility(pageableInstance, allResults);
 		}
 		if (pageSize == null) {
 			pageSize = Constants.DEFAULT_PAGE_SIZE;
 		}
 
 		Pageable pageableInstance = PageRequest.of(page - 1, pageSize);
-		return pageUtility(pageableInstance, allResults);
+		return ph.pageUtility(pageableInstance, allResults);
 	}
 
 	public PageResponse metricsUtility(Page<Buyer> buyerPage, List<String> metricParams, List<String> exclude,
@@ -100,18 +101,5 @@ public class BuyerService {
 		response.setContent(content);
 
 		return response;
-	}
-
-	// https://stackoverflow.com/questions/37136679/how-to-convert-a-list-of-enity-object-to-page-object-in-spring-mvc-jpa/46765495
-	private Page<Buyer> pageUtility(Pageable obj, List<Buyer> list) {
-		int total = list.size();
-		int start = (int) obj.getOffset();
-		int end = Math.min((start + obj.getPageSize()), total);
-
-		List<Buyer> output = new ArrayList<>();
-		if (start <= end)
-			output = list.subList(start, end);
-
-		return new PageImpl<Buyer>(output, obj, total);
 	}
 }
