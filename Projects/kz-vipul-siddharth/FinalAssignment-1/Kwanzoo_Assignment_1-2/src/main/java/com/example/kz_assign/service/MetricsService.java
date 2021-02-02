@@ -75,9 +75,9 @@ public class MetricsService {
 		 return datamap;
 	}
 
-	private Timestamp ConvertStrtoTS(String date) {
+	private Timestamp ConvertStrtoTS(String date) {	//No camel casing for function naming.
 		try {
-		    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");	// Checkout for synchronized blocks. Java.time - for java11
 		    Date parsedDate = dateFormat.parse(date);
 		    Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
 		    return timestamp;
@@ -115,7 +115,7 @@ public class MetricsService {
 	
 	
 	public List<Map<String,Object>> getbuyermetrics(List<buyer> buyerslist, List<Map<String,Object>> buyerdatamap, List<String>metrics) { 
-		for(int i=0;i<buyerslist.size();i++) {
+		for(int i=0;i<buyerslist.size();i++) {			//Take a class return.
 			int buyer_score=0;
 			boolean qualified_buyer = false;
 			Map<String,Integer> buyeractivities = new LinkedHashMap<>();

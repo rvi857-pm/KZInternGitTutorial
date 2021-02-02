@@ -64,7 +64,7 @@ public class AccountsService {
 	
 	private List<account> Custom_Pagination(String page, String page_size, List<account> accountslist){ 
 		int ps = 10;
-		if(!(page_size.equals(""))) {							//checking if parameter given or not
+		if(!(page_size.equals(""))) {							//checking if parameter given or not //check for known thing first
 			int check_ps = Integer.parseInt(page_size);			// checking for false values
 			if(check_ps >0) {
 				ps = check_ps;
@@ -74,7 +74,7 @@ public class AccountsService {
 			}
 		}
 		if(page.equals("")) {									//Same as the above two steps (comments)
-				return Custom_Pagination("1",page_size,accountslist);
+			return Custom_Pagination("1",page_size,accountslist);
 		}else {
 			int pa = Integer.parseInt(page);
 			if(pa>0) {

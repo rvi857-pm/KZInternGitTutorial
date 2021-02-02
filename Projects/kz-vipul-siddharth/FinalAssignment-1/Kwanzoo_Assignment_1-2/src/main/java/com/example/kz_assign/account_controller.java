@@ -1,6 +1,7 @@
 package com.example.kz_assign;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -89,18 +90,17 @@ public class account_controller {
 	}
 	
 	
-	@RequestMapping(path="/uploadaccountlist",method=RequestMethod.POST,consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
-	@ResponseBody
-	public String uploadFile(@RequestParam("file") MultipartFile file) {
+	@PostMapping(path="/uploadaccountlist",consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
+	public Map<String, String> uploadFile(@RequestParam("file") MultipartFile file) {
+		Map<String,String> messagemapforfrontend = new HashMap<>();
 	    String message = "";
 	      try {
 	    	  fileService.save(file);
 	        message = "Uploaded the file successfully";
-	
-	        return message;
 	      } catch (Exception e) {
 	        message = "Could not upload the file";
-	        return message;
 	      }
+	      messagemapforfrontend.put("message", message);
+	      return messagemapforfrontend;
     }
 }

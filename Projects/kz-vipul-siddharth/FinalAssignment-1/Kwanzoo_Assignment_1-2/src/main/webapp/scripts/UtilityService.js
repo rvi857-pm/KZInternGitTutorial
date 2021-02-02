@@ -105,9 +105,11 @@ app.service('UtilityService',function($http){
             data:fd,
             
         }).then(function successCallback(response) {
-            return "Success";
+            alert((response.data).message);
+            return response.message;
         }, function errorCallback(response) {
-            return response.statusText;
+            alert((response.data).message);
+            return response.message;
             // console.log(response.statusText);
         });
      };
