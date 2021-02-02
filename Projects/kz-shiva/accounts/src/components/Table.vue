@@ -13,13 +13,13 @@
 			id="my-table"
 			:items="items"
 			:fields="fields"
+			@row-clicked="rowClicked"
 		></b-table>
 	</div>
 </template>
 
 <script>
 import axios from "axios";
-import api from "../util/ApiUrl";
 
 export default {
 	name: "table",
@@ -29,6 +29,9 @@ export default {
 		state: Object,
 		updateItems: Function,
 		updateState: Function,
+		getUrl: Function,
+		rowClicked: Function,
+		tableId: String,
 	},
 
 	data() {
@@ -78,7 +81,8 @@ export default {
 		 */
 		update() {
 			this.updateShowTable(false);
-			let url = api.getAccountUrl(this.state);
+			let url = this.getUrl();
+			console.log(url);
 			axios
 				.get(url)
 				.then((response) => {

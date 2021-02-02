@@ -1,10 +1,6 @@
 <template>
 	<div id="app">
-		<Search
-			:state="state"
-			:parse="parse"
-			:updateState="updateState"
-		/>
+		<Search :state="state" :parse="parse" :updateState="updateState" />
 		<Table
 			:items="items"
 			:fields="fields"
@@ -12,13 +8,15 @@
 			:updateItems="updateItems"
 			:updateState="updateState"
 			:rowClicked="rowClicked"
+			:getUrl="getUrl"
 		/>
 	</div>
 </template>
 
 <script>
 import Search from "@/components/Search";
-import Table from '@/components/Table';
+import Table from "@/components/Table";
+import api from "../util/ApiUrl";
 
 export default {
 	name: "home",
@@ -32,12 +30,12 @@ export default {
 		return {
 			fields: [
 				"name",
-				"ipDomain",
+				"ip_domain",
 				"city",
 				"state",
 				"country",
 				"type",
-				"salesforceId",
+				"salesforce_id",
 			],
 			items: [],
 			state: {
@@ -74,8 +72,13 @@ export default {
 			return true;
 		},
 
-		rowClicked(){
+		rowClicked(item) {
+			// console.log(item);
+			this.$router.push(`/account/${item.id}`)
+		},
 
+		getUrl() {
+			return api.getAccountUrl(this.state);
 		},
 
 		/**

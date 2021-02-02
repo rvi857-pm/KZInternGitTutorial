@@ -15,6 +15,13 @@ export default {
 	components: {
 		Header,
 	},
+
+	data() {
+		return {
+			account: null,
+			buyer: null
+		};
+	},
 };
 </script>
 

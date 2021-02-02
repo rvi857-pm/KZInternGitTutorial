@@ -93,13 +93,14 @@ public class MetricService {
 	public Map<String, Object> fillValues(Map<String, String> filter, Account account, Metric metric) {
 
 		Map<String, Object> value = new HashMap<String, Object>();
+		value.put("id", account.getId());
 		value.put("name", account.getName());
-		value.put("ipDomain", account.getIp_domain());
+		value.put("ip_domain", account.getIp_domain());
 		value.put("city", account.getCity());
 		value.put("state", account.getState());
 		value.put("country", account.getCountry());
 		value.put("type", account.getType());
-		value.put("salesforceId", account.getSalesforce_id());
+		value.put("salesforce_id", account.getSalesforce_id());
 
 		if (filter.get("metrics") != null) {
 			String val = filter.get("metrics");
