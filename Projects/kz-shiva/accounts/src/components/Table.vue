@@ -2,10 +2,10 @@
 	<div v-if="showTable">
 		<b-pagination
 			id="page"
-			v-if="localPageNum"
-			v-model="localPageNum"
+			v-if="pageNum"
+			v-model="pageNum"
 			:total-rows="totalLength"
-			:per-page="perPage"
+			:per-page="state.pageSize"
 			aria-controls="my-table"
 			align="center"
 		></b-pagination>
@@ -13,13 +13,13 @@
 			id="my-table"
 			:items="items"
 			:fields="fields"
-			@row-clicked="rowClicked"
 		></b-table>
 	</div>
 </template>
 
 <script>
 import axios from "axios";
+import api from "../util/ApiUrl";
 
 export default {
 	name: "table",
@@ -28,13 +28,13 @@ export default {
 		items: Array,
 		state: Object,
 		updateItems: Function,
+		updateState: Function,
 	},
 
 	data() {
 		return {
-			PageNum: 1,
+			pageNum: 1,
 			totalLength: 0,
-			perPage: 10,
 			showTable: false,
 		};
 	},
@@ -44,20 +44,8 @@ export default {
 			this.update();
 		},
 
-		PageNum: function() {
-			if (this.localPageNum) {
-				this.updateShowTable(false);
-
-				axios
-					.get(url)
-					.then((res) => {
-						this.updateItems(res.data.content);
-						this.updateShowTable(true);
-					})
-					.catch((err) => {
-						console.log(err);
-					});
-			}
+		pageNum: function() {
+			this.updateState({...this.state, page: this.pageNum});
 		},
 	},
 
@@ -77,13 +65,6 @@ export default {
 		},
 
 		/**
-		 * @param size elements per a single page
-		 */
-		updatePerPage(size) {
-			this.perPage = size;
-		},
-
-		/**
 		 * @param value current index of the page
 		 */
 		updatePageNum(value) {
@@ -97,14 +78,13 @@ export default {
 		 */
 		update() {
 			this.updateShowTable(false);
-			let url = "http://localhost:8080/accounts?metrics=all&page=0&page_size=10";
+			let url = api.getAccountUrl(this.state);
 			axios
 				.get(url)
-				.then((res) => {
-					this.updatePageNum(this.state.page + 1);
-					this.updatePerPage(this.state.pageSize);
+				.then((response) => {
+					this.updatePageNum(this.state.page);
 					this.updateTotalLength(response.data.totalElements);
-					this.updateItems(res.data.data);
+					this.updateItems(response.data.data);
 					this.updateShowTable(true);
 				})
 				.catch((err) => {

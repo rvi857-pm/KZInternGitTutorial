@@ -64,12 +64,12 @@
 import axios from "axios";
 
 export default {
+	name: "search",
+
 	props: {
 		state: Object,
 		parse: Function,
 		updateState: Function,
-		search: Function,
-		updateTable: Function,
 	},
 
 	data() {
@@ -88,32 +88,22 @@ export default {
 		 * @return
 		 */
 		onSubmit() {
-			let myPromise = new Promise((resolve, reject) => {
-				this.updateTable(false);
-				let state = this.parse(this.value);
+			let state = this.parse(this.value);
 
-				state = this.size
-					? { ...state, page: "0", pageSize: this.size }
-					: { ...state, page: "", pageSize: "" };
+			state = this.size
+				? { ...state, page: "0", pageSize: this.size }
+				: { ...state, page: "", pageSize: "" };
 
-				if (this.updateState(state)) resolve();
-				else reject();
-			});
-
-			myPromise
-				.then(() => {
-					this.search();
-				})
-				.catch();
+			this.updateState(state);
 		},
 		onOk() {
 			this.fileUpload(this.file)
-			.then(res => {
-				console.log(res)
-			})
-			.catch(err => {
-				console.log(err)
-			})
+				.then((res) => {
+					console.log(res);
+				})
+				.catch((err) => {
+					console.log(err);
+				});
 		},
 		fileUpload(file) {
 			const url = "http://localhost:8080/upload-accounts";
