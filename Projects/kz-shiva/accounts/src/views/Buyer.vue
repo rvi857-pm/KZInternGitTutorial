@@ -1,5 +1,6 @@
 <template>
-	<div id="app">
+	<div id="buyer">
+		<buyer-info />
 		<Table
 			:items="items"
 			:fields="fields"
@@ -16,12 +17,14 @@
 import Table from "@/components/Table";
 import api from "../util/ApiUrl";
 import { mapGetters } from "vuex";
+import BuyerInfo from "../components/BuyerInfo.vue";
 
 export default {
 	name: "buyer",
 
 	components: {
 		Table,
+		BuyerInfo,
 	},
 
 	data() {
@@ -43,7 +46,7 @@ export default {
 		},
 
 		updateState(updatedState) {
-			this.$store.commit('setAccount', updatedState);
+			this.$store.commit("setAccount", updatedState);
 			return true;
 		},
 
@@ -57,7 +60,7 @@ export default {
 </script>
 
 <style>
-#app {
+#buyer {
 	font-family: Avenir, Helvetica, Arial, sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;

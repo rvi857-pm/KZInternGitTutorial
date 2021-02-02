@@ -1,5 +1,6 @@
 <template>
 	<div id="app">
+		<account-info/>
 		<Table
 			:items="items"
 			:fields="fields"
@@ -16,12 +17,14 @@
 import Table from "@/components/Table";
 import api from "../util/ApiUrl";
 import { mapGetters } from "vuex";
+import AccountInfo from '../components/AccountInfo.vue';
 
 export default {
 	name: "account",
 
 	components: {
 		Table,
+		AccountInfo,
 	},
 
 	data() {

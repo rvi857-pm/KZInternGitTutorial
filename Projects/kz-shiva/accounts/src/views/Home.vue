@@ -1,5 +1,5 @@
 <template>
-	<div id="app">
+	<div id="home">
 		<Search :state="state" :parse="parse" :updateState="updateState" />
 		<Table
 			:items="items"
@@ -134,7 +134,7 @@ export default {
 </script>
 
 <style>
-#app {
+#home {
 	font-family: Avenir, Helvetica, Arial, sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
