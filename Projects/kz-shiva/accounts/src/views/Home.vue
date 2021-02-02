@@ -17,6 +17,7 @@
 import Search from "@/components/Search";
 import Table from "@/components/Table";
 import api from "../util/ApiUrl";
+import { mapGetters } from "vuex";
 
 export default {
 	name: "home",
@@ -38,19 +39,13 @@ export default {
 				"salesforce_id",
 			],
 			items: [],
-			state: {
-				search: "",
-				name: "",
-				ipDomain: "",
-				city: "",
-				state: "",
-				country: "",
-				type: "",
-				salesforceId: "",
-				page: 1,
-				pageSize: 10,
-			},
 		};
+	},
+
+	computed: {
+		...mapGetters({
+			state: "getHome",
+		}),
 	},
 
 	methods: {
@@ -68,12 +63,25 @@ export default {
 		 * @return boolean to mark as successful
 		 */
 		updateState(updatedState) {
-			this.state = updatedState;
+			this.$store.commit('setHome', updatedState);
 			return true;
 		},
 
 		rowClicked(item) {
-			this.$router.push(`/account/${item.id}`)
+			this.$router.push(`/account/${item.id}`);
+			const value = {
+				name: item.name,
+				ip_domain: item.ip_domain,
+				city: item.city,
+				state: item.state,
+				country: item.country,
+				type: item.type,
+				salesforce_id: item.salesforce_id,
+				score: item.score,
+				marketing_qualified: item.marketing_qualified,
+				account_id: item.id,
+			};
+			this.$store.commit('setAccount', value);
 		},
 
 		getUrl() {

@@ -15,6 +15,7 @@
 <script>
 import Table from "@/components/Table";
 import api from "../util/ApiUrl";
+import { mapGetters } from "vuex";
 
 export default {
 	name: "buyer",
@@ -25,19 +26,15 @@ export default {
 
 	data() {
 		return {
-			fields: [
-                "id",
-				"datetime",
-				"activity_type",
-				"details",
-			],
+			fields: ["id", "datetime", "activity_type", "details"],
 			items: [],
-			state: {
-				buyer_id: null,
-				page: 1,
-				pageSize: 10,
-			},
 		};
+	},
+
+	computed: {
+		...mapGetters({
+			state: "getBuyer",
+		}),
 	},
 
 	methods: {
@@ -46,7 +43,7 @@ export default {
 		},
 
 		updateState(updatedState) {
-			this.state = updatedState;
+			this.$store.commit('setAccount', updatedState);
 			return true;
 		},
 
@@ -58,9 +55,9 @@ export default {
 			this.state.buyer_id = value;
 		},
 
-		getActivityUrl(){
+		getActivityUrl() {
 			return api.getActivityUrl(this.state);
-		}
+		},
 	},
 
 	created() {

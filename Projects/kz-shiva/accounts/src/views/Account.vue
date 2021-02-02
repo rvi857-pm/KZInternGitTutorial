@@ -15,6 +15,7 @@
 <script>
 import Table from "@/components/Table";
 import api from "../util/ApiUrl";
+import { mapGetters } from "vuex";
 
 export default {
 	name: "account",
@@ -35,12 +36,13 @@ export default {
 				"job_function",
 			],
 			items: [],
-			state: {
-				account_id: null,
-				page: 1,
-				pageSize: 10,
-			},
 		};
+	},
+
+	computed: {
+		...mapGetters({
+			state: "getAccount",
+		}),
 	},
 
 	methods: {
@@ -49,25 +51,17 @@ export default {
 		},
 
 		updateState(updatedState) {
-			this.state = updatedState;
+			this.$store.commit('setAccount', updatedState);
 			return true;
 		},
 
 		rowClicked(item) {
-			this.$router.push(`/buyer/${item.id}`)
+			this.$router.push(`/buyer/${item.id}`);
 		},
 
-		setAccount_id(value) {
-			this.state.account_id = value;
-		},
-
-		getBuyerUrl(){
+		getBuyerUrl() {
 			return api.getBuyerUrl(this.state);
-		}
-	},
-
-	created() {
-		this.setAccount_id(this.$route.params.id);
+		},
 	},
 };
 </script>

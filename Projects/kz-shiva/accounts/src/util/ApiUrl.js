@@ -23,9 +23,9 @@ const getAccountUrl = (state) => {
 
 	url += state.salesforceId ? "&salesforce_id=" + state.salesforceId : "";
 
-	url += state.page ? "&page=" + (state.page - 1) : "";
+	url += state.page ? "&page=" + (state.page - 1) : "&page=0";
 
-	url += state.pageSize ? "&page_size=" + state.pageSize : "";
+	url += state.pageSize ? "&page_size=" + state.pageSize : "&page_size=10";
 
 	return server + url;
 };
@@ -36,9 +36,9 @@ const getBuyerUrl = (state) => {
 	
 	url += state.account_id ? "&id=" + state.account_id : "";
 
-	url += state.page ? "&page=" + (state.page - 1) : "";
+	url += state.page ? "&page=" + (state.page - 1) : "&page=0";
 
-	url += state.pageSize ? "&page_size=" + state.pageSize : "";
+	url += state.pageSize ? "&page_size=" + state.pageSize : "&page_size=10";
 
 	return server + url;
 };
@@ -49,9 +49,9 @@ const getActivityUrl = (state) => {
 
 	url += state.buyer_id ? "?buyer_id=" + state.buyer_id : "";
 
-	url += state.page ? "&page=" + (state.page - 1) : "";
+	url += state.page ? "&page=" + (state.page - 1) : "&page=0";
 
-	url += state.pageSize ? "&page_size=" + state.pageSize : "";
+	url += state.pageSize ? "&page_size=" + state.pageSize : "&page_size=10";
 
 	return server + url;
 };
