@@ -82,7 +82,6 @@ export default {
 		update() {
 			this.updateShowTable(false);
 			let url = this.getUrl();
-			console.log(url);
 			axios
 				.get(url)
 				.then((response) => {

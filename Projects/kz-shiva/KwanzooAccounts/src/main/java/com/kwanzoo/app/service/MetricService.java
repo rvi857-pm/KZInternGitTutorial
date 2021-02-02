@@ -69,6 +69,26 @@ public class MetricService {
 		if (flag & (val.contains("location_count") || val.contains("all")))
 			value.put("location_count", metric.getLocationCount());
 	}
+	
+	public Map<String, Object> fillValues(Map<String, String> filter, Account account, Metric metric) {
+
+		Map<String, Object> value = new HashMap<String, Object>();
+		value.put("id", account.getId());
+		value.put("name", account.getName());
+		value.put("ip_domain", account.getIp_domain());
+		value.put("city", account.getCity());
+		value.put("state", account.getState());
+		value.put("country", account.getCountry());
+		value.put("type", account.getType());
+		value.put("salesforced", account.getSalesforce_id());
+
+		if (filter.get("metrics") != null) {
+			String val = filter.get("metrics");
+			fillMetrics(value, val, metric, true);
+		}
+
+		return value;
+	}
 
 	public Map<String, Object> fillValues(Map<String, String> filter, Buyer buyer, Metric metric) {
 		Map<String, Object> value = new HashMap<String, Object>();
@@ -90,30 +110,11 @@ public class MetricService {
 		return value;
 	}
 
-	public Map<String, Object> fillValues(Map<String, String> filter, Account account, Metric metric) {
-
-		Map<String, Object> value = new HashMap<String, Object>();
-		value.put("id", account.getId());
-		value.put("name", account.getName());
-		value.put("ip_domain", account.getIp_domain());
-		value.put("city", account.getCity());
-		value.put("state", account.getState());
-		value.put("country", account.getCountry());
-		value.put("type", account.getType());
-		value.put("salesforce_id", account.getSalesforce_id());
-
-		if (filter.get("metrics") != null) {
-			String val = filter.get("metrics");
-			fillMetrics(value, val, metric, true);
-		}
-
-		return value;
-	}
-
 	public Map<String, Object> fillValues(Map<String, String> filter, Activity activity) {
 
 		Map<String, Object> value = new HashMap<String, Object>();
 		value.put("buyer_id", activity.getBuyer().getId());
+		value.put("id", activity.getId());
 		value.put("datetime", activity.getDateTime());
 		value.put("activity_type", activity.getActivityType());
 		value.put("details", activity.getDetails());

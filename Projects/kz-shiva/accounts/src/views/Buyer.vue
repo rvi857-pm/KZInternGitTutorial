@@ -7,7 +7,7 @@
 			:updateItems="updateItems"
 			:updateState="updateState"
 			:rowClicked="rowClicked"
-			:getUrl="getBuyerUrl"
+			:getUrl="getActivityUrl"
 		/>
 	</div>
 </template>
@@ -17,7 +17,7 @@ import Table from "@/components/Table";
 import api from "../util/ApiUrl";
 
 export default {
-	name: "account",
+	name: "buyer",
 
 	components: {
 		Table,
@@ -26,17 +26,14 @@ export default {
 	data() {
 		return {
 			fields: [
-				"id",
-				"city",
-				"state",
-				"country",
-				"source",
-				"job_level",
-				"job_function",
+                "id",
+				"datetime",
+				"activity_type",
+				"details",
 			],
 			items: [],
 			state: {
-				account_id: null,
+				buyer_id: null,
 				page: 1,
 				pageSize: 10,
 			},
@@ -53,21 +50,21 @@ export default {
 			return true;
 		},
 
-		rowClicked(item) {
-			this.$router.push(`/buyer/${item.id}`)
+		rowClicked(item, index) {
+			console.log(item, index);
 		},
 
-		setAccount_id(value) {
-			this.state.account_id = value;
+		setBuyer_id(value) {
+			this.state.buyer_id = value;
 		},
 
-		getBuyerUrl(){
-			return api.getBuyerUrl(this.state);
+		getActivityUrl(){
+			return api.getActivityUrl(this.state);
 		}
 	},
 
 	created() {
-		this.setAccount_id(this.$route.params.id);
+		this.setBuyer_id(this.$route.params.id);
 	},
 };
 </script>

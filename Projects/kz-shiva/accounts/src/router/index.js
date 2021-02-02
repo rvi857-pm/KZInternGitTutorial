@@ -13,6 +13,11 @@ const routes = [
 		path: '/account/:id',
 		name: 'account',
 		component: () => import('@/views/Account')
+	},
+	{
+		path: '/buyer/:id',
+		name: 'buyer',
+		component: () => import('@/views/Buyer')
 	}
 ]
 

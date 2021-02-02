@@ -33,8 +33,21 @@ const getAccountUrl = (state) => {
 const getBuyerUrl = (state) => {
 	let server = "http://localhost:8080/buyers?metrics=all";
 	let url = "";
-	console.log(state.account_id);
+	
 	url += state.account_id ? "&id=" + state.account_id : "";
+
+	url += state.page ? "&page=" + (state.page - 1) : "";
+
+	url += state.pageSize ? "&page_size=" + state.pageSize : "";
+
+	return server + url;
+};
+
+const getActivityUrl = (state) => {
+	let server = "http://localhost:8080/activities";
+	let url = "";
+
+	url += state.buyer_id ? "?buyer_id=" + state.buyer_id : "";
 
 	url += state.page ? "&page=" + (state.page - 1) : "";
 
@@ -46,4 +59,5 @@ const getBuyerUrl = (state) => {
 export default {
 	getAccountUrl,
 	getBuyerUrl,
+	getActivityUrl
 };

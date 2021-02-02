@@ -73,7 +73,6 @@ export default {
 		},
 
 		rowClicked(item) {
-			// console.log(item);
 			this.$router.push(`/account/${item.id}`)
 		},
 
