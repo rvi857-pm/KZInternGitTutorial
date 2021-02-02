@@ -67,6 +67,20 @@ export default {
 			return api.getBuyerUrl(this.state);
 		},
 	},
+
+	mounted(){
+		let items = [
+            {
+                text: "Accounts",
+                to: "/",
+            },
+            {
+                text: this.state.name,
+                to: `/account/${this.state.id}`,
+            },
+        ];
+        this.$store.commit('setItems', items);
+	}
 };
 </script>
 

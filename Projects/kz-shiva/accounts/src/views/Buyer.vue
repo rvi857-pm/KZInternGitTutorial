@@ -36,7 +36,8 @@ export default {
 
 	computed: {
 		...mapGetters({
-			state: "getBuyer",
+            state: "getBuyer",
+            account: "getAccount",
 		}),
 	},
 
@@ -55,6 +56,23 @@ export default {
 		getActivityUrl() {
 			return api.getActivityUrl(this.state);
 		},
+	},
+	mounted() {
+		let items = [
+			{
+				text: "Accounts",
+				to: "/",
+			},
+			{
+				text: this.account.name,
+				to: `/account/${this.account.account_id}`,
+            },
+            {
+				text: this.state.id,
+				to: `/buyer/${this.state.id}`,
+            },
+		];
+		this.$store.commit("setItems", items);
 	},
 };
 </script>

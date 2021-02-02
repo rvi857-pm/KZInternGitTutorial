@@ -80,7 +80,7 @@ public class MetricService {
 		value.put("state", account.getState());
 		value.put("country", account.getCountry());
 		value.put("type", account.getType());
-		value.put("salesforced", account.getSalesforce_id());
+		value.put("salesforce_id", account.getSalesforce_id());
 
 		if (filter.get("metrics") != null) {
 			String val = filter.get("metrics");

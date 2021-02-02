@@ -63,12 +63,12 @@ export default {
 		 * @return boolean to mark as successful
 		 */
 		updateState(updatedState) {
-			this.$store.commit('setHome', updatedState);
+			this.$store.commit("setHome", updatedState);
 			return true;
 		},
 
 		rowClicked(item) {
-			this.$store.commit('setAccount', item);
+			this.$store.commit("setAccount", item);
 			this.$router.push(`/account/${item.id}`);
 		},
 
@@ -88,7 +88,18 @@ export default {
 			let temp = "";
 			let flag = false;
 			let seperator = false;
-			let returnValue = {};
+			let returnValue = {
+				search: "",
+				name: "",
+				ipDomain: "",
+				city: "",
+				state: "",
+				country: "",
+				type: "",
+				salesforceId: "",
+				page: 1,
+				pageSize: 10,
+			};
 			for (let c of searchValue) {
 				if (c == " ") {
 					if (flag) temp += c;
@@ -130,6 +141,15 @@ export default {
 			return returnValue;
 		},
 	},
+	mounted(){
+		let items = [
+            {
+                text: "All Accounts",
+                to: "/",
+            }
+        ];
+        this.$store.commit('setItems', items);
+	}
 };
 </script>
 

@@ -91,8 +91,8 @@ export default {
 			let state = this.parse(this.value);
 
 			state = this.size
-				? { ...state, page: "0", pageSize: this.size }
-				: { ...state, page: "", pageSize: "" };
+				? { ...state, page: 1, pageSize: this.size }
+				: { ...state, page: 1, pageSize: 10 };
 
 			this.updateState(state);
 		},

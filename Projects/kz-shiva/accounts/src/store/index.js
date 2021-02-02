@@ -25,6 +25,7 @@ export default new Vuex.Store({
 			page: 1,
 			pageSize: 10,
 		},
+		items:[]
 	},
 	getters: {
 		getHome: (state) => {
@@ -36,6 +37,9 @@ export default new Vuex.Store({
 		getBuyer: (state) => {
 			return state.buyer;
 		},
+		getItems:(state) => {
+			return state.items;
+		}
 	},
 	mutations: {
 		setHome: (state, payload) => {
@@ -46,6 +50,9 @@ export default new Vuex.Store({
 		},
 		setBuyer: (state, payload) => {
 			state.buyer = { ...state.buyer, ...payload };
+		},
+		setItems: (state, payload) => {
+			state.items = payload;
 		},
 	},
 });

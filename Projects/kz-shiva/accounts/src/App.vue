@@ -1,20 +1,29 @@
 <template>
 	<div id="app">
 		<Header />
-		<router-view/>
+		<template>
+			<b-breadcrumb :items="items"></b-breadcrumb>
+		</template>
+		<router-view />
 	</div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import Header from "./components/Header";
 
 export default {
-
 	name: "App",
 
 	components: {
 		Header,
 	},
+
+	computed:{
+		...mapGetters({
+			items: 'getItems'
+		})
+	}
 };
 </script>
 
