@@ -47,21 +47,11 @@ export default {
 			return true;
 		},
 
-		rowClicked(item, index) {
-			console.log(item, index);
-		},
-
-		setBuyer_id(value) {
-			this.state.buyer_id = value;
-		},
+		rowClicked() {},
 
 		getActivityUrl() {
 			return api.getActivityUrl(this.state);
 		},
-	},
-
-	created() {
-		this.setBuyer_id(this.$route.params.id);
 	},
 };
 </script>

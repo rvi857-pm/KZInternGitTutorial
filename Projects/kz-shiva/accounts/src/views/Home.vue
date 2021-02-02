@@ -68,20 +68,8 @@ export default {
 		},
 
 		rowClicked(item) {
+			this.$store.commit('setAccount', item);
 			this.$router.push(`/account/${item.id}`);
-			const value = {
-				name: item.name,
-				ip_domain: item.ip_domain,
-				city: item.city,
-				state: item.state,
-				country: item.country,
-				type: item.type,
-				salesforce_id: item.salesforce_id,
-				score: item.score,
-				marketing_qualified: item.marketing_qualified,
-				account_id: item.id,
-			};
-			this.$store.commit('setAccount', value);
 		},
 
 		getUrl() {

@@ -56,6 +56,7 @@ export default {
 		},
 
 		rowClicked(item) {
+			this.$store.commit('setBuyer', item);
 			this.$router.push(`/buyer/${item.id}`);
 		},
 
