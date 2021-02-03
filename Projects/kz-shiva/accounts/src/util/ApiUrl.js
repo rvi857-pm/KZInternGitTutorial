@@ -7,7 +7,7 @@ const getAccountUrl = (state) => {
 	let server = "http://localhost:8080/accounts?metrics=all";
 	let url = "";
 
-	url += state.search ? "&search" + state.search : "";
+	url += state.search ? "&search=" + state.search : "";
 
 	url += state.name ? "&name=" + state.name : "";
 
