@@ -1,0 +1,145 @@
+<div class="card my-5">
+  <div style="display: flex;justify-content: center;align-items: center; margin-top:20px;" class="form-group">
+    <label style="margin-top:10px;"for="file">Choose File</label>     
+    <input style="margin-left:40px;" type="file" id="file" (change)="handleFileInput($event.target.files)">
+    <button style="margin-left:80px; width:150px !important; border: 2px solid #4CAF50;border-radius: 8px;" (click)="uploadFileToAccounts()" id="uploadBtn">Upload</button>
+    <label [hidden]="!uploadStatus"style="margin-left:20px;margin-top:10px;color: #4CAF50;">Success</label>  
+  </div>
+   <div class="card-body"> 
+     <mat-form-field style="margin-left:80px; width:450px !important"> 
+      <input matInput (keyup)="takeTextInput($event.target.value)" placeholder="Filter"> 
+    </mat-form-field> 
+    <button style="margin-left:80px; width:150px !important; border: 2px solid #a7a7f5" mat-button color="primary" (click)="refreshPage()" id="filterBtn">Filter</button> 
+    <button style="margin-left:80px; width:150px !important; border: 2px solid #ee9292" mat-button (click)="clearPage()" id="clearBtn">Clear</button> 
+    <table class="table table-bordered table-striped"> 
+      <thead class="thead-dark"> <tr> <th scope="col">ID</th> 
+        <th scope="col">Account Name</th> <th scope="col">IP Domain</th> 
+        <th scope="col">IP Geo City</th> <th scope="col">IP Geo State</th> 
+        <th scope="col">IP Geo Country</th> <th scope="col">Types</th> 
+        <th scope="col">SFDC Account ID</th> </tr> 
+      </thead> 
+      <tbody> 
+        <tr *ngFor="let account of pageOfItems" (click)="openAccountModal(account)"> 
+          <td>{{ account.id }}</td> 
+          <td>{{ account.name }}</td> 
+          <td>{{ account.ip_domain }}</td> 
+          <td>{{ account.city }}</td> 
+          <td>{{ account.state }}</td> 
+          <td>{{ account.country }}</td> 
+          <td>{{ account.type }}</td> 
+          <td>{{ account.salesforce_id }}</td> 
+        </tr> 
+      </tbody> 
+    </table> 
+  </div>
+  <div style="display: flex;"> 
+    <mat-form-field style="margin-left:40px; align-self:centre;width:200px !important;" appearance="fill"> 
+      <mat-label>Select Page Size</mat-label> 
+      <mat-select [(value)]="pageSizeSelector" (selectionChange)="setPageSize($event)"> 
+        <mat-option value="PageSize5">5</mat-option> 
+        <mat-option value="PageSize10">10</mat-option> 
+        <mat-option value="PageSize15">15</mat-option> 
+        <mat-option value="PageSize20">20</mat-option> 
+        <mat-option value="PageSize25">25</mat-option> 
+        <mat-option value="PageSize30">30</mat-option> 
+      </mat-select> 
+    </mat-form-field> 
+    <jw-pagination style="margin-left:40px;" [items]="accounts" [pageSize]="pageSize" (changePage)="onChangePage($event);"></jw-pagination> 
+  </div> 
+</div>
+
+<div>
+  <jw-modal id="accountModal">
+    <div style="display: flex; justify-content: center;" >
+      <h1 text-align="centre" style="text-decoration: underline;">Account View</h1>
+    </div>
+    <br>
+    <br>
+    <div style="margin: auto;width: 60%;">
+      <p style="text-align:center;"><strong>ID</strong> : {{ currentAccount.id }}</p><hr>
+      <p style="text-align:center;"><strong>Account Name</strong> Name : {{ currentAccount.name }}</p><hr>
+      <p style="text-align:center;"><strong>IP Domain </strong>: {{ currentAccount.ip_domain }}</p><hr>
+      <p style="text-align:center;"><strong>IP Geo City</strong> : {{ currentAccount.city }}</p><hr>
+      <p style="text-align:center;"><strong>IP Geo State</strong> : {{ currentAccount.state }}</p><hr>
+      <p style="text-align:center;"><strong>IP Geo Country</strong> : {{ currentAccount.country }}</p><hr>
+      <p style="text-align:center;"><strong>Type</strong> : {{ currentAccount.type }}</p><hr>
+      <p style="text-align:center;"><strong>SalesForce ID</strong> : {{ currentAccount.salesforce_id }}</p><hr>
+    </div>
+    <br>
+    <br>
+    <div style="display: flex;">
+      <div [hidden]="!activityView" style="width: 600px" id="activityChart"></div>
+      <div [hidden]="!locationView" style="width: 600px" id="locationChart"></div>
+      <div [hidden]="!personaView" style="width: 600px" id="personaChart"></div>
+    </div>
+    <br>
+    <br>
+
+    <div [hidden]="!buyerTableView">
+      <table class="table table-bordered table-striped"> 
+        <thead class="thead-dark"> <tr> <th scope="col">ID</th> 
+          <th scope="col">Account ID</th> <th scope="col">Account Name</th> 
+          <th scope="col">Job Level</th> <th scope="col">Job Function</th> 
+          <th scope="col">City</th> <th scope="col">State</th> 
+          <th scope="col">Country</th> <th scope="col">Source</th> </tr> 
+        </thead> 
+        <tbody> 
+          <tr *ngFor="let buyer of buyers" (click)="openBuyerModal(buyer)"> 
+            <td>{{ buyer.id }}</td> 
+            <td>{{ buyer.account_id }}</td> 
+            <td>{{ buyer.account_name }}</td> 
+            <td>{{ buyer.job_level }}</td>
+            <td>{{ buyer.job_function }}</td>  
+            <td>{{ buyer.city }}</td> 
+            <td>{{ buyer.state }}</td> 
+            <td>{{ buyer.country }}</td> 
+            <td>{{ buyer.source }}</td> 
+          </tr> 
+        </tbody> 
+      </table> 
+    </div>
+    <button (click)="closeModal('accountModal');">All accounts</button>
+  </jw-modal>
+</div>
+<div>
+  <jw-modal id="buyerModal">
+    <div style="display: flex; justify-content: center;" >
+      <h1 text-align="centre" style="text-decoration: underline;">Buyer View</h1>
+    </div>
+    <br>
+    <br>
+    <div style="margin: auto;width: 60%;">
+      <p style="text-align:center;"><strong>ID</strong> : {{ currentBuyer.id }}</p><hr>
+      <p style="text-align:center;"><strong>Account ID</strong> Name : {{ currentBuyer.account_id }}</p><hr>
+      <p style="text-align:center;"><strong>Account Name </strong>: {{ currentBuyer.account_name }}</p><hr>
+      <p style="text-align:center;"><strong>Job Level</strong> : {{ currentBuyer.job_level }}</p><hr>
+      <p style="text-align:center;"><strong>Job Function</strong> : {{ currentBuyer.job_function }}</p><hr>
+      <p style="text-align:center;"><strong>City</strong> : {{ currentBuyer.city }}</p><hr>
+      <p style="text-align:center;"><strong>State</strong> : {{ currentBuyer.state }}</p><hr>
+      <p style="text-align:center;"><strong>Country</strong> : {{ currentBuyer.country }}</p><hr>
+      <p style="text-align:center;"><strong>Source</strong> : {{ currentBuyer.source}}</p><hr>
+    </div>
+    <br>
+    <br>
+
+    <div [hidden]="!activityTableView">
+      <table class="table table-bordered table-striped"> 
+        <thead class="thead-dark"> <tr> <th scope="col">ID</th> 
+          <th scope="col">Buyer ID</th> <th scope="col">Date and Time</th> 
+          <th scope="col">Activity Type</th> <th scope="col">Details</th>
+        </thead> 
+        <tbody> 
+          <tr *ngFor="let activity of activities"> 
+            <td>{{ activity.id }}</td> 
+            <td>{{ activity.buyer_id }}</td> 
+            <td>{{ activity.datatime }}</td> 
+            <td>{{ activity.activity_type }}</td> 
+            <td>{{ activity.details }}</td> 
+          </tr> 
+        </tbody> 
+      </table> 
+    </div>
+    <br>
+    <button (click)="closeModal('buyerModal');">Back to Account View</button>
+  </jw-modal>
+</div>

@@ -6,11 +6,11 @@
     <button style="margin-left:80px; width:150px !important" mat-button color="primary" (click)="refreshPage()" id="filterBtn">Filter</button> 
     <button style="margin-left:80px; width:150px !important" mat-button (click)="clearPage()" id="clearBtn">Clear</button> 
     <table class="table table-bordered table-striped"> 
-      <thead class="thead-dark"> <tr> <th scope="col">ID</th> 
-        <th scope="col">Account Name</th> <th scope="col">IP Domain</th> 
-        <th scope="col">IP Geo City</th> <th scope="col">IP Geo State</th> 
-        <th scope="col">IP Geo Country</th> <th scope="col">Types</th> 
-        <th scope="col">SDFC Account ID</th> </tr> 
+      <thead class="thead-dark"> <tr> <th scope="col" class ="text-center">ID</th> 
+        <th scope="col" class ="text-center">Account Name</th> <th scope="col" class ="text-center">IP Domain</th> 
+        <th scope="col" class ="text-center">IP Geo City</th> <th scope="col" class ="text-center">IP Geo State</th> 
+        <th scope="col" class ="text-center">IP Geo Country</th> <th scope="col" class ="text-center">Types</th> 
+        <th scope="col" class ="text-center">SDFC Account ID</th> </tr> 
       </thead> 
       <tbody> 
         <tr *ngFor="let user of pageOfItems"> 
