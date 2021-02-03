@@ -49,6 +49,7 @@ public class AccountController {
 	@GetMapping("/accounts")
 	public List<Map<String,Object>> getAccounts( @ModelAttribute Account account, @RequestParam (required = false) Integer page, 
 			@RequestParam (required = false) Integer page_size, @RequestParam (required = false) String q, @RequestParam ( required = false) String metrics, @RequestParam ( required = false) String start, @RequestParam ( required = false) String end, @RequestParam ( required = false) String exclude) {
+		//System.out.println("hey");
 		Page <Account> accounts= accountService.getAllAccounts( account, page, page_size, q);
 		return metricService.metricsFilter(accounts, metrics,start, end,exclude);
 			
@@ -57,7 +58,10 @@ public class AccountController {
 	@PostMapping("/accounts")
 	public String fileupload( @RequestParam("file") MultipartFile multipartfile) {
 		
-		return fileService.uploadFile( multipartfile);	
+		return fileService.uploadFile( multipartfile);
+		//System.out.println(multipartfile.getOriginalFilename());
+		//return "success";
+		
 	}
 	
 	@GetMapping("/buyer")

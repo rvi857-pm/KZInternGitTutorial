@@ -82,6 +82,7 @@ public class BuyerService {
 			mapBuyer.put("job_function",buyer.getJobFunction());
 			mapBuyer.put("job_level",buyer.getJobLevel());
 			mapBuyer.put("account_name",buyer.getAccount().getName());
+			mapBuyer.put("activity",buyer.getActivities());
 			
 			calculated = calculation.compute(buyerList,start,end);
 			for ( int i = 0; i < metric.length; i++) {

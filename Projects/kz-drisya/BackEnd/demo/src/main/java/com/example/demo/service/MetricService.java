@@ -54,7 +54,7 @@ public class MetricService {
 		if ( metrics != null) {
 			
 			if ( metrics.equals("all"))
-				metrics="score,buyer_count,marketing_qualified,persona_count,location_count";
+				metrics="score,buyer_count,marketing_qualified,persona_count,location_count,activity_count";
 	
 			metric = metrics.split("[,]",0);	
 		}

@@ -1,7 +1,9 @@
 package com.example.demo.service;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,6 +97,53 @@ private String check( String string) {
 	return string;
 }
 
+private Date getDate( String dateString ) {
+
+	long dateS = Long.parseLong(dateString);
+	Date date;
+	try {
+		date = new Date(dateS);
+		return date;
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+	return null;
+}
+private Date convert( String dateString) {
+	
+	SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy");
+	Date date = new Date();
+	try {
+		date = dateFormat.parse(dateString);
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+	return date;
+}
+private boolean checkDate( String start, String end , String date) {
+	
+	if( start == null && end == null)
+		return true;
+	
+	
+	Date startDate, endDate, actDate;
+	
+	actDate = getDate(date);
+	if( start != null) 
+		startDate = convert(start);
+	else
+		startDate = actDate;
+	if( end != null)
+		endDate = convert(end);
+	else
+		endDate = actDate;
+	
+	if( actDate.compareTo(startDate) >=0 && actDate.compareTo(endDate) <= 0) 
+		return true;
+	
+	return false;
+		
+}
 /**
  * 
  * @param buyer
@@ -111,8 +160,12 @@ private double calculate( Buyer buyer,String buyer_id,String start, String end) 
 	double totalActivityScore = 0.0;
 	for ( int itr = 0; itr < activities.size(); itr++) {
 		
+		
 		Activity activity  = activities.get(itr);
-		totalActivityScore += getActivityScore( activity.getActivityType());
+		//String date = activity.getDatetime();
+		
+		if ( checkDate(start,end,activity.getDatetime()) )
+			totalActivityScore += getActivityScore( activity.getActivityType());
 	}
 	
 	return totalActivityScore;
@@ -198,7 +251,7 @@ public Map<String, Object> compute(List<Buyer> buyers,String start, String end) 
 	}
 	
 		////////////////////////////////////////////////////////////////////////////////////////////////
-	Map<String, Object> temp = new HashMap<>(){
+	Map<String, Object> activityCount = new HashMap<>(){
 		{
 			put("ad_clicks", adClick);
 			put("website_visits", webVisit);
@@ -211,9 +264,8 @@ public Map<String, Object> compute(List<Buyer> buyers,String start, String end) 
 	boolean marketing_qualified = false;
 	if ( qualified >= 3 && totalBuyerScore >= 10)
 		marketing_qualified = true;
-	
 	mapAccount.put("score", totalBuyerScore);
-	mapAccount.put("activity_ount",temp);
+	mapAccount.put("activity_count",activityCount);
 	mapAccount.put("persona_count", personCount);
 	mapAccount.put("location_count", locationCount);
 	mapAccount.put("marketing_qualified", marketing_qualified);
